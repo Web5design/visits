@@ -47,5 +47,9 @@ function handleFiles(files){
 	reader.onload = handleReaderLoad;
 	 
 	// begin the read operation
-	reader.readAsDataURL(file);
+	reader.readAsText(file);
+}
+
+function handleReaderLoad(evt){
+	alert(evt.target.result);
 }
