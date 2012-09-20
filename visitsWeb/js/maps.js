@@ -1,6 +1,14 @@
 var handleReaderLoad = function(evt){
 	var extLocationHistory = JSON.parse(evt.target.result);
-	alert(extLocationHistory.length);
+
+	var resultGpsLoc = new Array();
+	for(var extLocation in extLocationHistory){
+		var location = new gpsLoc(extLocation.lon, extLocation.lat, extLocation.t);
+		resultGpsLoc.push(location);
+	}
+
+	alert(resultGpsLoc.length);
+	
 };
 
 function initialize() {

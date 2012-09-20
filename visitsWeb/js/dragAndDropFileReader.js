@@ -41,7 +41,5 @@ var dragAndDropFileReader = function(callback){
 	dropbox.addEventListener("dragenter", this.stopEventPropagation, false);
 	dropbox.addEventListener("dragexit", this.stopEventPropagation, false);
 	dropbox.addEventListener("dragover", this.stopEventPropagation, false);
-	dropbox.addEventListener("drop", this.dropEventHandler, false);
-	
-	alert("done initializing.");
+	dropbox.addEventListener("drop", this.dropEventHandler, false);	
 };
