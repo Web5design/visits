@@ -2,12 +2,25 @@ var handleReaderLoad = function(evt){
 	var extLocationHistory = JSON.parse(evt.target.result);
 
 	var resultGpsLoc = new Array();
-	for(var extLocation in extLocationHistory){
+	for(var i = 0; i < extLocationHistory.length; i++){
+		var extLocation = extLocationHistory[i];
 		var location = new gpsLoc(extLocation.lon, extLocation.lat, extLocation.t);
 		resultGpsLoc.push(location);
 	}
-
-	alert(resultGpsLoc.length);
+	
+	var distances = "";
+	var prevLoc = null;
+	for(var i = 0; i < resultGpsLoc.length; i++){
+		var location = resultGpsLoc[i];
+		var dist = 0;
+		if(prevLoc)
+			dist = haversine(prevLoc, location);
+		distances = distances + location.timestamp + ";" + location.lon + ";" + location.lat + ";" + dist + "\n";
+		prevLoc = location;
+	}
+	console.log(distances);
+	
+	//alert(resultGpsLoc.length);
 	
 };
 
