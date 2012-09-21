@@ -57,6 +57,37 @@ var lastElementClustering = function(locations, clusterThreshold){
 	return result;
 };
 
+//with cluster Datatype
+var lastElementClustering2 = function(locations, clusterThreshold){
+	
+	var result = new Array();
+	var pivotElement = locations[0];
+	var currentCluster = new cluster();
+	currentCluster.push(locations[0]);
+	
+	for(var i = 1; i < locations.length; i++){
+		var currentLocation = locations[i];
+		var currentDistance = haversine(pivotElement, currentLocation);
+		
+		if(currentDistance > clusterThreshold){
+			//create a new cluster
+			result.push(currentCluster);
+			currentCluster = new Array();
+			currentCluster.push(currentLocation);
+		} else {
+			//add the location to the current cluster
+			currentCluster.push(currentLocation);
+		}
+		
+		pivotElement = currentLocation;
+	}
+	result.push(currentCluster);
+	
+	return result;
+};
+
+
+
 // hierarchical clustering
 // 
 var hierarchicalClustering = function(locations, clusterThreshold){

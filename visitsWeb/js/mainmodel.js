@@ -25,9 +25,4 @@ function mainmodel(gpsLocs){
 			minTimeInterval = t;
 		}
 	}
-	
-	this.minTimeInterval = this.timeframe/this.maxNumberOfTicks;
-		
-	
-	
 }
