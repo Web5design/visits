@@ -52,8 +52,8 @@ function ViewJS(mainmodel, timelineModel){
 			    console.log("displaying map for cluster " + i + " in map_canvas: map_canvas" + i);
 			}
 			
-			timelineDocElement.append('<img class="map_mask_circle' + i + '" src="img/mask1000.png" style="top:'+horizontalPosition+'px;left:'+verticalPosition+'px;width:' + clusterWidth + 'px;height:' + clusterWidth + 'px"></img>');
-			//timelineDocElement.append('<div class="map_mask_bottom' + i + '" style="top:' + clusterWidth + 'px;left:0px;width:' + clusterWidth + 'px;height:' + bottomMaskHeight + 'px"></div>');
+			timelineDocElement.append('<img class="map_mask_circle' + i + '" src="img/mask1000.png" style="position:absolute;left:'+horizontalPosition+'px;top:'+verticalPosition+'px;width:' + clusterWidth + 'px;height:' + clusterWidth + 'px"></img>');
+			timelineDocElement.append('<div class="map_mask_bottom' + i + '" style="position:absolute;top:' + (verticalPosition + clusterWidth) + 'px;left:'+ horizontalPosition +'px;width:' + clusterWidth + 'px;height:' + bottomMaskHeight + 'px;background-color:white"></div>');
 			timelineDocElement.append('</div>');
 			
 			horizontalPosition = horizontalPosition + clusterWidth;
