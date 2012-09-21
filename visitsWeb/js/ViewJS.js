@@ -14,15 +14,50 @@ function ViewJS(mainmodel, timelineModel){
 		for(var i = 0; i < this.timelineModel.clusters.length; i++){
 			var clusterWidth = this.timelineModel.clusters[i].gpsLocs.length * stepSize;
 			var verticalPosition = (availableHeight / 2.0) - (clusterWidth / 2.0);
+			var bottomMaskHeight = 20;
+			var clusterVerticalHeight = clusterWidth + bottomMaskHeight;
 			
-			timelineDocElement.append('<div class="map_countainer' + i + '" style="width:' + clusterWidth + 'px;height:' + clusterWidth + 'px;border-radius:'+clusterWidth / 2+'px;position:absolute;left:'+horizontalPosition+'px;top:'+verticalPosition+'px;background-color:grey"></div>');
-
-			horizontalPosition = horizontalPosition + clusterWidth;
-			
+			timelineDocElement.append('<div class="map_countainer' + i + '" style="width:' + clusterWidth + 'px;height:' + clusterVerticalHeight + 'px;border-radius:'+clusterWidth / 2+'px;position:absolute;left:'+horizontalPosition+'px;top:'+verticalPosition+'px;background-color:grey">');
+			timelineDocElement.append('<div id="map_canvas' + i + '" style="width:' + clusterWidth + 'px;height:' + clusterVerticalHeight + 'px;position:absolute;position:absolute;left:'+horizontalPosition+'px;top:'+ verticalPosition+'px;"></div>');
+						
 			console.log("adding cluster " + i + " of size " + this.timelineModel.clusters[i].gpsLocs.length + "to view with a width of " + clusterWidth);
 			/*if(this.timelineModel.clusters[i].length > 5){
 			}*/
 			
+			//load the google maps
+			if(this.timelineModel.clusters[i].gpsLocs.length > 5){
+				var clusterBounds = new google.maps.LatLngBounds();
+				for(var j = 0; j < this.timelineModel.clusters[i].gpsLocs.length; j++){
+					var currentPoint = new google.maps.LatLng(this.timelineModel.clusters[i].gpsLocs[j].lat, this.timelineModel.clusters[i].gpsLocs[j].lon);
+					clusterBounds.extend(currentPoint);
+				}
+				
+			    var mapOptions = {
+			    	      center: new google.maps.LatLng(-34.397, 150.644),
+			    	      zoom: 10,
+			    	      mapTypeId: google.maps.MapTypeId.ROADMAP,
+			    	      noClear: true,
+			    	      zoomControl: false,
+			    	      panControl: false,
+			    	      rotateControl: false,
+			    	      scaleControl: false,
+			    	      disableDefaultUI: true
+
+			    	    };
+			    var map = new google.maps.Map(document.getElementById("map_canvas" + i),
+			    	        mapOptions);
+			    	    
+			    map.fitBounds(clusterBounds);
+			    
+			    console.log("displaying map for cluster " + i + " in map_canvas: map_canvas" + i);
+			}
+			
+			timelineDocElement.append('<img class="map_mask_circle' + i + '" src="img/mask1000.png" style="top:'+horizontalPosition+'px;left:'+verticalPosition+'px;width:' + clusterWidth + 'px;height:' + clusterWidth + 'px"></img>');
+			//timelineDocElement.append('<div class="map_mask_bottom' + i + '" style="top:' + clusterWidth + 'px;left:0px;width:' + clusterWidth + 'px;height:' + bottomMaskHeight + 'px"></div>');
+			timelineDocElement.append('</div>');
+			
+			horizontalPosition = horizontalPosition + clusterWidth;
+
 		}
 	};
 }
