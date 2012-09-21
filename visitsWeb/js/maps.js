@@ -20,7 +20,7 @@ var handleReaderLoad = function(evt){
 	}
 	//console.log(distances);
 	
-	var clusters = pivotClustering(resultGpsLoc, 30);
+	var clusters = pivotClustering(resultGpsLoc, 50);
 	for(var i = 0; i < clusters.length; i++){
 		console.log("cluster #" + i + " ("+ clusters[i].length +"):");
 		//for(var j = 0; j < clusters[i].length; j++){

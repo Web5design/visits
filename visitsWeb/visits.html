@@ -14,12 +14,15 @@
 <title>Visits</title>
 </head>
 <body onload="initialize()">
-  <div id="map_mask" style="width:280px;height:300px;">
-   	<div id="map_canvas" style="width:280px; height:300px;position:absolute;top:0px;left:0px"></div>
-	<img src="img/mask1000.png" style="position:absolute;top:0px;left:0px;width:280px;height:280px"></img>
-	<div id="map_mask_bottom" style="width:280px;height:20px;position:absolute;top:280px;left:0px;background-color:white"></div>
-	<div id="map_mask_bottom" style="width:280px;height:280px;position:absolute;top:-2px;left:-2px;border:2px solid #555555;border-radius:140px"></div>
+
+<!--  <div id="timeline"> -->
+  <div class="map_container" style="width:280px;height:300px;">
+   	<div class="map_canvas" id="map_canvas" style="width:280px; height:300px;top:0px;left:0px"></div>
+	<img class="map_mask_circle" src="img/mask1000.png" style="top:0px;left:0px;width:280px;height:280px"></img>
+	<div class="map_mask_bottom" style="width:280px;height:20px;top:280px;left:0px;"></div>
+	<div class="map_border" style="width:280px;height:280px;top:-2px;left:-2px;border-radius:140px"></div>
   </div>
+<!--  </div> -->
   
 <div id="dropbox"><br/><br/><span id="droplabel">&nbsp;Drop file here...</span></div>
 
