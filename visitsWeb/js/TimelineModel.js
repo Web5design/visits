@@ -8,15 +8,15 @@ function TimelineModel(mainmodel){
 	
 	this.displayedGpsLocs = mainmodel.gpsLocs;
 	
-	this.clusters = pivotClustering(resultGpsLoc, 50);
+	this.clusters = lastElementClustering(mainmodel.gpsLocs, 50);
 	
 	
 	//ausgabe
-	for(var i = 0; i < clusters.length; i++){
-		console.log("cluster #" + i + " ("+ clusters[i].length +"):");
+	for(var i = 0; i < this.clusters.length; i++){
+		console.log("cluster #" + i + " ("+ this.clusters[i].gpsLocs.length +"):");
 		//for(var j = 0; j < clusters[i].length; j++){
 		var j = 0;
-			console.log("   " + clusters[i][j].timestamp + " - " + clusters[i][j].lon + ", " + clusters[i][j].lat);
+			console.log("   " + this.clusters[i].gpsLocs[j].timestamp + " - " + this.clusters[i].gpsLocs[j].lon + ", " + this.clusters[i].gpsLocs[j].lat);
 		//}
 	}
 	

@@ -17,10 +17,10 @@ function Cluster(){
 		
 		this.gpsLocs.push(gpsLoc);
 		
-		this.timeframeStart = gpsLocs[0];
+		this.timeframeStart = this.gpsLocs[0];
 		
 		//eigentlich nicht... (erster Punkt des nächsten Clusters!)
-		this.timeframeEnd = gpsLocs[gpsLocs.length-1];
+		this.timeframeEnd = this.gpsLocs[this.gpsLocs.length-1];
 		
 		this.timeframe = this.timeframeEnd -this.timeframeStart;
 		
