@@ -18,8 +18,16 @@ var handleReaderLoad = function(evt){
 		distances = distances + location.timestamp + ";" + location.lon + ";" + location.lat + ";" + dist + "\n";
 		prevLoc = location;
 	}
-	console.log(distances);
+	//console.log(distances);
 	
+	var clusters = pivotClustering(resultGpsLoc, 30);
+	for(var i = 0; i < clusters.length; i++){
+		console.log("cluster #" + i + " ("+ clusters[i].length +"):");
+		//for(var j = 0; j < clusters[i].length; j++){
+		var j = 0;
+			console.log("   " + clusters[i][j].timestamp + " - " + clusters[i][j].lon + ", " + clusters[i][j].lat);
+		//}
+	}
 	//alert(resultGpsLoc.length);
 	
 };
