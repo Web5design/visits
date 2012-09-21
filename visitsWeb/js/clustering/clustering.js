@@ -58,12 +58,13 @@ var lastElementClustering = function(locations, clusterThreshold){
 };
 
 //with cluster Datatype
+//TODO: change method from arrays to array of cluster objects
 var lastElementClustering2 = function(locations, clusterThreshold){
 	
 	var result = new Array();
 	var pivotElement = locations[0];
-	var currentCluster = new cluster();
-	currentCluster.push(locations[0]);
+	var currentCluster = new Cluster();
+	currentCluster.addLoc(locations[0]);
 	
 	for(var i = 1; i < locations.length; i++){
 		var currentLocation = locations[i];
@@ -72,11 +73,11 @@ var lastElementClustering2 = function(locations, clusterThreshold){
 		if(currentDistance > clusterThreshold){
 			//create a new cluster
 			result.push(currentCluster);
-			currentCluster = new Array();
-			currentCluster.push(currentLocation);
+			currentCluster = new Cluster();
+			currentCluster.addLoc(currentLocation);
 		} else {
 			//add the location to the current cluster
-			currentCluster.push(currentLocation);
+			currentCluster.addLoc(currentLocation);
 		}
 		
 		pivotElement = currentLocation;

@@ -8,9 +8,9 @@ var handleReaderLoad = function(evt){
 		resultGpsLoc.push(location);
 	}
 	
-	var mainmodel = new mainmodel(resultGpsLoc);
+	var mainmodel = new Mainmodel(resultGpsLoc);
 	
-	var tlModel = new timelineModel(mainmodel);
+	var tlModel = new TimelineModel(mainmodel);
 	
 };
 

@@ -1,4 +1,4 @@
-function timelineModel(mainmodel){
+function TimelineModel(mainmodel){
 	this.mainmodel = mainmodel;
 	
 	this.displayedTimeframeStart = mainmodel.timeframeStart;

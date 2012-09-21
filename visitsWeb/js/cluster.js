@@ -1,4 +1,4 @@
-function cluster(){
+function Cluster(){
 	this.gpsLocs = new Array();
 	
 	this.minLon = Number.POSITIVE_INFINITY;
