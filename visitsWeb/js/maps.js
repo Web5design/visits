@@ -12,6 +12,8 @@ var handleReaderLoad = function(evt){
 	
 	var tlModel = new TimelineModel(mainmodel);
 	
+	var viewJS = new ViewJS(mainmodel, tlModel);
+	viewJS.drawTimeline();
 };
 
 function initialize() {
