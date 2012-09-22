@@ -14,21 +14,19 @@ function ViewJS(mainmodel, timelineModel){
 		console.log("availableWidth: " + availableWidth + ", stepSize: " + stepSize);
 		
 		for(var i = 0; i < this.timelineModel.clusters.length; i++){
-			console.log("timeframe "+ this.timelineModel.clusters[i].timeframe);
+
 			var clusterWidth = this.timelineModel.clusters[i].timeframe * stepSize;
 			var verticalPosition = (availableHeight / 2.0) - (clusterWidth / 2.0);
 			var bottomMaskHeight = 20;
 			var clusterVerticalHeight = clusterWidth + bottomMaskHeight;
 			
-			timelineDocElement.append('<div class="map_countainer' + i + '" style="width:' + clusterWidth + 'px;height:' + clusterVerticalHeight + 'px;border-radius:'+clusterWidth / 2+'px;position:absolute;left:'+horizontalPosition+'px;top:'+verticalPosition+'px;background-color:grey">');
+			timelineDocElement.append('<div class="map_countainer" style="width:' + clusterWidth + 'px;height:' + clusterVerticalHeight + 'px;border-radius:'+clusterWidth / 2+'px;position:absolute;left:'+horizontalPosition+'px;top:'+verticalPosition+'px;background-color:#eeeeee">');
 			timelineDocElement.append('<div id="map_canvas' + i + '" style="width:' + clusterWidth + 'px;height:' + clusterVerticalHeight + 'px;position:absolute;position:absolute;left:'+horizontalPosition+'px;top:'+ verticalPosition+'px;"></div>');
 						
 			console.log("adding cluster " + i + " of size " + this.timelineModel.clusters[i].gpsLocs.length + "to view with a width of " + clusterWidth);
-			/*if(this.timelineModel.clusters[i].length > 5){
-			}*/
 			
 			//load the google maps
-			if(this.timelineModel.clusters[i].gpsLocs.length > 5){
+			if(clusterWidth>10){
 				var clusterBounds = new google.maps.LatLngBounds();
 				for(var j = 0; j < this.timelineModel.clusters[i].gpsLocs.length; j++){
 					var currentPoint = new google.maps.LatLng(this.timelineModel.clusters[i].gpsLocs[j].lat, this.timelineModel.clusters[i].gpsLocs[j].lon);
@@ -68,8 +66,8 @@ function ViewJS(mainmodel, timelineModel){
 			    }
 			}
 			
-			timelineDocElement.append('<img class="map_mask_circle' + i + '" src="img/mask1000.png" style="position:absolute;left:'+horizontalPosition+'px;top:'+verticalPosition+'px;width:' + clusterWidth + 'px;height:' + clusterWidth + 'px"></img>');
-			timelineDocElement.append('<div class="map_mask_bottom' + i + '" style="position:absolute;top:' + (verticalPosition + clusterWidth) + 'px;left:'+ horizontalPosition +'px;width:' + clusterWidth + 'px;height:' + bottomMaskHeight + 'px;background-color:white"></div>');
+			timelineDocElement.append('<img class="map_mask_circle" src="img/mask1000.png" style="position:absolute;left:'+horizontalPosition+'px;top:'+verticalPosition+'px;width:' + clusterWidth + 'px;height:' + clusterWidth + 'px"></img>');
+			timelineDocElement.append('<div class="map_mask_bottom" style="position:absolute;top:' + (verticalPosition + clusterWidth) + 'px;left:'+ horizontalPosition +'px;width:' + clusterWidth + 'px;height:' + bottomMaskHeight + 'px;background-color:white"></div>');
 			timelineDocElement.append('</div>');
 			
 			horizontalPosition = horizontalPosition + clusterWidth;
