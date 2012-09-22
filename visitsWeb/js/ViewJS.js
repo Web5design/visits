@@ -34,13 +34,11 @@ function ViewJS(mainmodel, timelineModel){
 			//load the google maps
 			if(clusterWidth>10){
 				var currentCluster = this.timelineModel.clusters[i];
-				var clusterBounds = new google.maps.LatLngBounds(new google.maps.LatLng(currentCluster.maxLat, currentCluster.minLon),
-						new google.maps.LatLng(currentCluster.minLat, currentCluster.maxLon));
-				
+				var clusterBounds = currentCluster.clusterBounds;
 				
 			    var mapOptions = {
 			    	      center: new google.maps.LatLng(clusterBounds.getCenter().lat(), clusterBounds.getCenter().lng()),
-			    	      zoom: 1,
+			    	      zoom: 5,
 			    	      mapTypeId: google.maps.MapTypeId.HYBRID,
 			    	      noClear: true,
 			    	      zoomControl: false,
