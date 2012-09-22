@@ -5,7 +5,7 @@ body { height: 100%; margin: 0; padding: 0; font-family: Helvetica; }
 #map_canvas { height: 100% }
       
 
-#dropbox { width: 280px; height: 100px; background-color:#ddd; border-radius:25px}
+#dropbox { width: 280px; height: 100px; background-color:#ddd; border-radius:25px; position:absolute; top: 400px}
 #droplabel { color: white; }
 
 #timeline {position:absolute; top:30px; left:30px; width: 1000px; height: 500px;}

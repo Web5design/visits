@@ -4,7 +4,7 @@ var handleReaderLoad = function(evt){
 	var resultGpsLoc = new Array();
 	for(var i = 0; i < extLocationHistory.length; i++){
 		var extLocation = extLocationHistory[i];
-		var location = new gpsLoc(extLocation.lon, extLocation.lat, extLocation.t);
+		var location = new GpsLoc(extLocation.lon, extLocation.lat, extLocation.t);
 		resultGpsLoc.push(location);
 	}
 	
@@ -32,6 +32,6 @@ function initialize() {
     var map = new google.maps.Map(document.getElementById("map_canvas"),
         mapOptions);
     
-    var myFileReader = new dragAndDropFileReader(handleReaderLoad);
+    var myFileReader = new DragAndDropFileReader(handleReaderLoad);
   }
 

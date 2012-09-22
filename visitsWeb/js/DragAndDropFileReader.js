@@ -1,7 +1,7 @@
 // reads a file via HTML5
 // code is mostly taken from http://www.thebuzzmedia.com/html5-drag-and-drop-and-file-api-tutorial/
 
-var dragAndDropFileReader = function(callback){
+var DragAndDropFileReader = function(callback){
 	this.stopEventPropagation = function(evt){
 		evt.stopPropagation();
 		evt.preventDefault();		
