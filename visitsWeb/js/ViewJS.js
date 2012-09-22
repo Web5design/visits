@@ -15,9 +15,12 @@ function ViewJS(mainmodel, timelineModel){
 		
 		for(var i = 0; i < this.timelineModel.clusters.length; i++){
 
-			var clusterWidth = this.timelineModel.clusters[i].timeframe * stepSize;
+			var clusterWidth = Math.floor(this.timelineModel.clusters[i].timeframe * stepSize);
 			var verticalPosition = (availableHeight / 2.0) - (clusterWidth / 2.0);
-			var bottomMaskHeight = 20;
+			
+			
+			
+			var bottomMaskHeight = 25;
 			var clusterVerticalHeight = clusterWidth + bottomMaskHeight;
 			
 			timelineDocElement.append('<div class="map_countainer" style="width:' + clusterWidth + 'px;height:' + clusterVerticalHeight + 'px;border-radius:'+clusterWidth / 2+'px;position:absolute;left:'+horizontalPosition+'px;top:'+verticalPosition+'px;background-color:#eeeeee">');
@@ -28,14 +31,9 @@ function ViewJS(mainmodel, timelineModel){
 			//load the google maps
 			if(clusterWidth>10){
 				var currentCluster = this.timelineModel.clusters[i];
-				/*var clusterBounds = new google.maps.LatLngBounds(new google.maps.LatLng(currentCluster.minLon, currentCluster.maxLat),
-						new google.maps.LatLng(currentCluster.maxLon, currentCluster.minLat));*/
 				var clusterBounds = new google.maps.LatLngBounds(new google.maps.LatLng(currentCluster.maxLat, currentCluster.minLon),
 						new google.maps.LatLng(currentCluster.minLat, currentCluster.maxLon));
-				/*for(var j = 0; j < this.timelineModel.clusters[i].gpsLocs.length; j++){
-					var currentPoint = new google.maps.LatLng(this.timelineModel.clusters[i].gpsLocs[j].lat, this.timelineModel.clusters[i].gpsLocs[j].lon);
-					clusterBounds.extend(currentPoint);
-				}*/
+				
 				
 			    var mapOptions = {
 			    	      center: new google.maps.LatLng(clusterBounds.getCenter().lat(), clusterBounds.getCenter().lng()),
@@ -52,15 +50,15 @@ function ViewJS(mainmodel, timelineModel){
 			    var map = new google.maps.Map(document.getElementById("map_canvas" + i),
 			    	        mapOptions);
 			    	    
-			    map.panToBounds(clusterBounds);
 			    map.fitBounds(clusterBounds);
-			    map.setCenter(clusterBounds.getCenter());
 			    
 			    console.log("displaying map for cluster " + i + " in map_canvas: map_canvas" + i);
 			    
 			    //draw markers for all points from the cluster
 			    var markerSize = new google.maps.Size(8,8);
+			    
 			    var markerImage = new google.maps.MarkerImage('img/cross.png', markerSize, new google.maps.Point(0,0), new google.maps.Point(markerSize.width / 2, markerSize.height / 2), markerSize);
+			    
 			    for(var j = 0; j < this.timelineModel.clusters[i].gpsLocs.length; j++){
 			    	var myMarkerLocation = this.timelineModel.clusters[i].gpsLocs[j];
 			        var myLatLng = new google.maps.LatLng(myMarkerLocation.lat, myMarkerLocation.lon);
