@@ -29,8 +29,6 @@ function initialize() {
       disableDefaultUI: true
 
     };
-    var map = new google.maps.Map(document.getElementById("map_canvas"),
-        mapOptions);
     
     var myFileReader = new DragAndDropFileReader(handleReaderLoad);
   }
