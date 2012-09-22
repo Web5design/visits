@@ -50,6 +50,19 @@ function ViewJS(mainmodel, timelineModel){
 			    map.fitBounds(clusterBounds);
 			    
 			    console.log("displaying map for cluster " + i + " in map_canvas: map_canvas" + i);
+			    
+			    //draw markers for all points from the cluster
+			    var markerSize = new google.maps.Size(8,8);
+			    var markerImage = new google.maps.MarkerImage('img/cross.png', markerSize, new google.maps.Point(0,0), new google.maps.Point(markerSize.width / 2, markerSize.height / 2), markerSize);
+			    for(var j = 0; j < this.timelineModel.clusters[i].gpsLocs.length; j++){
+			    	var myMarkerLocation = this.timelineModel.clusters[i].gpsLocs[j];
+			        var myLatLng = new google.maps.LatLng(myMarkerLocation.lat, myMarkerLocation.lon);
+			        var beachMarker = new google.maps.Marker({
+			            position: myLatLng,
+			            map: map,
+			            icon: markerImage
+			        });
+			    }
 			}
 			
 			timelineDocElement.append('<img class="map_mask_circle' + i + '" src="img/mask1000.png" style="position:absolute;left:'+horizontalPosition+'px;top:'+verticalPosition+'px;width:' + clusterWidth + 'px;height:' + clusterWidth + 'px"></img>');
