@@ -4,15 +4,18 @@ function ViewJS(mainmodel, timelineModel){
 	
 	this.drawTimeline = function(){
 		var timelineDocElement = $("#timeline");
+		
 		var availableWidth = timelineDocElement.width();
 		var availableHeight = timelineDocElement.height();
-		var stepSize = availableWidth / this.mainmodel.gpsLocs.length;
+		
+		var stepSize = availableWidth / this.timelineModel.displayedTimeframe;
 		var horizontalPosition = 0;
 		
 		console.log("availableWidth: " + availableWidth + ", stepSize: " + stepSize);
 		
 		for(var i = 0; i < this.timelineModel.clusters.length; i++){
-			var clusterWidth = this.timelineModel.clusters[i].gpsLocs.length * stepSize;
+			console.log("timeframe "+ this.timelineModel.clusters[i].timeframe);
+			var clusterWidth = this.timelineModel.clusters[i].timeframe * stepSize;
 			var verticalPosition = (availableHeight / 2.0) - (clusterWidth / 2.0);
 			var bottomMaskHeight = 20;
 			var clusterVerticalHeight = clusterWidth + bottomMaskHeight;
