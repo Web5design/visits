@@ -9,7 +9,7 @@ function TimelineModel(mainmodel){
 	this.displayedGpsLocs = mainmodel.gpsLocs;
 	
 	//this.clusters = lastElementClustering(this.displayedGpsLocs, 10);
-	this.clusters = averagePivotClustering(this.displayedGpsLocs, 100);
+	this.clusters = averagePivotClustering(this.displayedGpsLocs, 15);
 	
 	
 	//ausgabe

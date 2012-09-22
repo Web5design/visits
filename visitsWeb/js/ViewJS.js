@@ -40,7 +40,7 @@ function ViewJS(mainmodel, timelineModel){
 			    var mapOptions = {
 			    	      center: new google.maps.LatLng(clusterBounds.getCenter().lat(), clusterBounds.getCenter().lng()),
 			    	      zoom: 1,
-			    	      mapTypeId: google.maps.MapTypeId.ROADMAP,
+			    	      mapTypeId: google.maps.MapTypeId.HYBRID,
 			    	      noClear: true,
 			    	      zoomControl: false,
 			    	      panControl: false,
