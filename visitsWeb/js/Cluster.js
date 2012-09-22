@@ -49,8 +49,11 @@ function Cluster(){
 		
 		//calculate the cluster center
 		
-		this.centerLat = (this.maxLat - this.minLat) / 2.0;
-		this.centerLon = (this.maxLon - this.minLon) / 2.0;
+		var latDist = distLat(this.minLat,this.maxLat);
+		var lonDist = distLon(this.minLon,this.maxLon);
+		
+		this.centerLat = this.minLat+latDist/2.0;
+		this.centerLon = this.minLon+lonDist/2.0;
 		
 	};
 	

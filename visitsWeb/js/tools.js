@@ -11,3 +11,27 @@ var haversine = function (gpsLoc1,gpsLoc2){
 	
 	return d;
 };
+
+var distLon = function(a,b){
+	
+	var aPos = a+180;
+	var bPos = b+180;
+	
+	var d = bPos- aPos;
+	
+	if (d > 180){
+		return 360-d; 
+	}else{
+		return d;
+	}
+};
+
+var distLat = function (a,b){
+	
+	var aPos = a+90;
+	var bPos = b+90;
+	
+	var d = bPos- aPos;
+	
+	return d;
+};
