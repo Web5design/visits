@@ -23,8 +23,11 @@ function ViewJS(mainmodel, timelineModel){
 			var bottomMaskHeight = 25;
 			var clusterVerticalHeight = clusterWidth + bottomMaskHeight;
 			
-			timelineDocElement.append('<div class="map_countainer" style="width:' + clusterWidth + 'px;height:' + clusterVerticalHeight + 'px;border-radius:'+clusterWidth / 2+'px;position:absolute;left:'+horizontalPosition+'px;top:'+verticalPosition+'px;background-color:#eeeeee">');
-			timelineDocElement.append('<div id="map_canvas' + i + '" style="width:' + clusterWidth + 'px;height:' + clusterVerticalHeight + 'px;position:absolute;position:absolute;left:'+horizontalPosition+'px;top:'+ verticalPosition+'px;"></div>');
+			timelineDocElement.append('<div class="map_container" id="map_container' + i + '" style="width:' + clusterWidth + 'px;height:' + clusterVerticalHeight + 'px;left:'+horizontalPosition+'px;top:'+verticalPosition+'px;"></div>');
+			
+			var currentClusterContainer = $("#map_container"+i);
+			
+			currentClusterContainer.append('<div class="map_canvas" id="map_canvas' + i + '" style="width:' + clusterWidth + 'px;height:' + clusterVerticalHeight + 'px;"></div>');
 						
 			console.log("adding cluster " + i + " of size " + this.timelineModel.clusters[i].gpsLocs.length + "to view with a width of " + clusterWidth);
 			
@@ -70,9 +73,8 @@ function ViewJS(mainmodel, timelineModel){
 			    }
 			}
 			
-			timelineDocElement.append('<img class="map_mask_circle" src="img/mask1000.png" style="position:absolute;left:'+horizontalPosition+'px;top:'+verticalPosition+'px;width:' + clusterWidth + 'px;height:' + clusterWidth + 'px"></img>');
-			timelineDocElement.append('<div class="map_mask_bottom" style="position:absolute;top:' + (verticalPosition + clusterWidth) + 'px;left:'+ horizontalPosition +'px;width:' + clusterWidth + 'px;height:' + bottomMaskHeight + 'px;background-color:white"></div>');
-			timelineDocElement.append('</div>');
+			currentClusterContainer.append('<img class="map_mask_circle" src="img/mask1000.png" style="width:' + clusterWidth + 'px;height:' + clusterWidth + 'px"></img>');
+			currentClusterContainer.append('<div class="map_mask_bottom" style="top:' +clusterWidth + 'px;width:' + clusterWidth + 'px;height:' + bottomMaskHeight + 'px;"></div>');
 			
 			horizontalPosition = horizontalPosition + clusterWidth;
 
