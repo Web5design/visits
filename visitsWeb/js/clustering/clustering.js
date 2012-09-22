@@ -21,12 +21,12 @@ var pivotClustering = function(locations, clusterThreshold){
 			result.push(currentCluster);
 			currentCluster = new Cluster();
 			currentCluster.addLoc(currentLocation,
-					(i == locations.length - 1)? locations[i + 1] : currentLocation);
+					(i == locations.length - 1)? currentLocation : locations[i + 1]);
 			pivotElement = currentLocation;
 		} else {
 			//add the location to the current cluster
 			currentCluster.addLoc(currentLocation,
-					(i == locations.length - 1)? locations[i + 1] : currentLocation);
+					(i == locations.length - 1)? currentLocation : locations[i + 1]);
 		}
 	}
 	result.push(currentCluster);
@@ -53,11 +53,11 @@ var lastElementClustering = function(locations, clusterThreshold){
 			result.push(currentCluster);
 			currentCluster = new Cluster();
 			currentCluster.addLoc(currentLocation,
-					(i == locations.length - 1)? locations[i + 1] : currentLocation);
+					(i == locations.length - 1)? currentLocation : locations[i + 1]);
 		} else {
 			//add the location to the current cluster
 			currentCluster.addLoc(currentLocation,
-					(i == locations.length - 1)? locations[i + 1] : currentLocation);
+					(i == locations.length - 1)? currentLocation : locations[i + 1]);
 		}
 		
 		pivotElement = currentLocation;
