@@ -20,7 +20,15 @@ function Cluster(){
 		
 		this.timeframe = this.timeframeEnd -this.timeframeStart;
 		
-		this.clusterBounds.extend(new google.maps.LatLng(gpsLoc.lat, gpsLoc.lon));
+		this.clusterBounds = new google.maps.LatLngBounds();
+		for(var i = 0; i < this.gpsLocs.length; i++){
+			this.clusterBounds.extend(new google.maps.LatLng(this.gpsLocs[i].lat, this.gpsLocs[i].lon));
+		}
+		
+		/*if(this.gpsLocs.length == 1){
+			//add artificial point to enlarge bounds
+			this.clusterBounds.extend(new google.maps.LatLng(gpsLoc.lat + 0.000001, gpsLoc.lon + 0.000001));
+		}*/
 	};
 	
 }
