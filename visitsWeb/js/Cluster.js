@@ -7,6 +7,9 @@ function Cluster(){
 	this.maxLon = Number.NEGATIVE_INFINITY;
 	this.maxLat = Number.NEGATIVE_INFINITY;
 	
+	this.centerLon = 0;
+	this.centerLat = 0;
+	
 	this.timeframeStart;
 	this.timeframeEnd;
 	
@@ -24,31 +27,30 @@ function Cluster(){
 		
 		this.timeframe = this.timeframeEnd -this.timeframeStart;
 		
-		for(i=0;i<this.gpsLocs.length; i++){
-			var curLoc = this.gpsLocs[i];
+		if(gpsLoc.lon <this.minLon){
 			
-			if(curLoc.lon <this.minLon){
-				
-				this.minLon = curLoc.lon;
-			}
-			
-			if(curLoc.lat <this.minLat){
-				
-				this.minLat = curLoc.lat;
-			}
-			
-			if(curLoc.lon > this.maxLon){
-				
-				this.maxLon = curLoc.lon;
-			}
-			
-			if(curLoc.lat > this.maxLat){
-				
-				this.maxLat = curLoc.lat;
-			}
-			
-			
+			this.minLon = gpsLoc.lon;
 		}
+		
+		if(gpsLoc.lat <this.minLat){
+			
+			this.minLat = gpsLoc.lat;
+		}
+		
+		if(gpsLoc.lon > this.maxLon){
+			
+			this.maxLon = gpsLoc.lon;
+		}
+		
+		if(gpsLoc.lat > this.maxLat){
+			
+			this.maxLat = gpsLoc.lat;
+		}
+		
+		//calculate the cluster center
+		
+		this.centerLat = (this.maxLat - this.minLat) / 2.0;
+		this.centerLon = (this.maxLon - this.minLon) / 2.0;
 		
 	};
 	
