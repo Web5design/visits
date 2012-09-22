@@ -41,7 +41,8 @@ var lastElementClustering = function(locations, clusterThreshold){
 	var result = new Array();
 	var pivotElement = locations[0];
 	var currentCluster = new Cluster();
-	currentCluster.addLoc(locations[0]);
+	currentCluster.addLoc(locations[0], 
+			(locations.length == 1)? locations[0] : locations[1]);
 	
 	for(var i = 1; i < locations.length; i++){
 		var currentLocation = locations[i];
@@ -51,10 +52,12 @@ var lastElementClustering = function(locations, clusterThreshold){
 			//create a new cluster
 			result.push(currentCluster);
 			currentCluster = new Cluster();
-			currentCluster.addLoc(currentLocation);
+			currentCluster.addLoc(currentLocation,
+					(i == locations.length - 1)? locations[i + 1] : currentLocation);
 		} else {
 			//add the location to the current cluster
-			currentCluster.addLoc(currentLocation);
+			currentCluster.addLoc(currentLocation,
+					(i == locations.length - 1)? locations[i + 1] : currentLocation);
 		}
 		
 		pivotElement = currentLocation;
