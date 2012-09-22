@@ -24,7 +24,21 @@ var DragAndDropFileReader = function(callback){
 		var file = files[0];
 		 
 		document.getElementById("droplabel").innerHTML = "Processing " + file.name;
-		 
+		
+		//extract file ending to determine type
+		var filename = file.name;
+		var filenameparts = filename.split(".");
+		var filetype = filenameparts[filenameparts.length - 1];
+		
+		if(filetype == "json"){
+			inputFileType = "json";
+		} else if(filetype == "kml") {
+			inputFileType = "kml";
+		} else {
+			alert("unknown filetype ." + filetype + "!");
+			return;
+		}
+		
 		var reader = new FileReader();
 		 
 		// init the reader event handlers
