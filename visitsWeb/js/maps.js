@@ -14,6 +14,9 @@ var handleReaderLoad = function(evt){
 	
 	var viewJS = new ViewJS(mainmodel, tlModel);
 	viewJS.drawTimeline();
+	
+	$("#timeline").fadeIn(2500);
+	$("#dropbox").fadeOut(2500);
 };
 
 function initialize() {
