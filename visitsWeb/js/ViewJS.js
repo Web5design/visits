@@ -27,15 +27,19 @@ function ViewJS(mainmodel, timelineModel){
 			
 			//load the google maps
 			if(clusterWidth>10){
-				var clusterBounds = new google.maps.LatLngBounds();
-				for(var j = 0; j < this.timelineModel.clusters[i].gpsLocs.length; j++){
+				var currentCluster = this.timelineModel.clusters[i];
+				/*var clusterBounds = new google.maps.LatLngBounds(new google.maps.LatLng(currentCluster.minLon, currentCluster.maxLat),
+						new google.maps.LatLng(currentCluster.maxLon, currentCluster.minLat));*/
+				var clusterBounds = new google.maps.LatLngBounds(new google.maps.LatLng(currentCluster.maxLat, currentCluster.minLon),
+						new google.maps.LatLng(currentCluster.minLat, currentCluster.maxLon));
+				/*for(var j = 0; j < this.timelineModel.clusters[i].gpsLocs.length; j++){
 					var currentPoint = new google.maps.LatLng(this.timelineModel.clusters[i].gpsLocs[j].lat, this.timelineModel.clusters[i].gpsLocs[j].lon);
 					clusterBounds.extend(currentPoint);
-				}
+				}*/
 				
 			    var mapOptions = {
-			    	      center: new google.maps.LatLng(-34.397, 150.644),
-			    	      zoom: 10,
+			    	      center: new google.maps.LatLng(clusterBounds.getCenter().lat(), clusterBounds.getCenter().lng()),
+			    	      zoom: 1,
 			    	      mapTypeId: google.maps.MapTypeId.ROADMAP,
 			    	      noClear: true,
 			    	      zoomControl: false,
@@ -48,7 +52,9 @@ function ViewJS(mainmodel, timelineModel){
 			    var map = new google.maps.Map(document.getElementById("map_canvas" + i),
 			    	        mapOptions);
 			    	    
+			    map.panToBounds(clusterBounds);
 			    map.fitBounds(clusterBounds);
+			    map.setCenter(clusterBounds.getCenter());
 			    
 			    console.log("displaying map for cluster " + i + " in map_canvas: map_canvas" + i);
 			    
