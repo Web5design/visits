@@ -48,7 +48,7 @@ function ViewJS(mainmodel, timelineModel){
 			    	      center: new google.maps.LatLng(clusterBounds.getCenter().lat(), clusterBounds.getCenter().lng()),
 			    	     // zoom: calculateZoomLevel(maxDistance,clusterWidth),
 			    	      zoom: calculateZoomLevel2(clusterBounds.getNorthEast(),clusterBounds.getSouthWest(),clusterWidth),
-			    	      mapTypeId: google.maps.MapTypeId.HYBRID,
+			    	      mapTypeId: google.maps.MapTypeId.ROADMAP,
 			    	      noClear: true,
 			    	      zoomControl: false,
 			    	      panControl: false,
