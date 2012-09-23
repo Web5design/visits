@@ -1,8 +1,13 @@
 function ViewJS(mainmodel, timelineModel){
+	
 	this.mainmodel = mainmodel;
 	this.timelineModel = timelineModel;
-	
+
 	this.drawTimeline = function(){
+		
+		loadedMaps = 0;
+		maps = new Array();
+		
 		var timelineDocElement = $("#timeline");
 		
 		var availableWidth = timelineDocElement.width();
@@ -16,7 +21,9 @@ function ViewJS(mainmodel, timelineModel){
 		for(var i = 0; i < this.timelineModel.clusters.length; i++){
 
 			var clusterWidth = Math.floor(this.timelineModel.clusters[i].timeframe * stepSize);
+			
 			var verticalPosition = (availableHeight / 2.0) - (clusterWidth / 2.0);
+			
 			
 			
 			
@@ -29,16 +36,18 @@ function ViewJS(mainmodel, timelineModel){
 			
 			currentClusterContainer.append('<div class="map_canvas" id="map_canvas' + i + '" style="width:' + clusterWidth + 'px;height:' + clusterVerticalHeight + 'px;"></div>');
 						
-			console.log("adding cluster " + i + " of size " + this.timelineModel.clusters[i].gpsLocs.length + "to view with a width of " + clusterWidth);
+			console.log("adding cluster " + i + " of size " + this.timelineModel.clusters[i].gpsLocs.length + " to view with a width of " + clusterWidth);
 			
 			//load the google maps
 			if(clusterWidth>10){
 				var currentCluster = this.timelineModel.clusters[i];
 				var clusterBounds = currentCluster.clusterBounds;
+				var maxDistance = haversineLatLng(clusterBounds.getNorthEast(),clusterBounds.getSouthWest());
 				
 			    var mapOptions = {
 			    	      center: new google.maps.LatLng(clusterBounds.getCenter().lat(), clusterBounds.getCenter().lng()),
-			    	      zoom: 5,
+			    	     // zoom: calculateZoomLevel(maxDistance,clusterWidth),
+			    	      zoom: calculateZoomLevel2(clusterBounds.getNorthEast(),clusterBounds.getSouthWest(),clusterWidth),
 			    	      mapTypeId: google.maps.MapTypeId.HYBRID,
 			    	      noClear: true,
 			    	      zoomControl: false,
@@ -50,10 +59,9 @@ function ViewJS(mainmodel, timelineModel){
 			    	    };
 			    var map = new google.maps.Map(document.getElementById("map_canvas" + i),
 			    	        mapOptions);
-			    	    
-			    map.fitBounds(clusterBounds);
 			    
-			    console.log("displaying map for cluster " + i + " in map_canvas: map_canvas" + i);
+			    	    
+			    //map.fitBounds(clusterBounds);
 			    
 			    //draw markers for all points from the cluster
 			    var markerSize = new google.maps.Size(8,8);
