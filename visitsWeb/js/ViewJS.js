@@ -47,7 +47,7 @@ function ViewJS(mainmodel, timelineModel){
 			    var mapOptions = {
 			    	      center: new google.maps.LatLng(clusterBounds.getCenter().lat(), clusterBounds.getCenter().lng()),
 			    	     // zoom: calculateZoomLevel(maxDistance,clusterWidth),
-			    	      zoom: calculateZoomLevel2(clusterBounds.getNorthEast(),clusterBounds.getSouthWest(),clusterWidth),
+			    	      zoom: calculateZoomLevel(clusterBounds.getNorthEast(),clusterBounds.getSouthWest(),clusterWidth),
 			    	      mapTypeId: google.maps.MapTypeId.ROADMAP,
 			    	      noClear: true,
 			    	      zoomControl: false,
@@ -81,7 +81,7 @@ function ViewJS(mainmodel, timelineModel){
 			
 			currentClusterContainer.append('<img class="map_mask_circle" src="img/mask1000.png" style="width:' + clusterWidth + 'px;height:' + clusterWidth + 'px"></img>');
 			currentClusterContainer.append('<div class="map_mask_bottom" style="top:' +clusterWidth + 'px;width:' + clusterWidth + 'px;height:' + bottomMaskHeight + 'px;"></div>');
-			
+			currentClusterContainer.append('<div class="map_border" style="width:' +clusterWidth + 'px;height:' +clusterWidth + 'px;top:-2px;left:-2px;border-radius:' +clusterWidth + 'px"></div>');
 			horizontalPosition = horizontalPosition + clusterWidth;
 
 		}

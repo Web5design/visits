@@ -27,16 +27,7 @@ var haversineLatLng = function (northEast, southWest){
 	return d;
 };
 
-var calculateZoomLevel = function(dist ,width){
-	
-	
-	var zoom = Math.floor(8 - Math.log(1.6446 * dist / Math.sqrt(2 * (width * width))) / Math.log (2));
-	
-	return zoom;
-	
-};
-
-var calculateZoomLevel2 = function(ne,sw,width){
+var calculateZoomLevel = function(ne,sw,width){
 	
 	var GLOBE_WIDTH = 256; // a constant in Google's map projection
 	var west = sw.lng();
@@ -58,30 +49,8 @@ var calculateZoomLevel2 = function(ne,sw,width){
 	zoom = (width<150)? zoom-1 : zoom;
 	zoom = (width<70)? zoom-1 : zoom;
 	
+	zoom = (zoom>15)? 15: zoom;
+	
 	return zoom;
 	
 };
-
-/*var distLon = function(a,b){
-	
-	var aPos = a+180;
-	var bPos = b+180;
-	
-	var d = bPos- aPos;
-	
-	if (d > 180){
-		return 360-d; 
-	}else{
-		return d;
-	}
-};
-
-var distLat = function (a,b){
-	
-	var aPos = a+90;
-	var bPos = b+90;
-	
-	var d = bPos- aPos;
-	
-	return d;
-};*/
