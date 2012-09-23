@@ -44,14 +44,15 @@ function ViewJS(mainmodel, timelineModel){
 				var clusterBounds = currentCluster.clusterBounds;
 				var maxDistance = haversineLatLng(clusterBounds.getNorthEast(),clusterBounds.getSouthWest());
 				
-				var layer = "watercolor";
+				var layer = "toner";
 				
 			    var mapOptions = {
 			    	      center: new google.maps.LatLng(clusterBounds.getCenter().lat(), clusterBounds.getCenter().lng()),
 			    	     // zoom: calculateZoomLevel(maxDistance,clusterWidth),
 			    	      zoom: calculateZoomLevel(clusterBounds.getNorthEast(),clusterBounds.getSouthWest(),clusterWidth),
 			    	      mapTypeId: layer, 
-			    	      mapTypeControlOptions: { mapTypeIds: [layer] }, //google.maps.MapTypeId.ROADMAP,
+			    	      //mapTypeControlOptions: { mapTypeIds: [layer] }, 
+			    	      mapTypeControlOptions: google.maps.MapTypeId.ROADMAP,
 			    	      noClear: true,
 			    	      zoomControl: false,
 			    	      panControl: false,
@@ -63,7 +64,7 @@ function ViewJS(mainmodel, timelineModel){
 			    var map = new google.maps.Map(document.getElementById("map_canvas" + i),
 			    	        mapOptions);
 			    
-			    map.mapTypes.set(layer, new google.maps.StamenMapType(layer));
+			    //map.mapTypes.set(layer, new google.maps.StamenMapType(layer));
 			    
 			    	    
 			    //map.fitBounds(clusterBounds);
@@ -71,7 +72,7 @@ function ViewJS(mainmodel, timelineModel){
 			    //draw markers for all points from the cluster
 			    var markerSize = new google.maps.Size(8,8);
 			    
-			    var markerImage = new google.maps.MarkerImage('img/cross.png', markerSize, new google.maps.Point(0,0), new google.maps.Point(markerSize.width / 2, markerSize.height / 2), markerSize);
+			    var markerImage = new google.maps.MarkerImage('img/marker.png', markerSize, new google.maps.Point(0,0), new google.maps.Point(markerSize.width / 2, markerSize.height / 2), markerSize);
 			    
 			    for(var j = 0; j < this.timelineModel.clusters[i].gpsLocs.length; j++){
 			    	var myMarkerLocation = this.timelineModel.clusters[i].gpsLocs[j];
