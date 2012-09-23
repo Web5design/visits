@@ -44,14 +44,15 @@ function ViewJS(mainmodel, timelineModel){
 				var clusterBounds = currentCluster.clusterBounds;
 				var maxDistance = haversineLatLng(clusterBounds.getNorthEast(),clusterBounds.getSouthWest());
 				
-				var layer = "watercolor";
+				//var layer = "terrain";
 				
+				/*
 			    var mapOptions = {
 			    	      center: new google.maps.LatLng(clusterBounds.getCenter().lat(), clusterBounds.getCenter().lng()),
 			    	     // zoom: calculateZoomLevel(maxDistance,clusterWidth),
 			    	      zoom: calculateZoomLevel(clusterBounds.getNorthEast(),clusterBounds.getSouthWest(),clusterWidth),
 			    	      mapTypeId: layer, 
-			    	      mapTypeControlOptions: { mapTypeIds: [layer] }, //google.maps.MapTypeId.ROADMAP,
+			    	      mapTypeControlOptions: { mapTypeIds: [layer] },
 			    	      noClear: true,
 			    	      zoomControl: false,
 			    	      panControl: false,
@@ -64,6 +65,24 @@ function ViewJS(mainmodel, timelineModel){
 			    	        mapOptions);
 			    
 			    map.mapTypes.set(layer, new google.maps.StamenMapType(layer));
+			    */
+
+			    var mapOptions = {
+			    	      center: new google.maps.LatLng(clusterBounds.getCenter().lat(), clusterBounds.getCenter().lng()),
+			    	     // zoom: calculateZoomLevel(maxDistance,clusterWidth),
+			    	      zoom: calculateZoomLevel(clusterBounds.getNorthEast(),clusterBounds.getSouthWest(),clusterWidth),
+			    	      mapTypeId: google.maps.MapTypeId.ROADMAP, 
+			    	      noClear: true,
+			    	      zoomControl: false,
+			    	      panControl: false,
+			    	      rotateControl: false,
+			    	      scaleControl: false,
+			    	      disableDefaultUI: true
+
+			    	    };
+			    var map = new google.maps.Map(document.getElementById("map_canvas" + i),
+			    	        mapOptions);
+			    
 			    
 			    	    
 			    //map.fitBounds(clusterBounds);
