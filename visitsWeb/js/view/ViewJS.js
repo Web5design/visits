@@ -82,7 +82,7 @@ function drawTimeline(){
 		    //draw markers for all points from the cluster
 		    var markerSize = new google.maps.Size(8,8);
 		    
-		    var markerImage = new google.maps.MarkerImage('img/cross.png', markerSize, new google.maps.Point(0,0), new google.maps.Point(markerSize.width / 2, markerSize.height / 2), markerSize);
+		    var markerImage = new google.maps.MarkerImage('img/marker.png', markerSize, new google.maps.Point(0,0), new google.maps.Point(markerSize.width / 2, markerSize.height / 2), markerSize);
 		    
 		    for(var j = 0; j < this.timelineModel.clusters[i].gpsLocs.length; j++){
 		    	var myMarkerLocation = this.timelineModel.clusters[i].gpsLocs[j];
