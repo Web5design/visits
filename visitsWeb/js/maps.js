@@ -75,7 +75,7 @@ var handleReaderLoad = function(evt){
 	
 	var viewJS = new ViewJS(mainmodel, tlModel);
 	viewJS.drawTimeline();
-	//viewJS.drawOverviewMap();
+	viewJS.drawOverviewMap();
 	
 	$("#timeline").fadeIn(2500);
 	$("#overview").fadeIn(2500);
