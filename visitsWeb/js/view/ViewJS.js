@@ -104,7 +104,24 @@ function drawTimeline(){
 };
 
 function drawOverviewMap(){
+	var overviewDocElement = $("#overview");
+	var clusterWidth = overviewDocElement.width();
+	var overallClusterBounds = this.mainmodel.combinedLocationCluster.clusterBounds;
 	
+    var mapOptions = {
+  	      center: new google.maps.LatLng(overallClusterBounds.getCenter().lat(), overallClusterBounds.getCenter().lng()),
+  	     // zoom: calculateZoomLevel(maxDistance,clusterWidth),
+  	      zoom: calculateZoomLevel(overallClusterBounds.getNorthEast(),overallClusterBounds.getSouthWest(),clusterWidth),
+  	      mapTypeId: google.maps.MapTypeId.ROADMAP, 
+  	      noClear: true,
+  	      zoomControl: false,
+  	      panControl: false,
+  	      rotateControl: false,
+  	      scaleControl: false,
+  	      disableDefaultUI: true
+  	    };
+    var map = new google.maps.Map(overviewDocElement,
+  	        mapOptions);
 }
 
 function ViewJS(mainmodel, timelineModel){
