@@ -108,10 +108,10 @@ function drawOverviewMap(){
 	var clusterWidth = overviewDocElement.width();
 	var overallClusterBounds = this.mainmodel.combinedLocationCluster.clusterBounds;
 	
-    var mapOptions = {
+    var overviewMapoptions = {
   	      center: new google.maps.LatLng(overallClusterBounds.getCenter().lat(), overallClusterBounds.getCenter().lng()),
   	     // zoom: calculateZoomLevel(maxDistance,clusterWidth),
-  	      zoom: calculateZoomLevel(overallClusterBounds.getNorthEast(),overallClusterBounds.getSouthWest(),clusterWidth),
+  	      zoom: calculateZoomLevel(overallClusterBounds.getNorthEast(),overallClusterBounds.getSouthWest(),overviewDocElement.height()),
   	      mapTypeId: google.maps.MapTypeId.ROADMAP, 
   	      noClear: true,
   	      zoomControl: false,
@@ -120,8 +120,29 @@ function drawOverviewMap(){
   	      scaleControl: false,
   	      disableDefaultUI: true
   	    };
-    var map = new google.maps.Map(overviewDocElement,
-  	        mapOptions);
+    
+    var overviewMap = new google.maps.Map(document.getElementById("overview"), overviewMapoptions);
+    
+    //draw clusters on the overview map
+    for(var i = 0; i < this.timelineModel.clusters.length; i++){
+    	var currentCluster = this.timelineModel.clusters[i];
+    	var overlayRadius = haversineLatLng(currentCluster.clusterBounds.getNorthEast(), currentCluster.clusterBounds.getSouthWest());
+    	overlayRadius = overlayRadius * 1000;	// convert to meters
+    	console.log("overlay for cluster #" + i + " with radius: " + overlayRadius);
+    	
+    	var overlayOptions = {
+    		center: currentCluster.clusterBounds.getCenter(),
+    		radius: overlayRadius,
+    		map: overviewMap,
+    		
+    		fillColor: "#0099ff",
+    		fillOpacity: 0.2,
+    		strokeColor: "#000099",
+    		strokeOpacity: 1.0
+    	};
+    	
+    	var overlayCircle = new google.maps.Circle(overlayOptions);
+    }
 }
 
 function ViewJS(mainmodel, timelineModel){
