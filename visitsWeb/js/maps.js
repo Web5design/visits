@@ -77,6 +77,8 @@ var handleReaderLoad = function(evt){
 	viewJS.drawTimeline();
 	viewJS.drawOverviewMap();
 	
+	var overlayView = new OverlayView(mainmodel, tlModel);
+	
 	$("#timeline").fadeIn(2500);
 	$("#overview").fadeIn(2500);
 	$("#dropbox").fadeOut(2500);
