@@ -24,9 +24,11 @@ function drawOverlayForMap(map, i){
 	var currentMapBubbleProjection = currentMapBubble.getProjection();
 	var currentMapBubbleContainer = $("#map_container" + i);
 	
-	var currentMapBubblePositionLeft = currentMapBubbleContainer.css("left").substring(0, currentMapBubbleContainer.css("left").length - 2);
-	var currentMapBubblePositionTop = currentMapBubbleContainer.css("top").substring(0, currentMapBubbleContainer.css("top").length - 2);
-
+	var currentMapBubblePositionLeft = Number(currentMapBubbleContainer.css("left").substring(0, currentMapBubbleContainer.css("left").length - 2));
+	var currentMapBubblePositionTop = Number(currentMapBubbleContainer.css("top").substring(0, currentMapBubbleContainer.css("top").length - 2));
+	var currentMapBubbleWidth = currentMapBubbleContainer.width();
+	var currentMapBubbleHeight = currentMapBubbleContainer.height();
+	
 	var currentMapBubblePosition = new google.maps.Point(currentMapBubblePositionLeft, currentMapBubblePositionTop);
 	
 	//console.log("bubble #" + i + " is drawn at (" + currentMapBubblePositionLeft + ", " + currentMapBubblePositionTop + ")");
@@ -46,14 +48,13 @@ function drawOverlayForMap(map, i){
 	
 	//draw overlay circle on overview map
    	var currentCluster = TIMELINEMODEL.clusters[i];
-   	//var overlayRadius = haversineLatLng(currentCluster.clusterBounds.getNorthEast(), currentCluster.clusterBounds.getSouthWest());
-   	//overlayRadius = overlayRadius * 1000;	// convert to meters
-   	console.log("overlay for cluster #" + i + " with radius: " + overlayRadius);
+   	//console.log("overlay for cluster #" + i + " with radius: " + overlayRadius);
 
    	var northeastOverviewPosition = convertPoint(VIEWJS.overviewMap, currentCluster.clusterBounds.getNorthEast());
    	var southwestOverviewPosition = convertPoint(VIEWJS.overviewMap, currentCluster.clusterBounds.getSouthWest());
    	var overlayRadius = Math.abs(northeastOverviewPosition.x - southwestOverviewPosition.x);
    	
+   	//make sure the circles are large enough to be visible
    	if(overlayRadius < this.minimumCircleRadiusOnOverviewMap){
    		overlayRadius = this.minimumCircleRadiusOnOverviewMap;
    	}
@@ -61,14 +62,18 @@ function drawOverlayForMap(map, i){
    	var overviewPosition = convertPoint(VIEWJS.overviewMap, currentCluster.clusterBounds.getCenter());
    	
    	var overviewElement = $("#overview");
-	var overviewMapPositionLeft = overviewElement.css("left").substring(0, overviewElement.css("left").length - 2);
-	var overviewMapPositionTop = overviewElement.css("top").substring(0, overviewElement.css("top").length - 2);
+	var overviewMapPositionLeft = Number(overviewElement.css("left").substring(0, overviewElement.css("left").length - 2));
+	var overviewMapPositionTop = Number(overviewElement.css("top").substring(0, overviewElement.css("top").length - 2));
 
 	console.log("drawing overview map circle at (" + (overviewPosition.x + Number(overviewMapPositionLeft)) + ", " + (overviewPosition.y + Number(overviewMapPositionTop)) + ") with radius " + overlayRadius);
 	var overviewMapCircle = this.canvas.circle(overviewPosition.x + Number(overviewMapPositionLeft), overviewPosition.y + Number(overviewMapPositionTop), overlayRadius);
 	overviewMapCircle.attr({ "fill": "#0000cc", "opacity": "0.2", "stroke": "#999" });
 
 	//draw curve connecting bubble and overview map
+	var connectingCurvePath = "M" + (currentMapBubblePositionLeft + currentMapBubbleWidth / 2) + "," + (currentMapBubblePositionTop + currentMapBubbleWidth);
+	connectingCurvePath = connectingCurvePath + "T" + (overviewPosition.x + Number(overviewMapPositionLeft)) + "," + (overviewPosition.y + Number(overviewMapPositionTop) - overlayRadius);
+	var connectingCurve = this.canvas.path(connectingCurvePath);
+	connectingCurve.attr({"stroke" : "#0000dd", "stroke-width" : "1"});
 };
 
 function drawMapBubbleMasks(){
