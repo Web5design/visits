@@ -1,3 +1,13 @@
+function addProjectionChangedListener(map, i){
+    google.maps.event.addListener(map, 'idle', function(){
+    	//console.log("finished loading map " + special);
+    	OVERLAYVIEW.drawOverlayForMap(map, i);
+    	
+    	/*VIEWJS.mapsStillLoading.splice(i, 1);
+    	console.log("still " + VIEWJS.mapsStillLoading.length + " maps to load");*/
+    });
+};
+
 function drawTimeline(){
 	
 	loadedMaps = 0;
@@ -37,29 +47,6 @@ function drawTimeline(){
 			var clusterBounds = currentCluster.clusterBounds;
 			var maxDistance = haversineLatLng(clusterBounds.getNorthEast(),clusterBounds.getSouthWest());
 			
-			//var layer = "terrain";
-			
-			/*
-		    var mapOptions = {
-		    	      center: new google.maps.LatLng(clusterBounds.getCenter().lat(), clusterBounds.getCenter().lng()),
-		    	     // zoom: calculateZoomLevel(maxDistance,clusterWidth),
-		    	      zoom: calculateZoomLevel(clusterBounds.getNorthEast(),clusterBounds.getSouthWest(),clusterWidth),
-		    	      mapTypeId: layer, 
-		    	      mapTypeControlOptions: { mapTypeIds: [layer] },
-		    	      noClear: true,
-		    	      zoomControl: false,
-		    	      panControl: false,
-		    	      rotateControl: false,
-		    	      scaleControl: false,
-		    	      disableDefaultUI: true
-
-		    	    };
-		    var map = new google.maps.Map(document.getElementById("map_canvas" + i),
-		    	        mapOptions);
-		    
-		    map.mapTypes.set(layer, new google.maps.StamenMapType(layer));
-		    */
-
 		    var mapOptions = {
 		    	      center: new google.maps.LatLng(clusterBounds.getCenter().lat(), clusterBounds.getCenter().lng()),
 		    	     // zoom: calculateZoomLevel(maxDistance,clusterWidth),
@@ -78,9 +65,10 @@ function drawTimeline(){
 		    
 		    this.visibleMapBubbles.push(map);
 		    
+		    addProjectionChangedListener(map, i);		    
 		    
 		    //draw markers for all points from the cluster
-		    var markerSize = new google.maps.Size(8,8);
+		    /*var markerSize = new google.maps.Size(8,8);
 		    
 		    var markerImage = new google.maps.MarkerImage('img/marker.png', markerSize, new google.maps.Point(0,0), new google.maps.Point(markerSize.width / 2, markerSize.height / 2), markerSize);
 		    
@@ -92,7 +80,7 @@ function drawTimeline(){
 		            map: map,
 		            icon: markerImage
 		        });
-		    }
+		    }*/
 		}
 		
 		currentClusterContainer.append('<img class="map_mask_circle" src="img/mask1000.png" style="width:' + clusterWidth + 'px;height:' + clusterWidth + 'px"></img>');
@@ -149,7 +137,7 @@ function ViewJS(){
 	this.visibleMapBubbles = new Array();
 	
 	this.drawTimeline = drawTimeline;
-	this.drawOverviewMap = drawOverviewMap;
+	this.drawOverviewMap = drawOverviewMap;	
 };
 
 /*<div class="map_container" style="width:280px;height:300px;">
