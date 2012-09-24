@@ -3,6 +3,10 @@ function addProjectionChangedListener(map, i){
     	//console.log("finished loading map " + special);
     	OVERLAYVIEW.drawOverlayForMap(map, i);
     	
+    	/*$("#map_container" + i).animate(
+    			{ opacity: 1},
+    			2500, function(){ console.log("LALALALOA");}
+    			);*/
     	/*VIEWJS.mapsStillLoading.splice(i, 1);
     	console.log("still " + VIEWJS.mapsStillLoading.length + " maps to load");*/
     });
