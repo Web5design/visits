@@ -38,10 +38,8 @@ function drawOverlayForMap(map, i){
 		//var markerPosition = currentMapBubbleProjection.fromLatLngToPoint(markerLatLng);
 		var markerPosition = convertPoint(currentMapBubble, markerLatLng);
 		var circleMarker = this.canvas.circle(markerPosition.x + Number(currentMapBubblePositionLeft), markerPosition.y + Number(currentMapBubblePositionTop), 4);
-		circleMarker.attr("fill", "#0000cc");
-		circleMarker.attr("opacity", 0.7);
-		circleMarker.attr("stroke", "#fff");
-		circleMarker.attr("stroke-width", "2px");
+		circleMarker.attr({"fill" : "#0000cc", "opacity" : 0.7, "stroke" : "#fff", "stroke-width" : "2px"});
+		
 		console.log("  drawing marker #" + j + " of cluster #" + i + " for point (" + markerLatLng.lat() + ", " + markerLatLng.lng() + ") "+
 				"at (" + (markerPosition.x + Number(currentMapBubblePositionLeft)) + ", " + (markerPosition.y + Number(currentMapBubblePositionTop)) + ")");
 	}	
@@ -68,11 +66,10 @@ function drawMapBubbleMasks(){
 		polygonString = polygonString + "A" + (width / 2) + "," + (width / 2) + " " + "0 0 0" + " " + (posX + width) + "," + (posY + height / 2);
 		polygonString = polygonString + "A" + (width / 2) + "," + (width / 2) + " " + "0 0 0" + " " + (posX) + "," + (posY + height / 2);
 		var polyMask = this.canvas.path(polygonString);
-		polyMask.attr("fill", "#fff");
-		polyMask.attr("stroke-width", "0px");
+		polyMask.attr({"fill" : "#fff", "stroke-width" : "0px"});
 		
 		var borderCircle = this.canvas.circle((posX + width / 2), (posY + height / 2), width / 2);
-		borderCircle.attr("stroke", "#ccc");
+		borderCircle.attr({"stroke" : "#ccc"});
 	}
 };
 
