@@ -71,9 +71,10 @@ function drawOverlayForMap(map, i){
 
 	//draw curve connecting bubble and overview map
 	var connectingCurvePath = "M" + (currentMapBubblePositionLeft + currentMapBubbleWidth / 2) + "," + (currentMapBubblePositionTop + currentMapBubbleWidth);
-	connectingCurvePath = connectingCurvePath + "T" + (overviewPosition.x + Number(overviewMapPositionLeft)) + "," + (overviewPosition.y + Number(overviewMapPositionTop) - overlayRadius);
+	connectingCurvePath = connectingCurvePath + "Q" + (currentMapBubblePositionLeft + currentMapBubbleWidth / 2) + "," + (overviewPosition.y + Number(overviewMapPositionTop) - overlayRadius) + " ";
+	connectingCurvePath = connectingCurvePath + (overviewPosition.x + Number(overviewMapPositionLeft)) + "," + (overviewPosition.y + Number(overviewMapPositionTop));
 	var connectingCurve = this.canvas.path(connectingCurvePath);
-	connectingCurve.attr({"stroke" : "#0000dd", "stroke-width" : "1"});
+	connectingCurve.attr({"stroke" : "#0000bb", "stroke-width" : "1", "opacity" : 0.5});
 };
 
 function drawMapBubbleMasks(){
