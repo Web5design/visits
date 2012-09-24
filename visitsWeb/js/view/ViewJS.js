@@ -1,14 +1,8 @@
 function addProjectionChangedListener(map, i){
+	
     google.maps.event.addListener(map, 'idle', function(){
-    	//console.log("finished loading map " + special);
+
     	OVERLAYVIEW.drawOverlayForMap(map, i);
-    	
-    	/*$("#map_container" + i).animate(
-    			{ opacity: 1},
-    			2500, function(){ console.log("LALALALOA");}
-    			);*/
-    	/*VIEWJS.mapsStillLoading.splice(i, 1);
-    	console.log("still " + VIEWJS.mapsStillLoading.length + " maps to load");*/
     });
 };
 
@@ -52,7 +46,6 @@ function drawTimeline(){
 			
 		    var mapOptions = {
 		    	      center: new google.maps.LatLng(clusterBounds.getCenter().lat(), clusterBounds.getCenter().lng()),
-		    	     // zoom: calculateZoomLevel(maxDistance,clusterWidth),
 		    	      zoom: calculateZoomLevel(clusterBounds.getNorthEast(),clusterBounds.getSouthWest(),clusterWidth),
 		    	      mapTypeId: google.maps.MapTypeId.ROADMAP, 
 		    	      noClear: true,
