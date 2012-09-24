@@ -121,6 +121,8 @@ function ViewJS(){
 	this.visibleMapBubbles = new Array();
 	
 	this.bottomMaskHeight = 25;
+	
+	this.overviewMap;
 
 	this.drawTimeline = drawTimeline;
 	this.drawOverviewMap = drawOverviewMap;	
