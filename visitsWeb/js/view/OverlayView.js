@@ -25,7 +25,11 @@ function drawOverlayForMap(map, i){
 	
 	this.drawConnectionCurve(currentBubble,overviewMap);
 	
-	
+	$("#map_container" + i).animate({
+	    opacity: 1
+	  }, 3500, function() {
+	    // Animation complete.
+	  });
 };
 
 function drawOverviewMarker(currentBubble,overviewMap){
@@ -80,16 +84,6 @@ function drawConnectionCurve(currentBubble,overviewMap){
 
 function drawBubbleMasks(){
 	for(var i = 0; i < VIEWJS.visibleMapBubbles.length; i++){
-		/*var mapcontainerElement = $("#map_container" + i);
-		var posX = mapcontainerElement.css("left");	//can't use jQuery's offset(), b/c element isn't visible (display:none) 
-		posX = Number(posX.substring(0, posX.length - 2));
-		var posY = mapcontainerElement.css("top");
-		posY = Number(posY.substring(0, posY.length - 2));
-		var radius = Number(mapcontainerElement.width() / 2);
-		var width = Number(mapcontainerElement.width());
-		var actualheight = Number(mapcontainerElement.height()) + 1;
-		var height = actualheight - VIEWJS.bottomMaskHeight;
-		console.log("drawing mask circle for map #" + i + " at (" + posX + ", " + posY + ")");*/
 		
 		var currentBubble = new MapBubble(null,i);
 		

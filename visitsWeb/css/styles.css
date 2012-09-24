@@ -8,14 +8,18 @@ body { height: 100%; margin: 0; padding: 0; font-family: Helvetica; }
 #dropbox { width: 500px; height: 100px; background-color:#ddd; border-radius:10px; position:absolute; top: 10px; left:10px;}
 #droplabel { color: white; }
 
-#timeline {position:absolute; top:0px; left:0px; width: 100%; height: 500px;}
+#timeline {position:absolute; top:0px; left:0px; width: 100%; height: 500px;display:none}
 
 
 /* bubble */
 
-.map_container {background-color:#eee;position:absolute}
+.map_container {background-color:#eee;position:absolute;opacity:0}
 .map_canvas {position:absolute}
 .map_mask_circle{position:absolute}
 .map_mask_bottom{position:absolute; background-color:white}
 .map_border{position:absolute;border:2px solid #555555}
+
+
+svg{display:none};
+
 

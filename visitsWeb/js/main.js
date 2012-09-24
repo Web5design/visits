@@ -88,9 +88,11 @@ var handleReaderLoad = function(evt){
 	OVERLAYVIEW.drawBubbleMasks();
 	//overlayView.drawBubblesOverlay();
 	
-	$("#timeline").fadeIn(2500);
+	$("svg").fadeIn(1500);
+	$("#timeline").fadeIn(0);
 	$("#overview").fadeIn(2500);
-	$("#dropbox").fadeOut(2500);
+	$("#dropbox").fadeOut(500);
+	
 };
 
 function initialize() {
