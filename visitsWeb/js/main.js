@@ -85,6 +85,7 @@ var handleReaderLoad = function(evt){
 	VIEWJS.drawOverviewMap();
 	
 	OVERLAYVIEW = new OverlayView();
+	OVERLAYVIEW.drawMapBubbleMasks();
 	//overlayView.drawBubblesOverlay();
 	
 	$("#timeline").fadeIn(2500);

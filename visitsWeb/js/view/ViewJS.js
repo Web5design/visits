@@ -30,8 +30,7 @@ function drawTimeline(){
 		var verticalPosition = (availableHeight / 2.0) - (clusterWidth / 2.0);
 		
 		
-		var bottomMaskHeight = 25;
-		var clusterVerticalHeight = clusterWidth + bottomMaskHeight;
+		var clusterVerticalHeight = clusterWidth + this.bottomMaskHeight;
 		
 		timelineDocElement.append('<div class="map_container" id="map_container' + i + '" style="width:' + clusterWidth + 'px;height:' + clusterVerticalHeight + 'px;left:'+horizontalPosition+'px;top:'+verticalPosition+'px;"></div>');
 		
@@ -81,11 +80,13 @@ function drawTimeline(){
 		            icon: markerImage
 		        });
 		    }*/
+		} else {
+			this.visibleMapBubbles.push(null);
 		}
 		
-		currentClusterContainer.append('<img class="map_mask_circle" src="img/mask1000.png" style="width:' + clusterWidth + 'px;height:' + clusterWidth + 'px"></img>');
-		currentClusterContainer.append('<div class="map_mask_bottom" style="top:' +clusterWidth + 'px;width:' + clusterWidth + 'px;height:' + bottomMaskHeight + 'px;"></div>');
-		currentClusterContainer.append('<div class="map_border" style="width:' +clusterWidth + 'px;height:' +clusterWidth + 'px;top:-2px;left:-2px;border-radius:' +clusterWidth + 'px"></div>');
+		//currentClusterContainer.append('<img class="map_mask_circle" src="img/mask1000.png" style="width:' + clusterWidth + 'px;height:' + clusterWidth + 'px"></img>');
+		//currentClusterContainer.append('<div class="map_mask_bottom" style="top:' +clusterWidth + 'px;width:' + clusterWidth + 'px;height:' + bottomMaskHeight + 'px;"></div>');
+		//currentClusterContainer.append('<div class="map_border" style="width:' +clusterWidth + 'px;height:' +clusterWidth + 'px;top:-2px;left:-2px;border-radius:' +clusterWidth + 'px"></div>');
 		horizontalPosition = horizontalPosition + clusterWidth;
 
 	}
@@ -136,6 +137,8 @@ function drawOverviewMap(){
 function ViewJS(){
 	this.visibleMapBubbles = new Array();
 	
+	this.bottomMaskHeight = 25;
+
 	this.drawTimeline = drawTimeline;
 	this.drawOverviewMap = drawOverviewMap;	
 };

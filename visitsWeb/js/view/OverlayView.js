@@ -47,11 +47,49 @@ function drawOverlayForMap(map, i){
 	}	
 };
 
+function drawMapBubbleMasks(){
+	for(var i = 0; i < VIEWJS.visibleMapBubbles.length; i++){
+		var mapcontainerElement = $("#map_container" + i);
+		var posX = mapcontainerElement.css("left");	//can't use jQuery's offset(), b/c element isn't visible (display:none) 
+		posX = Number(posX.substring(0, posX.length - 2));
+		var posY = mapcontainerElement.css("top");
+		posY = Number(posY.substring(0, posY.length - 2));
+		var radius = Number(mapcontainerElement.width() / 2);
+		var width = Number(mapcontainerElement.width());
+		var actualheight = Number(mapcontainerElement.height()) + 1;
+		var height = actualheight - VIEWJS.bottomMaskHeight;
+		console.log("drawing mask circle for map #" + i + " at (" + posX + ", " + posY + ")");
+		
+		var polygonString = "M" + posX + "," + posY + "L" + (posX + width) + "," + posY;
+		polygonString = polygonString + "L" + (posX + width) + "," + (posY + actualheight);
+		polygonString = polygonString + "L" + posX + "," + (posY + actualheight);
+		polygonString = polygonString + "L" + posX + "," + posY;
+		polygonString = polygonString + "M" + posX + "," + (posY + height / 2);
+		polygonString = polygonString + "A" + (width / 2) + "," + (width / 2) + " " + "0 0 0" + " " + (posX + width) + "," + (posY + height / 2);
+		polygonString = polygonString + "A" + (width / 2) + "," + (width / 2) + " " + "0 0 0" + " " + (posX) + "," + (posY + height / 2);
+		//polygonString = polygonString + "C" + posX + "," + posY + " " + (posX + width) + "," + posY + " " + (posX + width) + "," + (posY + height / 2);
+		//polygonString = polygonString + "C" + (posX + width) + "," + (posY + height) + " " + posX + "," + (posY + height) + " " + posX + "," + (posY + height / 2);
+		//polygonString = polygonString + "C" + posX + "," + (posY - height * 0.25) + " " + (posX + width) + "," + (posY - height * 0.25) + " " + (posX + width) + "," + (posY + height / 2);
+		//polygonString = polygonString + "C" + (posX + width) + "," + (posY + height * 1.25) + " " + posX + "," + (posY + height * 1.25) + " " + posX + "," + (posY + height / 2);
+		var polyMask = this.canvas.path(polygonString);
+		polyMask.attr("fill", "#fff");
+		polyMask.attr("stroke-width", "0px");
+		
+		var borderCircle = this.canvas.circle((posX + width / 2), (posY + height / 2), width / 2);
+		borderCircle.attr("stroke", "#ccc");
+		//this.canvas.circle(posX + radius, posY + radius, radius);
+	}
+	//currentClusterContainer.append('<img class="map_mask_circle" src="img/mask1000.png" style="width:' + clusterWidth + 'px;height:' + clusterWidth + 'px"></img>');
+	//currentClusterContainer.append('<div class="map_mask_bottom" style="top:' +clusterWidth + 'px;width:' + clusterWidth + 'px;height:' + bottomMaskHeight + 'px;"></div>');
+	//currentClusterContainer.append('<div class="map_border" style="width:' +clusterWidth + 'px;height:' +clusterWidth + 'px;top:-2px;left:-2px;border-radius:' +clusterWidth + 'px"></div>');
+
+};
 
 function OverlayView(){
 	this.drawBubblesOverlay = drawBubblesOverlay;
 	
 	this.drawOverlayForMap = drawOverlayForMap;
+	this.drawMapBubbleMasks = drawMapBubbleMasks;
 	
 	//initialize overlay
 	this.canvas = Raphael(0,0,window.innerWidth,window.innerHeight);
