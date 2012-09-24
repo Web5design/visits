@@ -1,4 +1,12 @@
-var inputFileType = undefined;
+//GLOBALS:
+var INPUTFILETYPE = undefined;
+
+
+var MAINMODEL = undefined;
+var TIMELINEMODEL = undefined;
+var VIEWJS = undefined;
+var OVERLAYVIEW = undefined;
+
 
 function readKmlLocations(kmlText){
 	var result = new Array();
@@ -51,7 +59,7 @@ var handleReaderLoad = function(evt){
 
 	var resultGpsLoc = new Array();
 
-	if(inputFileType == "json"){
+	if(INPUTFILETYPE == "json"){
 		var extLocationHistory = JSON.parse(evt.target.result);
 	
 		for(var i = 0; i < extLocationHistory.length; i++){
@@ -59,9 +67,8 @@ var handleReaderLoad = function(evt){
 			var location = new GpsLoc(extLocation.lon, extLocation.lat, extLocation.t);
 			resultGpsLoc.push(location);
 		}
-	} else if(inputFileType == "kml"){
+	} else if(INPUTFILETYPE == "kml"){
 		resultGpsLoc = readKmlLocations(evt.target.result);
-		
 	}
 
 	console.log("resulting array:");
@@ -69,15 +76,15 @@ var handleReaderLoad = function(evt){
 		console.log("#" + i + ": lat: " + resultGpsLoc[i].lat + ", lon: " + resultGpsLoc[i].lon + ", timestamp: " + resultGpsLoc[i].timestamp);
 	}
 
-	var mainmodel = new Mainmodel(resultGpsLoc);
+	MAINMODEL = new Mainmodel(resultGpsLoc);
 	
-	var tlModel = new TimelineModel(mainmodel);
+	TIMELINEMODEL = new TimelineModel(MAINMODEL);
 	
-	var viewJS = new ViewJS(mainmodel, tlModel);
-	viewJS.drawTimeline();
-	viewJS.drawOverviewMap();
+	VIEWJS = new ViewJS();
+	VIEWJS.drawTimeline();
+	VIEWJS.drawOverviewMap();
 	
-	var overlayView = new OverlayView(mainmodel, tlModel, viewJS);
+	OVERLAYVIEW = new OverlayView();
 	//overlayView.drawBubblesOverlay();
 	
 	$("#timeline").fadeIn(2500);

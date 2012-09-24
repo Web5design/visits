@@ -1,6 +1,6 @@
 function drawBubblesOverlay(){
-	for(var i = 0; i < this.viewJs.visibleMapBubbles.length; i++){
-		var currentMapBubble = this.viewJs.visibleMapBubbles[i];
+	for(var i = 0; i < VIEWJS.visibleMapBubbles.length; i++){
+		var currentMapBubble = VIEWJS.visibleMapBubbles[i];
 		var currentMapBubbleProjection = currentMapBubble.getProjection();
 		var currentMapBubbleContainer = $("#map_container" + i);
 		var currentMapBubblePosition = new google.maps.Point(currentMapBubbleContainer.css("left"), currentMapBubbleContainer.css("top"));
@@ -8,8 +8,8 @@ function drawBubblesOverlay(){
 		console.log("bubble #" + i + " is drawn at (" + currentMapBubbleContainer.css("left") + ", " + currentMapBubbleContainer.css("top") + ")");
 		
 		//draw all markers on the overlay
-		for(var j = 0; j < this.timelineModel.clusters[i].gpsLocs.length; j++){
-			var marker = this.timelineModel.clusters[i].gpsLocs[j];
+		for(var j = 0; j < TIMELINEMODEL.clusters[i].gpsLocs.length; j++){
+			var marker = TIMELINEMODEL.clusters[i].gpsLocs[j];
 			var markerLatLng = new google.maps.LatLng(marker.lat, marker.lon);
 			var markerPosition = currentMapBubbleProjection.fromLatLngToPoint(markerLatLng);
 			var circleMarker = this.canvas.circle(markerPosition.x + currentMapBubblePosition.x, markerPosition.y + currentMapBubblePosition.y);
@@ -21,13 +21,7 @@ function drawBubblesOverlay(){
 
 
 
-function OverlayView(mainmodel, timelineModel, viewJs){
-	
-	this.mainmodel = mainmodel;
-	this.timelineModel = timelineModel;
-	
-	this.viewJs = viewJs;
-
+function OverlayView(){
 	this.drawBubblesOverlay = drawBubblesOverlay;
 	
 	//initialize overlay

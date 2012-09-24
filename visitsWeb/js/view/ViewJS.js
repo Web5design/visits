@@ -8,14 +8,14 @@ function drawTimeline(){
 	var availableWidth = timelineDocElement.width();
 	var availableHeight = timelineDocElement.height();
 	
-	var stepSize = availableWidth / this.timelineModel.displayedTimeframe;
+	var stepSize = availableWidth / TIMELINEMODEL.displayedTimeframe;
 	var horizontalPosition = 0;
 	
 	console.log("availableWidth: " + availableWidth + ", stepSize: " + stepSize);
 	
-	for(var i = 0; i < this.timelineModel.clusters.length; i++){
+	for(var i = 0; i < TIMELINEMODEL.clusters.length; i++){
 
-		var clusterWidth = Math.floor(this.timelineModel.clusters[i].timeframe * stepSize);
+		var clusterWidth = Math.floor(TIMELINEMODEL.clusters[i].timeframe * stepSize);
 		
 		var verticalPosition = (availableHeight / 2.0) - (clusterWidth / 2.0);
 		
@@ -29,11 +29,11 @@ function drawTimeline(){
 		
 		currentClusterContainer.append('<div class="map_canvas" id="map_canvas' + i + '" style="width:' + clusterWidth + 'px;height:' + clusterVerticalHeight + 'px;"></div>');
 					
-		console.log("adding cluster " + i + " of size " + this.timelineModel.clusters[i].gpsLocs.length + " to view with a width of " + clusterWidth);
+		console.log("adding cluster " + i + " of size " + TIMELINEMODEL.clusters[i].gpsLocs.length + " to view with a width of " + clusterWidth);
 		
 		//load the google maps
 		if(clusterWidth>10){
-			var currentCluster = this.timelineModel.clusters[i];
+			var currentCluster = TIMELINEMODEL.clusters[i];
 			var clusterBounds = currentCluster.clusterBounds;
 			var maxDistance = haversineLatLng(clusterBounds.getNorthEast(),clusterBounds.getSouthWest());
 			
@@ -84,8 +84,8 @@ function drawTimeline(){
 		    
 		    var markerImage = new google.maps.MarkerImage('img/marker.png', markerSize, new google.maps.Point(0,0), new google.maps.Point(markerSize.width / 2, markerSize.height / 2), markerSize);
 		    
-		    for(var j = 0; j < this.timelineModel.clusters[i].gpsLocs.length; j++){
-		    	var myMarkerLocation = this.timelineModel.clusters[i].gpsLocs[j];
+		    for(var j = 0; j < TIMELINEMODEL.clusters[i].gpsLocs.length; j++){
+		    	var myMarkerLocation = TIMELINEMODEL.clusters[i].gpsLocs[j];
 		        var myLatLng = new google.maps.LatLng(myMarkerLocation.lat, myMarkerLocation.lon);
 		        var beachMarker = new google.maps.Marker({
 		            position: myLatLng,
@@ -106,7 +106,7 @@ function drawTimeline(){
 function drawOverviewMap(){
 	var overviewDocElement = $("#overview");
 	var clusterWidth = overviewDocElement.width();
-	var overallClusterBounds = this.mainmodel.combinedLocationCluster.clusterBounds;
+	var overallClusterBounds = MAINMODEL.combinedLocationCluster.clusterBounds;
 	
     var overviewMapoptions = {
   	      center: new google.maps.LatLng(overallClusterBounds.getCenter().lat(), overallClusterBounds.getCenter().lng()),
@@ -124,8 +124,8 @@ function drawOverviewMap(){
     var overviewMap = new google.maps.Map(document.getElementById("overview"), overviewMapoptions);
     
     //draw clusters on the overview map
-    for(var i = 0; i < this.timelineModel.clusters.length; i++){
-    	var currentCluster = this.timelineModel.clusters[i];
+    for(var i = 0; i < TIMELINEMODEL.clusters.length; i++){
+    	var currentCluster = TIMELINEMODEL.clusters[i];
     	var overlayRadius = haversineLatLng(currentCluster.clusterBounds.getNorthEast(), currentCluster.clusterBounds.getSouthWest());
     	overlayRadius = overlayRadius * 1000;	// convert to meters
     	console.log("overlay for cluster #" + i + " with radius: " + overlayRadius);
@@ -145,11 +145,7 @@ function drawOverviewMap(){
     }
 }
 
-function ViewJS(mainmodel, timelineModel){
-	
-	this.mainmodel = mainmodel;
-	this.timelineModel = timelineModel;
-
+function ViewJS(){
 	this.visibleMapBubbles = new Array();
 	
 	this.drawTimeline = drawTimeline;

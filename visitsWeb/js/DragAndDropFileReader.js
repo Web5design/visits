@@ -31,9 +31,9 @@ var DragAndDropFileReader = function(callback){
 		var filetype = filenameparts[filenameparts.length - 1];
 		
 		if(filetype == "json"){
-			inputFileType = "json";
+			INPUTFILETYPE = "json";
 		} else if(filetype == "kml") {
-			inputFileType = "kml";
+			INPUTFILETYPE = "kml";
 		} else {
 			alert("unknown filetype ." + filetype + "!");
 			return;
