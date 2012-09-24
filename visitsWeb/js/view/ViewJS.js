@@ -1,3 +1,7 @@
+function mapFinishedLoading(){
+	
+};
+
 function drawTimeline(){
 	
 	loadedMaps = 0;
@@ -76,8 +80,28 @@ function drawTimeline(){
 		    	        mapOptions);
 		    
 		    
-		    	    
-		    //map.fitBounds(clusterBounds);
+		    this.visibleMapBubbles.push(map);
+		    var mapsStillLoading = this.mapsStillLoading.push(map);
+		    
+		    var mapEventListener = google.maps.event.addListener(map, 'idle', function(){
+		    	/*this.mapsStillLoading = this.mapsStillLoading.slice(index, 1);
+		    	
+		    	if(this.mapsStillLoading.length == 0){
+		    		console.log("[ViewJS] maps finished loading");
+		    		this.mapStatus = ViewJS.Finished;
+		    	}*/
+		    	var index = -1;
+		    	for(var j = 0; j < mapsStillLoading.length; j++){
+		    		if(mapsStillLoading[j].b.id == this.b.id){
+		    			index = j;
+		    			break;
+		    		}
+		    	}
+		    	
+		    	console.log("removing element " + index);
+		    });
+		    mapEventListener.supergut = "hallo " + i;
+		    
 		    
 		    //draw markers for all points from the cluster
 		    var markerSize = new google.maps.Size(8,8);
@@ -150,6 +174,15 @@ function ViewJS(mainmodel, timelineModel){
 	this.mainmodel = mainmodel;
 	this.timelineModel = timelineModel;
 
+	this.visibleMapBubbles = new Array();
+	
+	this.NONE = 0;
+	this.FINISHED = 1;
+	
+	this.mapStatus = this.NONE;
+	
+	this.mapsStillLoading = new Array();
+	
 	this.drawTimeline = drawTimeline;
 	this.drawOverviewMap = drawOverviewMap;
 };
