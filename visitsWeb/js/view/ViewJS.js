@@ -114,28 +114,7 @@ function drawOverviewMap(){
   	      disableDefaultUI: true
   	    };
     
-    var overviewMap = new google.maps.Map(document.getElementById("overview"), overviewMapoptions);
-    
-    //draw clusters on the overview map
-    for(var i = 0; i < TIMELINEMODEL.clusters.length; i++){
-    	var currentCluster = TIMELINEMODEL.clusters[i];
-    	var overlayRadius = haversineLatLng(currentCluster.clusterBounds.getNorthEast(), currentCluster.clusterBounds.getSouthWest());
-    	overlayRadius = overlayRadius * 1000;	// convert to meters
-    	console.log("overlay for cluster #" + i + " with radius: " + overlayRadius);
-    	
-    	var overlayOptions = {
-    		center: currentCluster.clusterBounds.getCenter(),
-    		radius: overlayRadius,
-    		map: overviewMap,
-    		
-    		fillColor: "#0099ff",
-    		fillOpacity: 0.2,
-    		strokeColor: "#000099",
-    		strokeOpacity: 1.0
-    	};
-    	
-    	var overlayCircle = new google.maps.Circle(overlayOptions);
-    }
+    this.overviewMap = new google.maps.Map(document.getElementById("overview"), overviewMapoptions);
 }
 
 function ViewJS(){
