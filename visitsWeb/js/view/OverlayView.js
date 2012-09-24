@@ -65,27 +65,21 @@ function drawOverlayForMap(map, i){
 	var overviewMapPositionLeft = Number(overviewElement.css("left").substring(0, overviewElement.css("left").length - 2));
 	var overviewMapPositionTop = Number(overviewElement.css("top").substring(0, overviewElement.css("top").length - 2));
 
-	console.log("drawing overview map circle at (" + (clusterPositionInOverview.x + Number(overviewMapPositionLeft)) + ", " + (clusterPositionInOverview.y + Number(overviewMapPositionTop)) + ") with radius " + overlayRadius);
 	var overviewMapCircle = this.canvas.circle(clusterPositionInOverview.x + Number(overviewMapPositionLeft), clusterPositionInOverview.y + Number(overviewMapPositionTop), overlayRadius);
 	overviewMapCircle.attr({ "fill": "#0000cc", "opacity": "0.2", "stroke": "#999" });
 	
 	
-/*
-	var connectingCurvePath = "M" + (currentMapBubblePositionLeft + currentMapBubbleWidth / 2) + "," + (currentMapBubblePositionTop + currentMapBubbleWidth);
-	connectingCurvePath = connectingCurvePath + "Q" + (currentMapBubblePositionLeft + currentMapBubbleWidth / 2) + "," + (clusterPositionInOverview.y + Number(overviewMapPositionTop/2) - overlayRadius) + " ";
-	connectingCurvePath = connectingCurvePath + (clusterPositionInOverview.x + Number(overviewMapPositionLeft)) + "," + (clusterPositionInOverview.y + Number(overviewMapPositionTop));
-	var connectingCurve = this.canvas.path(connectingCurvePath);
-	connectingCurve.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
-	*/
+	this.drawConnectionCurve(currentMapBubblePositionLeft + currentMapBubbleWidth / 2, 
+					   currentMapBubblePositionTop + currentMapBubbleWidth, 
+					   clusterPositionInOverview.x + Number(overviewMapPositionLeft), 
+					   clusterPositionInOverview.y + Number(overviewMapPositionTop)
+					   );
 	
-	//draw curve connecting bubble and overview map
 	
-	var curveTopX =  currentMapBubblePositionLeft + currentMapBubbleWidth / 2;
-	var curveTopY =  currentMapBubblePositionTop + currentMapBubbleWidth;
-	
-	var curveBottomX = clusterPositionInOverview.x + Number(overviewMapPositionLeft);
-	var curveBottomY = clusterPositionInOverview.y + Number(overviewMapPositionTop);
-	
+};
+
+
+function drawConnectionCurve(curveTopX,curveTopY,curveBottomX,curveBottomY){
 	
 	var connectingCurvePath = "M" + curveTopX + "," + curveTopY + " ";
 	connectingCurvePath = connectingCurvePath + "Q" + curveTopX + "," + (curveBottomY - (curveBottomY - curveTopY)/2.0) + " ";
@@ -93,13 +87,7 @@ function drawOverlayForMap(map, i){
 	var connectingCurve = this.canvas.path(connectingCurvePath);
 	connectingCurve.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
 	
-	
 };
-
-
-function drawConnetionCurve(){
-	
-}
 
 function drawMapBubbleMasks(){
 	for(var i = 0; i < VIEWJS.visibleMapBubbles.length; i++){
@@ -130,14 +118,16 @@ function drawMapBubbleMasks(){
 };
 
 function OverlayView(){
+	//initialize overlay
+	this.canvas = Raphael(0,0,window.innerWidth,window.innerHeight);
+	
 	this.minimumCircleRadiusOnOverviewMap = 5;
 	
 	this.drawBubblesOverlay = drawBubblesOverlay;
 	
 	this.drawOverlayForMap = drawOverlayForMap;
 	this.drawMapBubbleMasks = drawMapBubbleMasks;
+	this.drawConnectionCurve = drawConnectionCurve;
 	
-	//initialize overlay
-	this.canvas = Raphael(0,0,window.innerWidth,window.innerHeight);
 
 };
