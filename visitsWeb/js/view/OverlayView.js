@@ -48,10 +48,10 @@ function drawOverviewMarker(currentBubble,overviewMap){
    	
    	overviewMarker.pos = convertPoint(overviewMap.map, currentBubble.cluster.clusterBounds.getCenter());
    	
-	overviewMarker.fill = this.canvas.circle(overviewMarker.pos.x + Number(overviewMap.x), overviewMarker.pos.y + Number(overviewMap.y), overviewMarker.radius);
+	overviewMarker.fill = this.connectionLineCanvas.circle(overviewMarker.pos.x + Number(overviewMap.x), overviewMarker.pos.y + Number(overviewMap.y), overviewMarker.radius);
 	overviewMarker.fill.attr({ "fill": MARKERCOLOR, "opacity": "0.7", "stroke-width" : 0});
 	
-	overviewMarker.border = this.canvas.circle(overviewMarker.pos.x + Number(overviewMap.x), overviewMarker.pos.y + Number(overviewMap.y), overviewMarker.radius);
+	overviewMarker.border = this.connectionLineCanvas.circle(overviewMarker.pos.x + Number(overviewMap.x), overviewMarker.pos.y + Number(overviewMap.y), overviewMarker.radius);
 	overviewMarker.border.attr({ "stroke": "#aaa"});
 	
 	currentBubble.overviewMarker = overviewMarker;
@@ -78,7 +78,7 @@ function drawBubbleMarkers(currentBubble){
 		crossString = crossString + "M" + (markerX - 2.5) + "," + (markerY + 2.5) + " ";
 		crossString = crossString + "L" + (markerX + 2.5) + "," + (markerY - 2.5);
 		
-		var crossBg = this.canvas.path(crossString);
+		var crossBg = this.markerCanvas.path(crossString);
 		crossBg.attr({"stroke" : "#fff", "stroke-width" : 4 , "stroke-linecap" : "round", "opacity" : 0.7});
 		
 		crossString  = "M" + (markerX -2) + "," + (markerY -2) + " ";
@@ -86,7 +86,7 @@ function drawBubbleMarkers(currentBubble){
 		crossString = crossString + "M" + (markerX - 2) + "," + (markerY + 2) + " ";
 		crossString = crossString + "L" + (markerX + 2) + "," + (markerY - 2);
 		
-		var cross = this.canvas.path(crossString);
+		var cross = this.markerCanvas.path(crossString);
 		cross.attr({"stroke" : MARKERCOLOR, "stroke-width" : 2 , "stroke-linecap" : "round", "opacity" : 0.9});
 		
 	}	
@@ -98,12 +98,12 @@ function drawConnectionCurve(currentBubble,overviewMap){
 	var curveTopX = currentBubble.x + currentBubble.width / 2;
 	var curveTopY = currentBubble.y + currentBubble.width;
 	var curveBottomX = currentBubble.overviewMarker.pos.x + Number(overviewMap.x);
-	var curveBottomY = currentBubble.overviewMarker.pos.y + Number(overviewMap.y) - currentBubble.overviewMarker.radius;
+	var curveBottomY = currentBubble.overviewMarker.pos.y + Number(overviewMap.y);
 	
 	var connectingCurvePath = "M" + curveTopX + "," + curveTopY + " ";
 	connectingCurvePath = connectingCurvePath + "Q" + curveTopX + "," + (curveBottomY - (curveBottomY - curveTopY)/2.0) + " ";
 	connectingCurvePath = connectingCurvePath + "" + curveBottomX + "," + curveBottomY;
-	var connectingCurve = this.canvas.path(connectingCurvePath);
+	var connectingCurve = this.connectionLineCanvas.path(connectingCurvePath);
 	connectingCurve.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
 	
 };
@@ -127,17 +127,19 @@ function drawBubbleMasks(){
 		polygonString = polygonString + "A" + (maskWidth / 2) + "," + (maskWidth / 2) + " " + "0 0 0" + " " + (maskX + maskWidth) + "," + (maskY + circleHeight / 2);
 		polygonString = polygonString + "A" + (maskWidth / 2) + "," + (maskWidth / 2) + " " + "0 0 0" + " " + (maskX) + "," + (maskY + circleHeight / 2);
 		
-		var polyMask = this.canvas.path(polygonString);
+		var polyMask = this.maskCanvas.path(polygonString);
 		polyMask.attr({"fill" : "#fff", "stroke-width" : "0px"});
 		
-		var borderCircle = this.canvas.circle((maskX + maskWidth / 2), (maskY + circleHeight / 2), maskWidth / 2);
+		var borderCircle = this.maskCanvas.circle((maskX + maskWidth / 2), (maskY + circleHeight / 2), maskWidth / 2);
 		borderCircle.attr({"stroke" : "#aaa"});
 	}
 };
 
 function OverlayView(){
 	//initialize overlay
-	this.canvas = Raphael(0,0,window.innerWidth,window.innerHeight);
+	this.markerCanvas = Raphael("marker",window.innerWidth,window.innerHeight);
+	this.maskCanvas = Raphael("masks",window.innerWidth,window.innerHeight);
+	this.connectionLineCanvas = Raphael("connectionLines",window.innerWidth,window.innerHeight);
 	
 	this.minimumCircleRadiusOnOverviewMap = 2;
 	

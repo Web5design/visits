@@ -90,10 +90,13 @@ var handleReaderLoad = function(evt){
 	OVERLAYVIEW.drawBubbleMasks();
 	//overlayView.drawBubblesOverlay();
 	
-	$("svg").fadeIn(1500);
-	$("#timeline").fadeIn(0);
-	$("#overview").fadeIn(2500);
 	$("#dropbox").fadeOut(500);
+	$("svg").fadeIn(1500);
+	$("#marker").fadeIn(1500);
+	$("#masks").fadeIn(1500);
+	$("#connectionLines").fadeIn(1500);
+	$("#timeline").fadeIn(500);
+	$("#overview").fadeIn(2500);
 	
 };
 
