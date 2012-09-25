@@ -50,7 +50,7 @@ var calculateZoomLevel = function(ne,sw,width){
 	zoom = (width<70)? zoom-1 : zoom;
 	
 	zoom = (zoom>15)? 15: zoom;
-	
+		
 	return zoom;
 	
 };

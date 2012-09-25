@@ -90,6 +90,8 @@ var handleReaderLoad = function(evt){
 	OVERLAYVIEW.drawBubbleMasks();
 	//overlayView.drawBubblesOverlay();
 	
+	new Slider("slider", null);
+	
 	$("#dropbox").fadeOut(500);
 	$("svg").fadeIn(1500);
 	$("#marker").fadeIn(1500);
