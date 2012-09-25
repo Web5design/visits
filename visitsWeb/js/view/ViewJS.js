@@ -108,6 +108,7 @@ function drawOverviewMap(){
   	    };
     
     this.overviewMap = new google.maps.Map(document.getElementById("overview"), overviewMapoptions);
+    this.overviewMap.fitBounds(overallClusterBounds);
 }
 
 function ViewJS(){

@@ -47,8 +47,12 @@ function drawOverviewMarker(currentBubble,overviewMap){
    	}
    	
    	overviewMarker.pos = convertPoint(overviewMap.map, currentBubble.cluster.clusterBounds.getCenter());
-	overviewMarker.circle = this.canvas.circle(overviewMarker.pos.x + Number(overviewMap.x), overviewMarker.pos.y + Number(overviewMap.y), overviewMarker.radius);
-	overviewMarker.circle.attr({ "fill": "#0000cc", "opacity": "0.2", "stroke": "#999" });
+   	
+	overviewMarker.fill = this.canvas.circle(overviewMarker.pos.x + Number(overviewMap.x), overviewMarker.pos.y + Number(overviewMap.y), overviewMarker.radius);
+	overviewMarker.fill.attr({ "fill": MARKERCOLOR, "opacity": "0.7", "stroke-width" : 0});
+	
+	overviewMarker.border = this.canvas.circle(overviewMarker.pos.x + Number(overviewMap.x), overviewMarker.pos.y + Number(overviewMap.y), overviewMarker.radius);
+	overviewMarker.border.attr({ "stroke": "#aaa"});
 	
 	currentBubble.overviewMarker = overviewMarker;
 	
@@ -61,8 +65,30 @@ function drawBubbleMarkers(currentBubble){
 		var marker = currentBubble.cluster.gpsLocs[j];
 		var markerLatLng = new google.maps.LatLng(marker.lat, marker.lon);
 		var markerPosition = convertPoint(currentBubble.map, markerLatLng);
+		/*
 		var circleMarker = this.canvas.circle(markerPosition.x + Number(currentBubble.x), markerPosition.y + Number(currentBubble.y), 4);
 		circleMarker.attr({"fill" : "#0000cc", "opacity" : 0.7, "stroke" : "#fff", "stroke-width" : "2px"});
+		*/
+		
+		var markerX = markerPosition.x + Number(currentBubble.x);
+		var markerY = markerPosition.y + Number(currentBubble.y);
+		
+		var crossString  = "M" + (markerX -2.5) + "," + (markerY -2.5) + " ";
+		crossString = crossString + "L" + (markerX + 2.5) + "," + (markerY + 2.5) + " ";
+		crossString = crossString + "M" + (markerX - 2.5) + "," + (markerY + 2.5) + " ";
+		crossString = crossString + "L" + (markerX + 2.5) + "," + (markerY - 2.5);
+		
+		var crossBg = this.canvas.path(crossString);
+		crossBg.attr({"stroke" : "#fff", "stroke-width" : 4 , "stroke-linecap" : "round", "opacity" : 0.7});
+		
+		crossString  = "M" + (markerX -2) + "," + (markerY -2) + " ";
+		crossString = crossString + "L" + (markerX + 2) + "," + (markerY + 2) + " ";
+		crossString = crossString + "M" + (markerX - 2) + "," + (markerY + 2) + " ";
+		crossString = crossString + "L" + (markerX + 2) + "," + (markerY - 2);
+		
+		var cross = this.canvas.path(crossString);
+		cross.attr({"stroke" : MARKERCOLOR, "stroke-width" : 2 , "stroke-linecap" : "round", "opacity" : 0.9});
+		
 	}	
 };
 
@@ -113,7 +139,7 @@ function OverlayView(){
 	//initialize overlay
 	this.canvas = Raphael(0,0,window.innerWidth,window.innerHeight);
 	
-	this.minimumCircleRadiusOnOverviewMap = 5;
+	this.minimumCircleRadiusOnOverviewMap = 2;
 	
 	this.drawOverlayForMap = drawOverlayForMap;
 	this.drawBubbleMasks = drawBubbleMasks;

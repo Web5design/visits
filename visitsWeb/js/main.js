@@ -7,6 +7,8 @@ var TIMELINEMODEL = undefined;
 var VIEWJS = undefined;
 var OVERLAYVIEW = undefined;
 
+var MARKERCOLOR = "#124BB9";
+
 
 function readKmlLocations(kmlText){
 	var result = new Array();
