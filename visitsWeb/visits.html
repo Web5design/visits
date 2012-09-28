@@ -12,7 +12,7 @@
 <script type="text/javascript" src="js/Mainmodel.js"></script>
 <script type="text/javascript" src="js/Cluster.js"></script>
 <script type="text/javascript" src="js/TimelineModel.js"></script>
-<script type="text/javascript" src="js/view/ViewJS.js"></script>
+<script type="text/javascript" src="js/view/TimelineView.js"></script>
 <script type="text/javascript" src="js/view/OverlayView.js"></script>
 <script type="text/javascript" src="js/view/MapBubble.js"></script>
 <script type="text/javascript" src="js/view/Slider.js"></script>
@@ -27,26 +27,16 @@
 </head>
 <body onload="initialize()">
 
-<!-- 
-<div id="timeline2" style="width:800px;height:500px;position:absolute;top:20px">
-  <div class="map_container" style="width:280px;height:300px;">
-   	<div class="map_canvas" id="map_canvas" style="width:280px; height:300px;top:0px;left:0px"></div>
-	<img class="map_mask_circle" src="img/mask1000.png" style="top:0px;left:0px;width:280px;height:280px"></img>
-	<div class="map_mask_bottom" style="width:280px;height:20px;top:280px;left:0px;"></div>
-	<div class="map_border" style="width:280px;height:280px;top:-2px;left:-2px;border-radius:140px"></div>
-  </div>
-</div>
-
- -->
 <div id="dropbox"><br/><br/><span id="droplabel">&nbsp;Drop file here...</span></div>
 
-<div id="timeline" style="position:absolute;top:0px;left:0px;height:500px;"></div>
-<div id="marker" style="position:absolute;top:0px;left:0px;height:100%;width:100%;display:none"></div>
-<div id="masks" style="position:absolute;top:0px;left:0px;height:100%;width:100%;display:none"></div>
+<div id="timeline"></div>
+<div id="marker"></div>
+<div id="masks"></div>
 
-<div id="overview" style="position:absolute;top:500px;left:20px;height:250px;width:500px;display:none"></div>
-<div id="connectionLines" style="position:absolute;top:0px;left:0px;height:100%;width:100%;display:none"></div>
+<div id="overview"></div>
+<div id="connectionLines"></div>
 
-<div id="slider" style="position:absolute;top:600px;left:600px;"></div>
+<div id="slider"></div>
+<div id="calender"></div>
 
 </body>

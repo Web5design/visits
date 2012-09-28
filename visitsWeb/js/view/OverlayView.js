@@ -1,20 +1,11 @@
-function drawOverlayForMap(map, i){
+function drawMarkersAndLines(map, i){
 	
-	var currentBubble = new Object();
-		
-	currentBubble.map = map;
-	currentBubble.div = $("#map_container" + i);
-	currentBubble.cluster = TIMELINEMODEL.clusters[i];	
-	currentBubble.x = Number(currentBubble.div.css("left").substring(0, currentBubble.div.css("left").length - 2));
-	currentBubble.y = Number(currentBubble.div.css("top").substring(0, currentBubble.div.css("top").length - 2));
-	currentBubble.width = currentBubble.div.width();
-	currentBubble.height = currentBubble.div.height();
-	currentBubble.overviewMarker;
+	var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
 	
 	
 	var overviewMap = new Object();
 	
-	overviewMap.map = VIEWJS.overviewMap;
+	overviewMap.map = TIMELINEVIEW.overviewMap;
 	overviewMap.div = $("#overview");
 	overviewMap.x = Number(overviewMap.div.css("left").substring(0, overviewMap.div.css("left").length - 2));
 	overviewMap.y = Number(overviewMap.div.css("top").substring(0, overviewMap.div.css("top").length - 2));
@@ -70,8 +61,8 @@ function drawBubbleMarkers(currentBubble){
 		circleMarker.attr({"fill" : "#0000cc", "opacity" : 0.7, "stroke" : "#fff", "stroke-width" : "2px"});
 		*/
 		
-		var markerX = markerPosition.x + Number(currentBubble.x);
-		var markerY = markerPosition.y + Number(currentBubble.y);
+		var markerX = markerPosition.x + Number(currentBubble.x)  + Number(TIMELINEVIEW.x);
+		var markerY = markerPosition.y + Number(currentBubble.y)  + Number(TIMELINEVIEW.y);
 		
 		var crossString  = "M" + (markerX -2.5) + "," + (markerY -2.5) + " ";
 		crossString = crossString + "L" + (markerX + 2.5) + "," + (markerY + 2.5) + " ";
@@ -95,8 +86,8 @@ function drawBubbleMarkers(currentBubble){
 
 function drawConnectionCurve(currentBubble,overviewMap){
 	
-	var curveTopX = currentBubble.x + currentBubble.width / 2;
-	var curveTopY = currentBubble.y + currentBubble.width;
+	var curveTopX = currentBubble.x + currentBubble.width / 2  + Number(TIMELINEVIEW.x);
+	var curveTopY = currentBubble.y + currentBubble.width + Number(TIMELINEVIEW.y);
 	var curveBottomX = currentBubble.overviewMarker.pos.x + Number(overviewMap.x);
 	var curveBottomY = currentBubble.overviewMarker.pos.y + Number(overviewMap.y);
 	
@@ -109,15 +100,16 @@ function drawConnectionCurve(currentBubble,overviewMap){
 };
 
 function drawBubbleMasks(){
-	for(var i = 0; i < VIEWJS.visibleMapBubbles.length; i++){
+	
+	for(var i = 0; i < TIMELINEVIEW.visibleMapBubbles.length; i++){
 		
-		var currentBubble = new MapBubble(null,i);
+		var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
 		
-		var maskX = currentBubble.x;
-		var maskY = currentBubble.y;
+		var maskX = currentBubble.x  + Number(TIMELINEVIEW.x);
+		var maskY = currentBubble.y  + Number(TIMELINEVIEW.y);
 		var maskWidth = currentBubble.width;
 		var maskHeight = currentBubble.height +1;
-		var circleHeight = maskHeight - VIEWJS.bottomMaskHeight;
+		var circleHeight = maskHeight - TIMELINEVIEW.bottomMaskHeight;
 		
 		var polygonString = "M" + maskX + "," + maskY + "L" + (maskX + maskWidth) + "," + maskY;
 		polygonString = polygonString + "L" + (maskX + maskWidth) + "," + (maskY + maskHeight);
@@ -137,13 +129,13 @@ function drawBubbleMasks(){
 
 function OverlayView(){
 	//initialize overlay
-	this.markerCanvas = Raphael("marker",window.innerWidth,window.innerHeight);
-	this.maskCanvas = Raphael("masks",window.innerWidth,window.innerHeight);
-	this.connectionLineCanvas = Raphael("connectionLines",window.innerWidth,window.innerHeight);
+	this.markerCanvas = Raphael("marker",window.innerWidth,750);
+	this.maskCanvas = Raphael("masks",window.innerWidth,750);
+	this.connectionLineCanvas = Raphael("connectionLines",window.innerWidth,750);
 	
 	this.minimumCircleRadiusOnOverviewMap = 2;
 	
-	this.drawOverlayForMap = drawOverlayForMap;
+	this.drawMarkersAndLines = drawMarkersAndLines;
 	this.drawBubbleMasks = drawBubbleMasks;
 	this.drawConnectionCurve = drawConnectionCurve;
 	

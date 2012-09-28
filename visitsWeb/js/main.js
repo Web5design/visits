@@ -4,8 +4,11 @@ var INPUTFILETYPE = undefined;
 
 var MAINMODEL = undefined;
 var TIMELINEMODEL = undefined;
-var VIEWJS = undefined;
+
+var TIMELINEVIEW = undefined;
 var OVERLAYVIEW = undefined;
+
+var CALENDER = undefined;
 
 var MARKERCOLOR = "#124BB9";
 
@@ -82,12 +85,16 @@ var handleReaderLoad = function(evt){
 	
 	TIMELINEMODEL = new TimelineModel(MAINMODEL);
 	
-	VIEWJS = new ViewJS();
-	VIEWJS.drawTimeline();
-	VIEWJS.drawOverviewMap();
+	TIMELINEVIEW = new TimelineView();
+	TIMELINEVIEW.drawTimeline();
+	TIMELINEVIEW.drawOverviewMap();
 	
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
+	
+	//CALENDER = new Calender();
+	
+	
 	//overlayView.drawBubblesOverlay();
 	
 	new Slider("slider", null);
@@ -97,6 +104,7 @@ var handleReaderLoad = function(evt){
 	$("#marker").fadeIn(1500);
 	$("#masks").fadeIn(1500);
 	$("#connectionLines").fadeIn(1500);
+	$("#calender").fadeIn(1500);
 	$("#timeline").fadeIn(500);
 	$("#overview").fadeIn(2500);
 	
