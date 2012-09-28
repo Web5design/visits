@@ -169,6 +169,8 @@ function drawBubbleMasks(){
 
 function drawPreviewBubbles(){
 	
+	$("#previewBubbles").css("display","block");
+	
 	this.previewBubblesCanvas.clear();
 	
 	var availableWidth = TIMELINEVIEW.div.width();

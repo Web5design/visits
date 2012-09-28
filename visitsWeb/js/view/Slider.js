@@ -21,7 +21,8 @@ function dragSliderTo(x, sliderButton){
 
 	if(sliderObj.currentValue != nextValue){
 		var sliderPosition = sliderObj.padding + nextValue * sliderObj.sliderHorizontalStep;
-		sliderValueDisplay.attr({"x" : sliderPosition, "y" : Number(sliderObj.verticalPosition + 20), "text" : sliderObj.values[nextValue].value});
+		var sliderValueText = (Number(sliderObj.values[nextValue].value) >= 1000)? Number(sliderObj.values[nextValue].value)/1000 + "km" : sliderObj.values[nextValue].value + "m";
+		sliderValueDisplay.attr({"x" : sliderPosition, "y" : Number(sliderObj.verticalPosition + 20), "text" : sliderValueText});
 		sliderButton.attr({"cx" : sliderPosition});
 		
 		sliderObj.currentValue = nextValue;
@@ -58,13 +59,14 @@ function initializeSliderElements(targetDiv, slider){
 	slider.sliderButton.node.setAttribute("class", "sliderButton");
 	slider.sliderButton.sliderObject = slider;
 	
-	sliderValueDisplay = slider.canvas.text(150,Number(slider.verticalPosition), "");
+	sliderValueDisplay = slider.canvas.text(150,Number(slider.verticalPosition) + 20, "");
 	sliderValueDisplay.node.setAttribute("class", "sliderValueDisplay");
 	
 	initializeLabels(slider);
 	
 	slider.sliderButton.toFront();	
-	sliderValueDisplay.attr({"text" : slider.values[slider.currentValue].value});
+	var sliderValueText = (Number(slider.values[slider.currentValue].value) >= 1000)? Number(slider.values[slider.currentValue].value)/1000 + "km" : slider.values[slider.currentValue].value + "m";
+	sliderValueDisplay.attr({"text" : sliderValueText});
 	sliderValueDisplay.toFront();
 	
 };

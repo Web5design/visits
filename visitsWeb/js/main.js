@@ -75,18 +75,22 @@ function handleSliderMoved(slider){
 };
 
 function handleSliderUp(slider){
+
+	$("#previewBubbles").fadeOut(2000);
+	
 	$("#marker").empty();
 	$("#masks").empty();
 	$("#connectionLines").empty();
 	$("#calender").empty();
 	$("#timeline").empty();
 	$("#overview").empty();
-	/*
-	TIMELINEVIEW = new TimelineView();
-	TIMELINEVIEW.drawTimeline();
-	OVERVIEWMAP.drawOverviewMap();
-	OVERLAYVIEW.drawBubbleMasks();
-		*/
+	
+	$("#marker").css("display","none");
+	$("#masks").css("display","none");
+	$("#connectionLines").css("display","none");
+	$("#calender").css("display","none");
+	$("#timeline").css("opacity", "1");
+	
 	TIMELINEVIEW = new TimelineView();
 	TIMELINEVIEW.drawTimeline();
 	
@@ -96,8 +100,16 @@ function handleSliderUp(slider){
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
 	
+	$("#marker").fadeIn(1500);
+	$("#masks").fadeIn(1500);
+	$("#connectionLines").fadeIn(1500);
+	$("#calender").fadeIn(1500);
 	$("#timeline").fadeIn(500);
 	$("#overview").fadeIn(2500);
+	
+	
+	
+	 
 };
 
 var handleReaderLoad = function(evt){
@@ -116,10 +128,6 @@ var handleReaderLoad = function(evt){
 		resultGpsLoc = readKmlLocations(evt.target.result);
 	}
 
-	console.log("resulting array:");
-	for(var i = 0; i < resultGpsLoc.length; i++){
-		console.log("#" + i + ": lat: " + resultGpsLoc[i].lat + ", lon: " + resultGpsLoc[i].lon + ", timestamp: " + resultGpsLoc[i].timestamp);
-	}
 	var sliderValues = [
 	                    { value: 100, label: "street"},
 	                    { value: 200, label: ""},

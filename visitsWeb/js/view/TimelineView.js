@@ -74,7 +74,7 @@ function drawTimeline(){
 };
 
 function hideTimeline(){
-	this.div.fadeOut(500);
+	this.div.css("opacity","0.0");
 }
 
 function TimelineView(){
