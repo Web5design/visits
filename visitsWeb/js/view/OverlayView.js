@@ -125,12 +125,6 @@ function drawBubbleMasks(){
 			"y": Number(minBubbleY + maxBubbleHeight + TIMELINEVIEW.y + 1)
 	};
 
-	//draw surrounding rectangle
-	/*maskPath = maskPath + "M" + upperLeft.x + "," + upperLeft.y;
-	maskPath = maskPath + "L" + upperRight.x + "," + upperRight.y;
-	maskPath = maskPath + "L" + lowerRight.x + "," + lowerRight.y;
-	maskPath = maskPath + "L" + lowerLeft.x + "," + lowerLeft.y;
-	*/
 	var verticalMiddle = upperRight.y + ((lowerRight.y - upperRight.y) / 2) - (TIMELINEVIEW.bottomMaskHeight / 2);
 	
 	//draw circles
@@ -172,37 +166,6 @@ function drawBubbleMasks(){
 
 };
 
-function drawBubbleMasks__(){
-	
-	this.maskCanvas.clear();
-	
-	for(var i = 0; i < TIMELINEVIEW.visibleMapBubbles.length; i++){
-		
-		var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
-		
-		var maskX = currentBubble.x  + Number(TIMELINEVIEW.x);
-		var maskY = currentBubble.y  + Number(TIMELINEVIEW.y);
-		var maskWidth = currentBubble.width;
-		var maskHeight = currentBubble.height + 1;
-		var circleHeight = maskHeight - TIMELINEVIEW.bottomMaskHeight;
-		
-		console.log("mask #" + i + " x,y (" + maskX + ", " + maskY + "), width: " + maskWidth + ", height: " + maskHeight);
-		
-		var polygonString = "M" + maskX + "," + maskY + "L" + (maskX + maskWidth) + "," + maskY;
-		polygonString = polygonString + "L" + (maskX + maskWidth) + "," + (maskY + maskHeight);
-		polygonString = polygonString + "L" + maskX + "," + (maskY + maskHeight);
-		polygonString = polygonString + "L" + maskX + "," + maskY;
-		polygonString = polygonString + "M" + maskX + "," + (maskY + circleHeight / 2);
-		polygonString = polygonString + "A" + (maskWidth / 2) + "," + (maskWidth / 2) + " " + "0 0 0" + " " + (maskX + maskWidth) + "," + (maskY + circleHeight / 2);
-		polygonString = polygonString + "A" + (maskWidth / 2) + "," + (maskWidth / 2) + " " + "0 0 0" + " " + (maskX) + "," + (maskY + circleHeight / 2);
-		
-		var polyMask = this.maskCanvas.path(polygonString);
-		polyMask.attr({"fill" : "#fff", "stroke-width" : "0px"});
-		
-		var borderCircle = this.maskCanvas.circle((maskX + maskWidth / 2), (maskY + circleHeight / 2), maskWidth / 2);
-		borderCircle.attr({"stroke" : "#aaa"});
-	}
-};
 
 function drawPreviewBubbles(){
 	

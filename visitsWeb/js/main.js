@@ -75,7 +75,29 @@ function handleSliderMoved(slider){
 };
 
 function handleSliderUp(slider){
+	$("#marker").empty();
+	$("#masks").empty();
+	$("#connectionLines").empty();
+	$("#calender").empty();
+	$("#timeline").empty();
+	$("#overview").empty();
+	/*
+	TIMELINEVIEW = new TimelineView();
+	TIMELINEVIEW.drawTimeline();
+	OVERVIEWMAP.drawOverviewMap();
+	OVERLAYVIEW.drawBubbleMasks();
+		*/
+	TIMELINEVIEW = new TimelineView();
+	TIMELINEVIEW.drawTimeline();
 	
+	OVERVIEWMAP = new OverviewMap();
+	OVERVIEWMAP.drawOverviewMap();
+	
+	OVERLAYVIEW = new OverlayView();
+	OVERLAYVIEW.drawBubbleMasks();
+	
+	$("#timeline").fadeIn(500);
+	$("#overview").fadeIn(2500);
 };
 
 var handleReaderLoad = function(evt){
