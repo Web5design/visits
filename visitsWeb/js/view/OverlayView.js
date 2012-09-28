@@ -1,8 +1,5 @@
 function drawMarkersAndLines(map, i){
 	
-	this.connectionLineCanvas.clear();
-	this.markerCanvas.clear();
-	
 	var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
 	
 	this.drawBubbleMarkers(currentBubble);
