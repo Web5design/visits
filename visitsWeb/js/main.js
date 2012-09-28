@@ -101,7 +101,22 @@ var handleReaderLoad = function(evt){
 	
 	//overlayView.drawBubblesOverlay();
 	
-	new Slider("slider", null);
+	var sliderValues = [
+	                    { value: 100, label: "street"},
+	                    { value: 200, label: ""},
+	                    { value: 1000, label: ""},
+	                    { value: 2000, label: "neighbourhood", active : true},
+	                    { value: 5000, label: ""},
+	                    { value: 10000, label: ""},
+	                    { value: 20000, label: "city"},
+	                    { value: 30000, label: ""},
+	                    { value: 70000, label: ""},
+	                    { value: 100000, label: "area"},
+	                    { value: 300000, label: ""},
+	                    { value: 600000, label: ""},
+	                    { value: 1000000, label: "country"}
+	];
+	new Slider("slider", sliderValues, function(){}, function(){});
 	
 	$("#dropbox").fadeOut(500);
 	$("svg").fadeIn(1500);

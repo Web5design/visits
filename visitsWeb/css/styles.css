@@ -26,6 +26,10 @@ body { height: 100%; margin: 0; padding: 0; font-family: Helvetica; }
 .map_mask_bottom{position:absolute; background-color:white}
 .map_border{position:absolute;border:2px solid #555555}
 
+.sliderLine {stroke-width: 2px; fill: #fff}
+.sliderButton {stroke-width: 2px; fill: #fff}
+.sliderValueDisplay {stroke: #cc0000}
+.sliderMark {fill: #000}
 
 svg{display:none};
 
