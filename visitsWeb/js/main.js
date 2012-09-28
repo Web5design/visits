@@ -82,15 +82,32 @@ var handleReaderLoad = function(evt){
 	for(var i = 0; i < resultGpsLoc.length; i++){
 		console.log("#" + i + ": lat: " + resultGpsLoc[i].lat + ", lon: " + resultGpsLoc[i].lon + ", timestamp: " + resultGpsLoc[i].timestamp);
 	}
+	var sliderValues = [
+	                    { value: 100, label: "street"},
+	                    { value: 200, label: ""},
+	                    { value: 1000, label: ""},
+	                    { value: 2000, label: "neighbourhood"},
+	                    { value: 5000, label: ""},
+	                    { value: 10000, label: "", active : true},
+	                    { value: 20000, label: "city"},
+	                    { value: 30000, label: ""},
+	                    { value: 70000, label: ""},
+	                    { value: 100000, label: "area"},
+	                    { value: 300000, label: ""},
+	                    { value: 600000, label: ""},
+	                    { value: 1000000, label: "country"}
+	                    ];
+	new Slider("slider", sliderValues, function(){}, function(){});
 
 	MAINMODEL = new Mainmodel(resultGpsLoc);
 	
-	TIMELINEMODEL = new TimelineModel(MAINMODEL);
+	TIMELINEMODEL = new TimelineModel(10);
 	
 	TIMELINEVIEW = new TimelineView();
 	TIMELINEVIEW.drawTimeline();
 	
 	OVERVIEWMAP = new OverviewMap();
+	OVERVIEWMAP.drawOverviewMap();
 	
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
@@ -100,22 +117,6 @@ var handleReaderLoad = function(evt){
 	
 	//overlayView.drawBubblesOverlay();
 	
-	var sliderValues = [
-	                    { value: 100, label: "street"},
-	                    { value: 200, label: ""},
-	                    { value: 1000, label: ""},
-	                    { value: 2000, label: "neighbourhood", active : true},
-	                    { value: 5000, label: ""},
-	                    { value: 10000, label: ""},
-	                    { value: 20000, label: "city"},
-	                    { value: 30000, label: ""},
-	                    { value: 70000, label: ""},
-	                    { value: 100000, label: "area"},
-	                    { value: 300000, label: ""},
-	                    { value: 600000, label: ""},
-	                    { value: 1000000, label: "country"}
-	];
-	new Slider("slider", sliderValues, function(){}, function(){});
 	
 	$("#dropbox").fadeOut(500);
 	$("svg").fadeIn(1500);

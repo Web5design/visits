@@ -6,8 +6,6 @@ function OverviewMap(){
 	this.map;
 	
 	this.drawOverviewMap = drawOverviewMap;
-	
-	this.drawOverviewMap();
 }
 
 function drawOverviewMap(){

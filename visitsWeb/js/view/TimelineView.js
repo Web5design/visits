@@ -9,7 +9,6 @@ function addProjectionChangedListener(map, i){
 function drawTimeline(){
 	
 	loadedMaps = 0;
-	maps = new Array();
 	
 	visibleMapBubbles = new Array();
 	
@@ -70,15 +69,19 @@ function drawTimeline(){
 	}
 };
 
+function hideTimeline(){
+	this.div.fadeOut(500);
+}
+
 function TimelineView(){
 	
 	this.div = $("#timeline");
 	this.x = Number(this.div.css("left").substring(0, this.div.css("left").length - 2));
 	this.y = Number(this.div.css("top").substring(0, this.div.css("top").length - 2));
+	this.bottomMaskHeight = 25;
 	
 	this.visibleMapBubbles = new Array();
 	
-	this.bottomMaskHeight = 25;
 
 	this.drawTimeline = drawTimeline;
 };

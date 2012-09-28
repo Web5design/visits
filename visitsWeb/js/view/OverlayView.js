@@ -119,6 +119,10 @@ function drawBubbleMasks(){
 	}
 };
 
+function hideMarkers(){
+	this.markerCanvas.clear();
+}
+
 function OverlayView(){
 	//initialize overlay
 	this.markerCanvas = Raphael("marker",window.innerWidth,750);
@@ -134,6 +138,8 @@ function OverlayView(){
 	this.drawBubbleMarkers = drawBubbleMarkers;
 	
 	this.drawOverviewMarker = drawOverviewMarker;
+	
+	this.hideMarkers = hideMarkers;
 	
 
 };

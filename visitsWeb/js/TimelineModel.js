@@ -1,15 +1,14 @@
-function TimelineModel(mainmodel){
-	this.mainmodel = mainmodel;
+function TimelineModel(distanceThreshold){
 	
-	this.displayedTimeframeStart = mainmodel.timeframeStart;
-	this.displayedTimeframeEnd = mainmodel.timeframeEnd;
+	this.displayedTimeframeStart = MAINMODEL.timeframeStart;
+	this.displayedTimeframeEnd = MAINMODEL.timeframeEnd;
 	
 	this.displayedTimeframe = this.displayedTimeframeEnd -this.displayedTimeframeStart;
 	
-	this.displayedGpsLocs = mainmodel.gpsLocs;
+	this.displayedGpsLocs = MAINMODEL.gpsLocs;
 	
 	//this.clusters = lastElementClustering(this.displayedGpsLocs, 10);
-	this.clusters = pivotClustering(this.displayedGpsLocs, 12);
+	this.clusters = pivotClustering(this.displayedGpsLocs, distanceThreshold);
 	
 	
 	//ausgabe
