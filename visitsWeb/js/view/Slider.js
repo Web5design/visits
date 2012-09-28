@@ -144,6 +144,7 @@ function Slider(targetDiv, values, cSliderStart, cSliderDragged, cSliderEnd){
 	
 	this.getNearestValue = getNearestValue;
 
+	callbackSliderStart = cSliderStart;
 	callbackSliderDragged = cSliderDragged;
 	callbackSliderEnd = cSliderEnd;
 

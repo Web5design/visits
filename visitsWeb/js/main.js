@@ -62,6 +62,20 @@ function readKmlLocations(kmlText){
 	return result;
 };
 
+function handleSliderDown(slider){
+	OVERLAYVIEW.hideMarkers();
+	TIMELINEVIEW.hideTimeline();
+	console.log("slider down!!");
+};
+
+function handleSliderMoved(slider){
+	
+};
+
+function handleSliderUp(slider){
+	
+};
+
 var handleReaderLoad = function(evt){
 
 	var resultGpsLoc = new Array();
@@ -97,7 +111,7 @@ var handleReaderLoad = function(evt){
 	                    { value: 600000, label: ""},
 	                    { value: 1000000, label: "country"}
 	                    ];
-	new Slider("slider", sliderValues, function(){}, function(){});
+	new Slider("slider", sliderValues, handleSliderDown, handleSliderMoved, handleSliderUp);
 
 	MAINMODEL = new Mainmodel(resultGpsLoc);
 	
