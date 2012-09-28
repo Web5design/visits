@@ -6,6 +6,8 @@ var MAINMODEL = undefined;
 var TIMELINEMODEL = undefined;
 
 var TIMELINEVIEW = undefined;
+var OVERVIEWMAP = undefined;
+
 var OVERLAYVIEW = undefined;
 
 var CALENDER = undefined;
@@ -87,7 +89,8 @@ var handleReaderLoad = function(evt){
 	
 	TIMELINEVIEW = new TimelineView();
 	TIMELINEVIEW.drawTimeline();
-	TIMELINEVIEW.drawOverviewMap();
+	
+	OVERVIEWMAP = new OverviewMap();
 	
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();

@@ -70,27 +70,6 @@ function drawTimeline(){
 	}
 };
 
-function drawOverviewMap(){
-	var overviewDocElement = $("#overview");
-	var clusterWidth = overviewDocElement.width();
-	var overallClusterBounds = MAINMODEL.combinedLocationCluster.clusterBounds;
-	
-    var overviewMapoptions = {
-  	      center: new google.maps.LatLng(overallClusterBounds.getCenter().lat(), overallClusterBounds.getCenter().lng()),
-  	      zoom: calculateZoomLevel(overallClusterBounds.getNorthEast(),overallClusterBounds.getSouthWest(),overviewDocElement.height()),
-  	      mapTypeId: google.maps.MapTypeId.ROADMAP, 
-  	      noClear: true,
-  	      zoomControl: false,
-  	      panControl: false,
-  	      rotateControl: false,
-  	      scaleControl: false,
-  	      disableDefaultUI: true
-  	    };
-    
-    this.overviewMap = new google.maps.Map(document.getElementById("overview"), overviewMapoptions);
-    this.overviewMap.fitBounds(overallClusterBounds);
-}
-
 function TimelineView(){
 	
 	this.div = $("#timeline");
@@ -100,9 +79,6 @@ function TimelineView(){
 	this.visibleMapBubbles = new Array();
 	
 	this.bottomMaskHeight = 25;
-	
-	this.overviewMap;
 
 	this.drawTimeline = drawTimeline;
-	this.drawOverviewMap = drawOverviewMap;	
 };

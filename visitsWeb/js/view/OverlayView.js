@@ -2,19 +2,11 @@ function drawMarkersAndLines(map, i){
 	
 	var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
 	
-	
-	var overviewMap = new Object();
-	
-	overviewMap.map = TIMELINEVIEW.overviewMap;
-	overviewMap.div = $("#overview");
-	overviewMap.x = Number(overviewMap.div.css("left").substring(0, overviewMap.div.css("left").length - 2));
-	overviewMap.y = Number(overviewMap.div.css("top").substring(0, overviewMap.div.css("top").length - 2));
-	
 	this.drawBubbleMarkers(currentBubble);
 	
-	this.drawOverviewMarker(currentBubble,overviewMap);
+	this.drawOverviewMarker(currentBubble);
 	
-	this.drawConnectionCurve(currentBubble,overviewMap);
+	this.drawConnectionCurve(currentBubble);
 	
 	$("#map_container" + i).animate({
 	    opacity: 1
@@ -23,13 +15,13 @@ function drawMarkersAndLines(map, i){
 	  });
 };
 
-function drawOverviewMarker(currentBubble,overviewMap){
+function drawOverviewMarker(currentBubble){
 	
 	var overviewMarker = new Object();
 	
 	//draw overlay circle on overview map
-	overviewMarker.ne = convertPoint(overviewMap.map, currentBubble.cluster.clusterBounds.getNorthEast());
-   	overviewMarker.sw = convertPoint(overviewMap.map, currentBubble.cluster.clusterBounds.getSouthWest());
+	overviewMarker.ne = convertPoint(OVERVIEWMAP.map, currentBubble.cluster.clusterBounds.getNorthEast());
+   	overviewMarker.sw = convertPoint(OVERVIEWMAP.map, currentBubble.cluster.clusterBounds.getSouthWest());
    	overviewMarker.radius = Math.abs(overviewMarker.ne.x - overviewMarker.sw.x);
    	
    	//make sure the circles are large enough to be visible
@@ -37,12 +29,12 @@ function drawOverviewMarker(currentBubble,overviewMap){
    		overviewMarker.radius = this.minimumCircleRadiusOnOverviewMap;
    	}
    	
-   	overviewMarker.pos = convertPoint(overviewMap.map, currentBubble.cluster.clusterBounds.getCenter());
+   	overviewMarker.pos = convertPoint(OVERVIEWMAP.map, currentBubble.cluster.clusterBounds.getCenter());
    	
-	overviewMarker.fill = this.connectionLineCanvas.circle(overviewMarker.pos.x + Number(overviewMap.x), overviewMarker.pos.y + Number(overviewMap.y), overviewMarker.radius);
+	overviewMarker.fill = this.connectionLineCanvas.circle(overviewMarker.pos.x + Number(OVERVIEWMAP.x), overviewMarker.pos.y + Number(OVERVIEWMAP.y), overviewMarker.radius);
 	overviewMarker.fill.attr({ "fill": MARKERCOLOR, "opacity": "0.7", "stroke-width" : 0});
 	
-	overviewMarker.border = this.connectionLineCanvas.circle(overviewMarker.pos.x + Number(overviewMap.x), overviewMarker.pos.y + Number(overviewMap.y), overviewMarker.radius);
+	overviewMarker.border = this.connectionLineCanvas.circle(overviewMarker.pos.x + Number(OVERVIEWMAP.x), overviewMarker.pos.y + Number(OVERVIEWMAP.y), overviewMarker.radius);
 	overviewMarker.border.attr({ "stroke": "#aaa"});
 	
 	currentBubble.overviewMarker = overviewMarker;
@@ -84,12 +76,12 @@ function drawBubbleMarkers(currentBubble){
 };
 
 
-function drawConnectionCurve(currentBubble,overviewMap){
+function drawConnectionCurve(currentBubble){
 	
 	var curveTopX = currentBubble.x + currentBubble.width / 2  + Number(TIMELINEVIEW.x);
 	var curveTopY = currentBubble.y + currentBubble.width + Number(TIMELINEVIEW.y);
-	var curveBottomX = currentBubble.overviewMarker.pos.x + Number(overviewMap.x);
-	var curveBottomY = currentBubble.overviewMarker.pos.y + Number(overviewMap.y);
+	var curveBottomX = currentBubble.overviewMarker.pos.x + Number(OVERVIEWMAP.x);
+	var curveBottomY = currentBubble.overviewMarker.pos.y + Number(OVERVIEWMAP.y);
 	
 	var connectingCurvePath = "M" + curveTopX + "," + curveTopY + " ";
 	connectingCurvePath = connectingCurvePath + "Q" + curveTopX + "," + (curveBottomY - (curveBottomY - curveTopY)/2.0) + " ";
