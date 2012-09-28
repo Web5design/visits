@@ -20,7 +20,7 @@ function drawTimeline(){
 	
 	for(var i = 0; i < TIMELINEMODEL.clusters.length; i++){
 
-		var clusterWidth = Math.floor(TIMELINEMODEL.clusters[i].timeframe * stepSize);
+		var clusterWidth = Math.round(TIMELINEMODEL.clusters[i].timeframe * stepSize);
 		
 		var verticalPosition = (availableHeight / 2.0) - (clusterWidth / 2.0);
 		
@@ -54,6 +54,10 @@ function drawTimeline(){
 		    	        mapOptions);
 		    
 		    var currentBubble = new MapBubble(map,i);
+		    currentBubble.x = horizontalPosition;
+		    currentBubble.y = verticalPosition;
+		    currentBubble.width = clusterWidth;
+		    currentBubble.height = clusterHeight;
 		    
 		    this.visibleMapBubbles.push(currentBubble);
 		    
