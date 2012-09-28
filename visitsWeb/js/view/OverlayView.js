@@ -135,14 +135,16 @@ function drawPreviewBubbles(){
 		
 		var radius = Math.floor(TIMELINEMODEL.clusters[i].timeframe * stepSize) / 2;
 		
-		var verticalPosition = (availableHeight / 2.0) - (clusterWidth / 2.0);
+		var verticalPosition = (availableHeight / 2.0) - (radius);
 		
-		var maskX = horizontalPosition + radius;
-		var maskY = verticalPosition + radius;
+		var maskX = horizontalPosition + radius + TIMELINEVIEW.x;
+		var maskY = verticalPosition + radius + TIMELINEVIEW.y;
 
 		
-		var borderCircle = this.maskCanvas.circle(maskX, maskY, radius);
-		borderCircle.attr({"fill" : "#aaa"});
+		var borderCircle = this.previewBubblesCanvas.circle(maskX, maskY, radius);
+		borderCircle.attr({"fill" : "#aaa", "stroke-width" : "0px", "opacity" : 0.2});
+		
+		horizontalPosition = horizontalPosition + radius * 2;
 	}
 	
 }

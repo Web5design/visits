@@ -84,4 +84,5 @@ function TimelineView(){
 	
 
 	this.drawTimeline = drawTimeline;
+	this.hideTimeline = hideTimeline;
 };

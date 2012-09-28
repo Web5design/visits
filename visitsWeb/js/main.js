@@ -69,7 +69,9 @@ function handleSliderDown(slider){
 };
 
 function handleSliderMoved(slider){
-	
+	var clusterThreshold = Number(slider.values[slider.currentValue].value) / 1000;
+	TIMELINEMODEL = new TimelineModel(clusterThreshold);
+	OVERLAYVIEW.drawPreviewBubbles();
 };
 
 function handleSliderUp(slider){
