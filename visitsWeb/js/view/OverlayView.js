@@ -1,5 +1,8 @@
 function drawMarkersAndLines(map, i){
 	
+	this.connectionLineCanvas.clear();
+	this.markerCanvas.clear();
+	
 	var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
 	
 	this.drawBubbleMarkers(currentBubble);
@@ -93,6 +96,8 @@ function drawConnectionCurve(currentBubble){
 
 function drawBubbleMasks(){
 	
+	this.maskCanvas.clear();
+	
 	for(var i = 0; i < TIMELINEVIEW.visibleMapBubbles.length; i++){
 		
 		var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
@@ -119,6 +124,32 @@ function drawBubbleMasks(){
 	}
 };
 
+function drawPreviewBubbles(){
+	
+	this.previewBubblesCanvas.clear();
+	
+	var availableWidth = TIMELINEVIEW.div.width();
+	var availableHeight = TIMELINEVIEW.div.height();
+	
+	var stepSize = availableWidth / TIMELINEMODEL.displayedTimeframe;
+	var horizontalPosition = 0;
+	
+	for(var i = 0; i < TIMELINEMODEL.clusters.length; i++){
+		
+		var radius = Math.floor(TIMELINEMODEL.clusters[i].timeframe * stepSize) / 2;
+		
+		var verticalPosition = (availableHeight / 2.0) - (clusterWidth / 2.0);
+		
+		var maskX = horizontalPosition + radius;
+		var maskY = verticalPosition + radius;
+
+		
+		var borderCircle = this.maskCanvas.circle(maskX, maskY, radius);
+		borderCircle.attr({"fill" : "#aaa"});
+	}
+	
+}
+
 function hideMarkers(){
 	this.markerCanvas.clear();
 }
@@ -128,6 +159,7 @@ function OverlayView(){
 	this.markerCanvas = Raphael("marker",window.innerWidth,750);
 	this.maskCanvas = Raphael("masks",window.innerWidth,750);
 	this.connectionLineCanvas = Raphael("connectionLines",window.innerWidth,750);
+	this.previewBubblesCanvas = Raphael("previewBubbles",window.innerWidth,750);
 	
 	this.minimumCircleRadiusOnOverviewMap = 2;
 	
@@ -140,6 +172,8 @@ function OverlayView(){
 	this.drawOverviewMarker = drawOverviewMarker;
 	
 	this.hideMarkers = hideMarkers;
+	
+	this.drawPreviewBubbles = drawPreviewBubbles;
 	
 
 };
