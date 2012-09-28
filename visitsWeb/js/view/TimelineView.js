@@ -20,7 +20,7 @@ function drawTimeline(){
 	
 	for(var i = 0; i < TIMELINEMODEL.clusters.length; i++){
 
-		var clusterWidth = Math.round(TIMELINEMODEL.clusters[i].timeframe * stepSize);
+		var clusterWidth = TIMELINEMODEL.clusters[i].timeframe * stepSize;
 		
 		var verticalPosition = (availableHeight / 2.0) - (clusterWidth / 2.0);
 		

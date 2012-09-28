@@ -94,7 +94,8 @@ function drawConnectionCurve(currentBubble){
 function drawBubbleMasks(){
 	this.maskCanvas.clear();
 	
-	var maskPath = "";
+	var upperMaskPath = "";
+	var lowerMaskPath = "";
 	
 	var minBubbleY = Number.POSITIVE_INFINITY;
 	var maxBubbleHeight = 0;
@@ -106,16 +107,35 @@ function drawBubbleMasks(){
 		}
 	}
 	
+	//corner points:
+	var upperLeft = {
+			"x": Number(TIMELINEVIEW.x) - 1,
+			"y": Number(TIMELINEVIEW.y + minBubbleY) - 1
+	};
+	var upperRight = {
+			"x": Number(TIMELINEVIEW.x + TIMELINEVIEW.div.width()) + 1,
+			"y": Number(TIMELINEVIEW.y + minBubbleY) - 1
+	};
+	var lowerRight = {
+			"x": Number(TIMELINEVIEW.x + TIMELINEVIEW.div.width()) + 1,
+			"y": Number(minBubbleY + maxBubbleHeight + TIMELINEVIEW.y + 1)
+	};
+	var lowerLeft = {
+			"x": Number(TIMELINEVIEW.x) - 1,
+			"y": Number(minBubbleY + maxBubbleHeight + TIMELINEVIEW.y + 1)
+	};
+
 	//draw surrounding rectangle
-	maskPath = maskPath + "M" + (Number(TIMELINEVIEW.x) - 1) + "," + (minBubbleY - 1) + Number(TIMELINEVIEW.y);
-	maskPath = maskPath + "L" + (Number(TIMELINEVIEW.div.width()) + Number(TIMELINEVIEW.x) + 1) + "," + (minBubbleY - 1)+ Number(TIMELINEVIEW.y);
-	maskPath = maskPath + "L" + (Number(TIMELINEVIEW.div.width()) + Number(TIMELINEVIEW.x) + 1) + "," + (maxBubbleHeight + 1)+ Number(TIMELINEVIEW.y);
-	maskPath = maskPath + "L" + (Number(TIMELINEVIEW.x) - 1) + "," + (maxBubbleHeight + 1)+ Number(TIMELINEVIEW.y);
-	maskPath = maskPath + "L" + (Number(TIMELINEVIEW.x) - 1) + "," + (minBubbleY - 1)+ Number(TIMELINEVIEW.y);
+	/*maskPath = maskPath + "M" + upperLeft.x + "," + upperLeft.y;
+	maskPath = maskPath + "L" + upperRight.x + "," + upperRight.y;
+	maskPath = maskPath + "L" + lowerRight.x + "," + lowerRight.y;
+	maskPath = maskPath + "L" + lowerLeft.x + "," + lowerLeft.y;
+	*/
+	var verticalMiddle = upperRight.y + ((lowerRight.y - upperRight.y) / 2) - (TIMELINEVIEW.bottomMaskHeight / 2);
 	
-	var verticalMiddle = Number(TIMELINEVIEW.div.height() / 2) + Number(TIMELINEVIEW.y);
 	//draw circles
-	maskPath = maskPath + "M" + (Number(TIMELINEVIEW.x)) + "," + verticalMiddle;
+	upperMaskPath = "M" + (Number(TIMELINEVIEW.x)) + "," + verticalMiddle;
+	lowerMaskPath = upperMaskPath;
 	
 	for(var i = 0; i < TIMELINEVIEW.visibleMapBubbles.length; i++){
 		var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
@@ -127,25 +147,28 @@ function drawBubbleMasks(){
 		var maskHeight = currentBubble.height + 1;
 		var circleHeight = maskHeight - TIMELINEVIEW.bottomMaskHeight;
 		
-		maskPath = maskPath + "A" + maskRadius  + "," + maskRadius + " 0 0,1 " + (maskX + maskWidth) + "," + verticalMiddle;		
-	}
-	
-	
-	for(var i = TIMELINEVIEW.visibleMapBubbles.length - 1; i >= 0; i--){
-		var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
+		upperMaskPath = upperMaskPath + "A" + maskRadius  + "," + maskRadius + " 0 0,1 " + (maskX + maskWidth) + "," + verticalMiddle;		
+		lowerMaskPath = lowerMaskPath + "A" + maskRadius  + "," + maskRadius + " 0 1,0 " + (maskX + maskWidth) + "," + verticalMiddle;	
 		
-		var maskX = currentBubble.x  + Number(TIMELINEVIEW.x);
-		var maskY = currentBubble.y  + Number(TIMELINEVIEW.y);
-		var maskWidth = currentBubble.width;
-		var maskRadius = maskWidth / 2;
-		var maskHeight = currentBubble.height + 1;
-		var circleHeight = maskHeight - TIMELINEVIEW.bottomMaskHeight;
-		
-		maskPath = maskPath + "A" + maskRadius  + "," + maskRadius + " 0 1,1 " + (maskX) + "," + verticalMiddle;		
+		var borderCircle = this.maskCanvas.circle((maskX + maskWidth / 2), (maskY + circleHeight / 2), maskWidth / 2);
+		borderCircle.attr({"stroke" : "#aaa"});
 	}
-	
-	var polyMask = this.maskCanvas.path(maskPath);
-	polyMask.attr({"fill" : "#cc0000", "stroke-width" : "1px", "stroke" : "black", "fill-rule" : "nonzero"});
+	upperMaskPath = upperMaskPath + "L" + upperRight.x + "," + upperRight.y;
+	upperMaskPath = upperMaskPath + "L" + upperLeft.x + "," + upperLeft.y;
+	upperMaskPath = upperMaskPath + "Z";
+
+	lowerMaskPath = lowerMaskPath + "L" + lowerRight.x + "," + lowerRight.y;
+	lowerMaskPath = lowerMaskPath + "L" + lowerLeft.x + "," + lowerLeft.y;
+	lowerMaskPath = lowerMaskPath + "Z";
+
+	var upperMask = this.maskCanvas.path(upperMaskPath);
+	upperMask.attr({"fill" : "#fff", "stroke-width" : "0px", "stroke" : "black"});
+	upperMask.toBack();
+
+	var lowerMask = this.maskCanvas.path(lowerMaskPath);
+	lowerMask.attr({"fill" : "#fff", "stroke-width" : "0px", "stroke" : "black"});
+	lowerMask.toBack();
+
 
 };
 
@@ -193,7 +216,7 @@ function drawPreviewBubbles(){
 	
 	for(var i = 0; i < TIMELINEMODEL.clusters.length; i++){
 		
-		var radius = Math.round(TIMELINEMODEL.clusters[i].timeframe * stepSize) / 2;
+		var radius = TIMELINEMODEL.clusters[i].timeframe * stepSize / 2;
 		
 		var verticalPosition = (availableHeight / 2.0) - (radius);
 		
