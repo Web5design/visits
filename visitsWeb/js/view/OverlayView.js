@@ -139,5 +139,7 @@ function OverlayView(){
 	
 	this.drawOverviewMarker = drawOverviewMarker;
 	
+	this.hideMarkers = hideMarkers;
+	
 
 };

@@ -69,6 +69,10 @@ function drawTimeline(){
 	}
 };
 
+function hideTimeline(){
+	this.div.fadeOut(500);
+}
+
 function TimelineView(){
 	
 	this.div = $("#timeline");
