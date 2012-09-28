@@ -1,3 +1,4 @@
+var callbackSliderStarted;
 var callbackSliderDragged;
 var callbackSliderEnd;
 var sliderValueDisplay;
@@ -25,7 +26,7 @@ function dragSliderTo(x, sliderButton){
 		
 		sliderObj.currentValue = nextValue;
 		
-		callbackSliderDragged();
+		callbackSliderDragged(sliderObj);
 	}
 }
 
@@ -38,13 +39,14 @@ function sliderDragStart(x, y, evt){
 	//console.log(x + ", " + y + ", " + evt);
 	//this.sliderButton.attr({"cx" : x});
 	dragSliderTo(x, this);
+	callbackSliderStart(this.sliderObject);
 };
 
 function sliderDragEnd(evt){
 	//console.log(evt);
 	//sliderValueDisplay.attr({"text" : ""});
 	
-	callbackSliderEnd();
+	callbackSliderEnd(this.sliderObject);
 	};
 
 function initializeSliderElements(targetDiv, slider){
@@ -129,11 +131,12 @@ function getNearestValue(xPos){
  * 						  label: "label x"
  * 						}
  * 					]
+ * @param cSliderStart - callback for slider dragging started
  * @param cSliderDragged - callback for slider dragged
  * @param cSliderEnd - callback for slider dragging stopped
  * @returns
  */
-function Slider(targetDiv, values, cSliderDragged, cSliderEnd){
+function Slider(targetDiv, values, cSliderStart, cSliderDragged, cSliderEnd){
 	//DRAWING CONSTANTS
 	this.padding = 30;	//how much space to the left and right of the slider in the <div>
 	this.verticalPosition = 25;
