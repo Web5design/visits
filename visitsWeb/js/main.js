@@ -91,6 +91,7 @@ var handleReaderLoad = function(evt){
 	TIMELINEVIEW.drawTimeline();
 	
 	OVERVIEWMAP = new OverviewMap();
+	OverVIEWMAP.drawOverviewMap();
 	
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
