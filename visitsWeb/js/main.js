@@ -134,9 +134,9 @@ var handleReaderLoad = function(evt){
 	                    { value: 1000, label: ""},
 	                    { value: 2000, label: "neighbourhood"},
 	                    { value: 5000, label: ""},
-	                    { value: 10000, label: "", active : true},
+	                    { value: 10000, label: ""},
 	                    { value: 20000, label: "city"},
-	                    { value: 30000, label: ""},
+	                    { value: 30000, label: "", active:true},
 	                    { value: 70000, label: ""},
 	                    { value: 100000, label: "area"},
 	                    { value: 300000, label: ""},
@@ -147,7 +147,7 @@ var handleReaderLoad = function(evt){
 
 	MAINMODEL = new Mainmodel(resultGpsLoc);
 	
-	TIMELINEMODEL = new TimelineModel(10);
+	TIMELINEMODEL = new TimelineModel(30);
 	
 	TIMELINEVIEW = new TimelineView();
 	TIMELINEVIEW.drawTimeline();

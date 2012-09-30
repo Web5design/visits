@@ -125,7 +125,7 @@ function drawBubbleMasks(){
 			"y": Number(minBubbleY + maxBubbleHeight + TIMELINEVIEW.y + 1)
 	};
 
-	var verticalMiddle = upperRight.y + ((lowerRight.y - upperRight.y) / 2) - (TIMELINEVIEW.bottomMaskHeight / 2);
+	var verticalMiddle = Number(upperRight.y + ((lowerRight.y - upperRight.y) / 2) - (TIMELINEVIEW.bottomMaskHeight / 2));
 	
 	//draw circles
 	upperMaskPath = "M" + (Number(TIMELINEVIEW.x)) + "," + verticalMiddle;
@@ -134,17 +134,17 @@ function drawBubbleMasks(){
 	for(var i = 0; i < TIMELINEVIEW.visibleMapBubbles.length; i++){
 		var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
 		
-		var maskX = currentBubble.x  + Number(TIMELINEVIEW.x);
-		var maskY = currentBubble.y  + Number(TIMELINEVIEW.y);
+		var maskX = Number(currentBubble.x)  + Number(TIMELINEVIEW.x);
+		var maskY = Number(currentBubble.y)  + Number(TIMELINEVIEW.y);
 		var maskWidth = currentBubble.width;
-		var maskRadius = maskWidth / 2;
-		var maskHeight = currentBubble.height + 1;
-		var circleHeight = maskHeight - TIMELINEVIEW.bottomMaskHeight;
-		
-		upperMaskPath = upperMaskPath + "A" + maskRadius  + "," + maskRadius + " 0 0,1 " + (maskX + maskWidth) + "," + verticalMiddle;		
-		lowerMaskPath = lowerMaskPath + "A" + maskRadius  + "," + maskRadius + " 0 1,0 " + (maskX + maskWidth) + "," + verticalMiddle;	
-		
-		var borderCircle = this.maskCanvas.circle((maskX + maskWidth / 2), (maskY + circleHeight / 2), maskWidth / 2);
+		var maskRadius = Number(maskWidth / 2.0);
+		var maskHeight = Number(currentBubble.height + 1);
+		var circleHeight = Number(maskHeight - TIMELINEVIEW.bottomMaskHeight);
+				
+		upperMaskPath = upperMaskPath + "a" + maskRadius  + "," + maskRadius + " 0 0,1 " + maskWidth + ",0";
+		lowerMaskPath = lowerMaskPath + "a" + maskRadius  + "," + maskRadius + " 0 1,0 " + maskWidth + ",0";
+
+		var borderCircle = this.maskCanvas.circle((maskX + maskRadius), verticalMiddle, maskRadius); //(maskY + circleHeight / 2), maskRadius);
 		borderCircle.attr({"stroke" : "#aaa"});
 	}
 	upperMaskPath = upperMaskPath + "L" + upperRight.x + "," + upperRight.y;
