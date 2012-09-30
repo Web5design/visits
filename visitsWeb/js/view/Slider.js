@@ -3,6 +3,17 @@ var callbackSliderDragged;
 var callbackSliderEnd;
 var sliderValueDisplay;
 
+function setSliderValueTo(sliderObj, nextValue){
+	var sliderPosition = sliderObj.padding + nextValue * sliderObj.sliderHorizontalStep;
+	var sliderValueText = (Number(sliderObj.values[nextValue].value) >= 1000)? Number(sliderObj.values[nextValue].value)/1000 + "km" : sliderObj.values[nextValue].value + "m";
+	sliderValueDisplay.attr({"x" : sliderPosition, "y" : Number(sliderObj.verticalPosition + 20), "text" : sliderValueText});
+	sliderObj.sliderButton.attr({"cx" : sliderPosition});
+	
+	sliderObj.currentValue = nextValue;
+	
+	callbackSliderDragged(sliderObj);
+};
+
 function dragSliderTo(x, sliderButton){
 	var parentElement = $("#slider");
 	var targetX = x - parentElement.offset().left;
@@ -20,14 +31,7 @@ function dragSliderTo(x, sliderButton){
 	var nextValue = sliderObj.getNearestValue(targetX);
 
 	if(sliderObj.currentValue != nextValue){
-		var sliderPosition = sliderObj.padding + nextValue * sliderObj.sliderHorizontalStep;
-		var sliderValueText = (Number(sliderObj.values[nextValue].value) >= 1000)? Number(sliderObj.values[nextValue].value)/1000 + "km" : sliderObj.values[nextValue].value + "m";
-		sliderValueDisplay.attr({"x" : sliderPosition, "y" : Number(sliderObj.verticalPosition + 20), "text" : sliderValueText});
-		sliderButton.attr({"cx" : sliderPosition});
-		
-		sliderObj.currentValue = nextValue;
-		
-		callbackSliderDragged(sliderObj);
+		setSliderValueTo(sliderObj, nextValue);
 	}
 }
 
@@ -71,6 +75,13 @@ function initializeSliderElements(targetDiv, slider){
 	
 };
 
+function setUpClickEventHandler(slider, i){
+	return function(){
+		setSliderValueTo(slider, i); 
+		callbackSliderEnd(slider);
+	};
+};
+
 function initializeLabels(slider){
 	var valuesRange = slider.values[slider.values.length - 1].value - slider.values[0].value;
 	//var valuesToPixels = slider.sliderWidth / valuesRange;
@@ -83,12 +94,20 @@ function initializeLabels(slider){
 			//no label - just a small circle then
 			var sliderMark = slider.canvas.circle(horizontalPosition, slider.verticalPosition, 2);
 			sliderMark.node.setAttribute("class", "sliderMark");
+			
+			sliderMark.click(setUpClickEventHandler(slider, i));
+			slider.values[i].position = {"x":horizontalPosition, "y":slider.verticalPosition};
 		} else {
 			//draw a circle
 			var sliderMark = slider.canvas.circle(horizontalPosition, slider.verticalPosition, 5);
 			sliderMark.node.setAttribute("class", "sliderMark");
+
+			sliderMark.click(setUpClickEventHandler(slider, i));
+
 			//draw a label
 			var sliderLabel = slider.canvas.text(horizontalPosition, slider.verticalPosition - 20, slider.values[i].label);
+
+			slider.values[i].position = {"x":horizontalPosition, "y":slider.verticalPosition};
 		}
 		
 		if(slider.values[i].active){
