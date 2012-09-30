@@ -140,9 +140,16 @@ function drawBubbleMasks(){
 		var maskRadius = Number(maskWidth / 2.0);
 		var maskHeight = Number(currentBubble.height + 1);
 		var circleHeight = Number(maskHeight - TIMELINEVIEW.bottomMaskHeight);
-				
-		upperMaskPath = upperMaskPath + "a" + maskRadius  + "," + maskRadius + " 0 0,1 " + maskWidth + ",0";
-		lowerMaskPath = lowerMaskPath + "a" + maskRadius  + "," + maskRadius + " 0 1,0 " + maskWidth + ",0";
+		
+		//use the actual distance between the current and next bubble as radius to prevent clipping errors
+		if(i < TIMELINEVIEW.visibleMapBubbles.length - 1){
+			var nextBubble = TIMELINEVIEW.visibleMapBubbles[i + 1];
+			maskWidth = Number(nextBubble.x) - Number(currentBubble.x);
+			maskRadius = maskWidth / 2;
+		}
+		
+		upperMaskPath = upperMaskPath + "A" + maskRadius  + "," + maskRadius + " 0 0,1 " + (maskX + maskWidth) + "," + verticalMiddle;
+		lowerMaskPath = lowerMaskPath + "A" + maskRadius  + "," + maskRadius + " 0 1,0 " + (maskX + maskWidth) + "," + verticalMiddle;
 
 		var borderCircle = this.maskCanvas.circle((maskX + maskRadius), verticalMiddle, maskRadius); //(maskY + circleHeight / 2), maskRadius);
 		borderCircle.attr({"stroke" : "#aaa"});
