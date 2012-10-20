@@ -44,7 +44,7 @@ var calculateZoomLevel = function(ne,sw,width){
 	  angle += 360;
 	}
 	
-	var zoom = Math.floor(Math.log(width * 360 / angle / GLOBE_WIDTH) / Math.LN2) - 1;
+	var zoom = Math.floor(Math.log(width * 360 / angle / GLOBE_WIDTH) / Math.LN2) -1;
 	
 	zoom = (width<150)? zoom-1 : zoom;
 	zoom = (width<70)? zoom-1 : zoom;
