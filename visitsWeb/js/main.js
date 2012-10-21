@@ -100,6 +100,9 @@ function handleSliderUp(slider){
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
 	
+	CALENDER = new Calender();
+	
+	
 	$("#marker").fadeIn(1500);
 	$("#masks").fadeIn(1500);
 	$("#connectionLines").fadeIn(1500);
@@ -158,7 +161,7 @@ var handleReaderLoad = function(evt){
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
 	
-	//CALENDER = new Calender();
+	CALENDER = new Calender();
 	
 	
 	//overlayView.drawBubblesOverlay();

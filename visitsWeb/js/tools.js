@@ -27,6 +27,21 @@ var haversineLatLng = function (northEast, southWest){
 	return d;
 };
 
+var timestampToDate = function(timestamp){
+	
+	var date = (new Date(timestamp*1000)).toDateString();
+	
+	//date = date.substr(4);
+	return (date);
+	
+};
+
+var timestampToTime = function(timestamp){
+	var time = (new Date(timestamp*1000)).toTimeString();
+	time = time.substring(0,5); // + time.toLowerCase().substr(8);
+	return (time);
+};
+
 var calculateZoomLevel = function(ne,sw,width){
 	
 	var GLOBE_WIDTH = 256; // a constant in Google's map projection

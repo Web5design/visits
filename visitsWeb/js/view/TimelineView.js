@@ -1,3 +1,17 @@
+function TimelineView(){
+	
+	this.div = $("#timeline");
+	this.x = Number(this.div.css("left").substring(0, this.div.css("left").length - 2));
+	this.y = Number(this.div.css("top").substring(0, this.div.css("top").length - 2));
+	this.bottomMaskHeight = 25;
+	
+	this.visibleMapBubbles = new Array();
+	
+
+	this.drawTimeline = drawTimeline;
+	this.hideTimeline = hideTimeline;
+};
+
 function addProjectionChangedListener(map, i){
 	
     google.maps.event.addListener(map, 'idle', function(){
@@ -76,17 +90,3 @@ function drawTimeline(){
 function hideTimeline(){
 	this.div.css("opacity","0.0");
 }
-
-function TimelineView(){
-	
-	this.div = $("#timeline");
-	this.x = Number(this.div.css("left").substring(0, this.div.css("left").length - 2));
-	this.y = Number(this.div.css("top").substring(0, this.div.css("top").length - 2));
-	this.bottomMaskHeight = 25;
-	
-	this.visibleMapBubbles = new Array();
-	
-
-	this.drawTimeline = drawTimeline;
-	this.hideTimeline = hideTimeline;
-};
