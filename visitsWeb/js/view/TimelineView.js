@@ -10,6 +10,9 @@ function TimelineView(){
 
 	this.drawTimeline = drawTimeline;
 	this.hideTimeline = hideTimeline;
+	
+	this.absoluteXtoTime = absoluteXToTime;
+	this.timeToAbsoluteX = timeToAbsoluteX;
 };
 
 function addProjectionChangedListener(map, i){
@@ -18,6 +21,25 @@ function addProjectionChangedListener(map, i){
 
     	OVERLAYVIEW.drawMarkersAndLines(map, i);
     });
+};
+
+function absoluteXToTime(x){
+	var tlX = x - this.x;
+	
+	var deltaT = TIMELINEMODEL.displayedTimeframe / this.div.width();
+	
+	return (TIMELINEMODEL.displayedTimeframeStart + (deltaT * tlX));
+	
+};
+
+function timeToAbsoluteX(t){
+	
+	var deltaT = t-TIMELINEMODEL.displayedTimeframeStart;
+	
+	var tlX = deltaT * this.div.width() /  TIMELINEMODEL.displayedTimeframe;
+	
+	return (this.x + tlX);
+	
 };
 
 function drawTimeline(){

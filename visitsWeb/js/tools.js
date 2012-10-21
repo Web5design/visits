@@ -36,11 +36,80 @@ var timestampToDate = function(timestamp){
 	
 };
 
+
+var timestampToMonth = function(timestamp){
+	
+	var date = (new Date(timestamp*1000)).toDateString();
+	
+	date = date.substr(4,4);
+	return (date);
+	
+};
+
+
+var timestampToDay = function(timestamp){
+	
+	var date = (new Date(timestamp*1000)).toDateString();
+	
+	date = date.substr(0,3);
+	return (date);
+	
+};
+
 var timestampToTime = function(timestamp){
-	var time = (new Date(timestamp*1000)).toTimeString();
+	var time = (new Date(timestamp*1000)).toLocaleTimeString();
 	time = time.substring(0,5); // + time.toLowerCase().substr(8);
 	return (time);
 };
+
+
+var firstFullHourTimestamp = function(startTs){
+	var firstFullHour = 0;
+	
+	for(var i =startTs; i<startTs+3600; i++){
+		var minutes = (new Date(i*1000)).getMinutes();
+		if(minutes == 0){
+			firstFullHour = i;
+			break;
+		}
+	}
+	
+	return firstFullHour;
+};
+
+
+var firstFullDayTimestamp = function(startTs){
+	var firstFullDay = 0;
+	
+	for(var i =startTs; i<startTs+86400; i++){
+		var hours = (new Date(i*1000)).getHours();
+		if(hours == 0){
+			firstFullDay = i;
+			break;
+		}
+	}
+	
+	return firstFullDay;
+};
+
+var firstFullMonthTimestamp = function(startTs){
+	var firstFullMonth = 0;
+	
+	for(var i =0; i<=31; i++){
+		
+		var ts = startTs + i*86400;
+		
+		var day = (new Date(ts*1000)).getDate();
+		if(day == 1){
+			firstFullMonth = ts;
+			break;
+		}
+	}
+	
+	return firstFullMonth;
+};
+
+
 
 var calculateZoomLevel = function(ne,sw,width){
 	

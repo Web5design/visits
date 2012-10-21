@@ -88,6 +88,7 @@ function handleSliderUp(slider){
 	$("#marker").css("display","none");
 	$("#masks").css("display","none");
 	$("#connectionLines").css("display","none");
+	$("#calenderBG").css("display","none");
 	$("#calender").css("display","none");
 	$("#timeline").css("opacity", "1");
 	
@@ -106,6 +107,7 @@ function handleSliderUp(slider){
 	$("#marker").fadeIn(1500);
 	$("#masks").fadeIn(1500);
 	$("#connectionLines").fadeIn(1500);
+	$("#calenderBG").fadeIn(1500);
 	$("#calender").fadeIn(1500);
 	$("#timeline").fadeIn(500);
 	$("#overview").fadeIn(2500);
@@ -172,6 +174,7 @@ var handleReaderLoad = function(evt){
 	$("#marker").fadeIn(1500);
 	$("#masks").fadeIn(1500);
 	$("#connectionLines").fadeIn(1500);
+	$("#calenderBG").fadeIn(1500);
 	$("#calender").fadeIn(1500);
 	$("#timeline").fadeIn(500);
 	$("#overview").fadeIn(2500);
