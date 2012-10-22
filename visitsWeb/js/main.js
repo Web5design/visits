@@ -154,6 +154,7 @@ var handleReaderLoad = function(evt){
 	MAINMODEL = new Mainmodel(resultGpsLoc);
 	
 	TIMELINEMODEL = new TimelineModel(30);
+	TIMELINEMODEL.initializeGeocodesForClusters();
 	
 	TIMELINEVIEW = new TimelineView();
 	TIMELINEVIEW.drawTimeline();

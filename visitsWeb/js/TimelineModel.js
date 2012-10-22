@@ -7,10 +7,16 @@ function TimelineModel(distanceThreshold){
 	
 	this.displayedGpsLocs = MAINMODEL.gpsLocs;
 	
+	this.geocoder = new google.maps.Geocoder();
+	
+	this.initializeGeocodesForClusters = initializeGeocodesForClusters;
+	
 	//this.clusters = lastElementClustering(this.displayedGpsLocs, 10);
 	this.clusters = pivotClustering(this.displayedGpsLocs, distanceThreshold);
 	
 	
+	
+	/*
 	//ausgabe
 	for(var i = 0; i < this.clusters.length; i++){
 		console.log("cluster #" + i + " ("+ this.clusters[i].gpsLocs.length +"):");
@@ -19,5 +25,9 @@ function TimelineModel(distanceThreshold){
 			console.log("   " + this.clusters[i].gpsLocs[j].timestamp + " - " + this.clusters[i].gpsLocs[j].lon + ", " + this.clusters[i].gpsLocs[j].lat);
 		//}
 	}
+	*/
+}
+
+function initializeGeocodesForClusters(){
 	
 }

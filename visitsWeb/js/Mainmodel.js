@@ -10,8 +10,7 @@ function Mainmodel(gpsLocs){
 	for(var i = 0; i < this.gpsLocs.length; i++){
 		this.combinedLocationCluster.addLoc(this.gpsLocs[i], (i == this.gpsLocs.length - 1) ? this.gpsLocs[i] : this.gpsLocs[i + 1]);
 	}
-	
-	//TODO: evtl lšschen!
+
 	this.timeIntervals = new Array();
 	
 	this.minTimeInterval = Number.POSITIVE_INFINITY;

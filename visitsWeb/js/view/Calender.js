@@ -121,8 +121,43 @@ function HoverLabel(cluster){
 	this.endCircle = CALENDER.canvas.circle(endX,tly,4);
 	this.endCircle.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
 	
-	this.locLabel = CALENDER.canvas.text(startX+(endX-startX)/2,tly-40,"Brooklyn, New York, USA");
+	this.geoCode = "";
+	
+	this.locLabel = CALENDER.canvas.text(startX+(endX-startX)/2,tly-40,this.geoCode);
 	this.locLabel.attr({"font-size":14});
+	this.locLabel.id = "locLabel";
+	
+	TIMELINEMODEL.geocoder.geocode({'latLng': cluster.clusterBounds.getCenter()}, function(results, status) {
+	      if (status == google.maps.GeocoderStatus.OK) {
+	    	  
+	    	  var text;
+	    	  
+	    	  for(var i= 0; i< results[0].address_components.length;i++){
+	    		  
+	    		  if(results[0].address_components[i].types[0] == "locality"){
+	    			  text = results[0].address_components[i].long_name;
+	    		  }
+	    		  
+	    	  }
+	    	  
+	    	  if(text == undefined){
+	    		  
+	    		  for(var i= 0; i< results[0].address_components.length;i++){
+		    		  
+		    		  if(results[0].address_components[i].types[1] == "political"){
+		    			  text = results[0].address_components[i].long_name;
+		    			  break;
+		    		  }
+		    		  
+		    	  }
+	    	  }
+	    	  
+	    	  CALENDER.canvas.getById("locLabel").attr({"text":text});
+	    	  
+	      } else {
+	        console.log("Geocoder failed due to: " + status);
+	      }
+	});
 	
 	
 	
