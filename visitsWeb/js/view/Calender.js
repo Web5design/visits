@@ -127,7 +127,9 @@ function HoverLabel(cluster){
 	this.locLabel.attr({"font-size":14});
 	this.locLabel.id = "locLabel";
 	
-	TIMELINEMODEL.geocoder.geocode({'latLng': cluster.clusterBounds.getCenter()}, function(results, status) {
+	var ll = new google.maps.LatLng(cluster.gpsLocs[Math.floor(cluster.gpsLocs.length/2)].lat,cluster.gpsLocs[Math.floor(cluster.gpsLocs.length/2)].lon);
+	
+	TIMELINEMODEL.geocoder.geocode({'latLng': ll}, function(results, status) {
 	      if (status == google.maps.GeocoderStatus.OK) {
 	    	  
 	    	  var text;
