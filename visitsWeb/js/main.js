@@ -143,7 +143,7 @@ var handleReaderLoad = function(evt){
 	                    { value: 600000, label: ""},
 	                    { value: 1000000, label: "country"}
 	                    ];
-	new Slider("slider", sliderValues, handleSliderDown, handleSliderMoved, handleSliderUp);
+	new VerticalSlider("slider", sliderValues, handleSliderDown, handleSliderMoved, handleSliderUp);
 
 	MAINMODEL = new Mainmodel(resultGpsLoc);
 	
