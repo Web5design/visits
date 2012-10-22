@@ -27,9 +27,18 @@ var haversineLatLng = function (northEast, southWest){
 	return d;
 };
 
-var timestampToDate = function(timestamp){
+var timestampToDateLong = function(timestamp){
 	
-	var date = (new Date(timestamp*1000)).toDateString();
+	var date = ((new Date(timestamp*1000)).toDateString()).substring(0,3) +"  "+(new Date(timestamp*1000)).getDate() + "." + ((new Date(timestamp*1000)).getMonth()+1) + "." +(new Date(timestamp*1000)).getFullYear();
+	
+	//date = date.substr(4);
+	return (date);
+	
+};
+
+var timestampToDateShort = function(timestamp){
+	
+	var date = ((new Date(timestamp*1000)).toDateString()).substring(0,3) +"  "+(new Date(timestamp*1000)).getDate() + "." + ((new Date(timestamp*1000)).getMonth()+1) + "."; //+ (new Date(timestamp*1000)).getFullYear();
 	
 	//date = date.substr(4);
 	return (date);
@@ -57,7 +66,7 @@ var timestampToDay = function(timestamp){
 };
 
 var timestampToTime = function(timestamp){
-	var time = (new Date(timestamp*1000)).toLocaleTimeString();
+	var time = (new Date(timestamp*1000)).toTimeString();
 	time = time.substring(0,5); // + time.toLowerCase().substr(8);
 	return (time);
 };

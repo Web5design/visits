@@ -97,11 +97,12 @@ function handleSliderUp(slider){
 	
 	OVERVIEWMAP = new OverviewMap();
 	OVERVIEWMAP.drawOverviewMap();
+
+	CALENDER = new Calender();
 	
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
 	
-	CALENDER = new Calender();
 	
 	
 	$("#marker").fadeIn(1500);
@@ -160,10 +161,12 @@ var handleReaderLoad = function(evt){
 	OVERVIEWMAP = new OverviewMap();
 	OVERVIEWMAP.drawOverviewMap();
 	
+	CALENDER = new Calender();
+	
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
 	
-	CALENDER = new Calender();
+	
 	
 	
 	//overlayView.drawBubblesOverlay();
