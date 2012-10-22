@@ -143,7 +143,10 @@ var handleReaderLoad = function(evt){
 	                    { value: 600000, label: ""},
 	                    { value: 1000000, label: "country"}
 	                    ];
-	new Slider("slider", sliderValues, handleSliderDown, handleSliderMoved, handleSliderUp);
+	var sliderPadding = 30;
+	var sliderLabelOffset = new Point(10,0);
+	var sliderLabelAlignment = "start";
+	new Slider("slider", sliderValues, new Point(0,0), new Point(sliderPadding * 2,500), sliderPadding, sliderLabelOffset, sliderLabelAlignment, handleSliderDown, handleSliderMoved, handleSliderUp);
 
 	MAINMODEL = new Mainmodel(resultGpsLoc);
 	

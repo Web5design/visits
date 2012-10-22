@@ -61,4 +61,76 @@ function convertPoint(map, latLng) {
     var scale=Math.pow(2,map.getZoom()); 
     var worldPoint=map.getProjection().fromLatLngToPoint(latLng); 
     return new google.maps.Point((worldPoint.x-bottomLeft.x)*scale,(worldPoint.y-topRight.y)*scale); 
-} 
+};
+
+function Line(sp, ep) {
+	this.startPoint = sp;
+	this.endPoint = ep;
+};
+
+// code from: http://forum.worldofplayers.de/forum/threads/783387-JAVA-Methode-zum-Schnittpunkt-zweier-Geraden(am-besten-Line2D-Objecte)-berechnen
+/**
+ * Berechnet den Schnittpunkt zweier Strecken.
+ *
+ * Formel von http://en.wikipedia.org/wiki/Line-line_intersection
+ *
+ * @param l Eine Strecke
+ * @param m Eine Strecke
+ * @return Der Schnittpunkt der beiden Strecken
+ */
+function intersectLines(l, m)
+{
+    // Wegen der Lesbarkeit
+	var x1 = l.startPoint.x;
+	var x2 = l.endPoint.x;
+	var x3 = m.startPoint.x;
+	var x4 = m.endPoint.x;
+	var y1 = l.startPoint.y;
+	var y2 = l.endPoint.y;
+	var y3 = m.startPoint.y;
+	var y4 = m.endPoint.y;
+
+    // Zaehler
+    var zx = (x1 * y2 - y1 * x2) - (x1 - x2) * (x3 * y4 - y3 * x4);
+    var zy = (x1 * y2 - y1 * x2) - (y1 - y2) * (x3 * y4 - y3 * x4);
+      
+    // Nenner
+    var n = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+    
+    // Koordinaten des Schnittpunktes
+    var x = zx/n;
+    var y = zy/n;
+
+    // Vielleicht ist bei der Division duch n etwas schief gelaufen
+    if (isNaN(x) || isNaN(y))
+    {
+    	console.log("no unique intersection point.");
+    	return null;
+    }
+    
+    // Test ob der Schnittpunkt auf den angebenen Strecken liegt oder au§erhalb.
+    if
+    (
+        (x - x1) / (x2 - x1) > 1 ||
+        (x - x3) / (x4 - x3) > 1 ||
+        (y - y1) / (y2 - y1) > 1 ||
+        (y - y3) / (y4 - y3) > 1
+    )
+    {
+    	console.log("intersection point is outside of lines");
+    	//return null;
+    }
+
+    return new Point(x, y);
+};
+
+function Point(x, y){
+	this.x = x;
+	this.y = y;
+	
+	this.length = function(){ return Math.sqrt(x*x+y*y); };
+	this.scale = function(factor){ return new Point(x * factor, y * factor); };
+	this.normalize = function(){ return new Point(x / length(), y / length()); };
+	this.add = function(p){ return new Point(x + p.x, y + p.y); };
+};
+
