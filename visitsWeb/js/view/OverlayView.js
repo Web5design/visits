@@ -32,7 +32,7 @@ function drawOverviewMarker(currentBubble){
    	overviewMarker.pos = convertPoint(OVERVIEWMAP.map, currentBubble.cluster.clusterBounds.getCenter());
    	
 	overviewMarker.fill = this.connectionLineCanvas.circle(overviewMarker.pos.x + Number(OVERVIEWMAP.x), overviewMarker.pos.y + Number(OVERVIEWMAP.y), overviewMarker.radius);
-	overviewMarker.fill.attr({ "fill": MARKERCOLOR, "opacity": "0.7", "stroke-width" : 0});
+	overviewMarker.fill.attr({ "fill": MARKERCOLOR, "opacity": "0", "stroke-width" : 0});
 	
 	overviewMarker.border = this.connectionLineCanvas.circle(overviewMarker.pos.x + Number(OVERVIEWMAP.x), overviewMarker.pos.y + Number(OVERVIEWMAP.y), overviewMarker.radius);
 	overviewMarker.border.attr({ "stroke": "#aaa"});
@@ -131,6 +131,19 @@ function drawBubbleMasks(){
 	upperMaskPath = "M" + (Number(TIMELINEVIEW.x)) + "," + verticalMiddle;
 	lowerMaskPath = upperMaskPath;
 	
+	var addBubbleMousehandler = function(currentBubble, touchCircle){
+		
+		touchCircle.mouseover(function(){
+			CALENDER.drawHoverLabels(currentBubble.cluster);
+		}	
+		);	
+		
+		touchCircle.mouseout(function(){
+			CALENDER.hideHoverLabels();
+		}		
+		);	
+	};
+
 	for(var i = 0; i < TIMELINEVIEW.visibleMapBubbles.length; i++){
 		var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
 		
@@ -150,9 +163,15 @@ function drawBubbleMasks(){
 		
 		upperMaskPath = upperMaskPath + "A" + maskRadius  + "," + maskRadius + " 0 0,1 " + (maskX + maskWidth) + "," + verticalMiddle;
 		lowerMaskPath = lowerMaskPath + "A" + maskRadius  + "," + maskRadius + " 0 1,0 " + (maskX + maskWidth) + "," + verticalMiddle;
-
+		
 		var borderCircle = this.maskCanvas.circle((maskX + maskRadius), verticalMiddle, maskRadius); //(maskY + circleHeight / 2), maskRadius);
 		borderCircle.attr({"stroke" : "#aaa"});
+		
+		var touchCircle = CALENDER.canvas.circle((maskX + maskRadius), verticalMiddle, maskRadius); //(maskY + circleHeight / 2), maskRadius);
+		touchCircle.attr({"stroke" : "#aaa", "fill" : "#c00", "opacity" : 0});
+		
+		addBubbleMousehandler(currentBubble, touchCircle);
+		touchCircle.toFront();
 	}
 	upperMaskPath = upperMaskPath + "L" + upperRight.x + "," + upperRight.y;
 	upperMaskPath = upperMaskPath + "L" + upperLeft.x + "," + upperLeft.y;
