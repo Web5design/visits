@@ -3,7 +3,7 @@ function Cluster(){
 	
 	this.clusterBounds = new google.maps.LatLngBounds();
 	
-	this.geoCode = "";
+	this.geoCode;
 	
 	this.timeframeStart;
 	this.timeframeEnd;
