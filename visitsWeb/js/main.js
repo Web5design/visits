@@ -135,19 +135,19 @@ var handleReaderLoad = function(evt){
 	}
 
 	var sliderValues = [
-	                    { value: 100, label: "street"},
+	                    { value: 100, label: "Street"},
 	                    { value: 200, label: ""},
 	                    { value: 1000, label: ""},
-	                    { value: 2000, label: "neighbourhood"},
+	                    { value: 2000, label: "Neighbourhood"},
 	                    { value: 5000, label: ""},
 	                    { value: 10000, label: ""},
-	                    { value: 20000, label: "city"},
+	                    { value: 20000, label: "City"},
 	                    { value: 30000, label: "", active:true},
 	                    { value: 70000, label: ""},
-	                    { value: 100000, label: "area"},
+	                    { value: 100000, label: "Area"},
 	                    { value: 300000, label: ""},
 	                    { value: 600000, label: ""},
-	                    { value: 1000000, label: "country"}
+	                    { value: 1000000, label: "Country"}
 	                    ];
 	new VerticalSlider("slider", sliderValues, handleSliderDown, handleSliderMoved, handleSliderUp);
 

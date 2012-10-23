@@ -93,10 +93,11 @@ function initializeSliderElements(){
 	
 	//init background line of slider
 	this.sliderLine = this.canvas.path("M"+ this.horizontalPosition +","+ this.padding +" L"+(this.horizontalPosition)+"," + (this.sliderHeight + this.padding));
+	//this.sliderLine.attr({"stroke-width":"1px", "width":"1px"});
 	this.sliderLine.node.setAttribute("class", "sliderLine");
 	
 	//init moveable button
-	this.sliderButton = this.canvas.circle(this.horizontalPosition,150, 10);
+	this.sliderButton = this.canvas.circle(this.horizontalPosition,150, 5);
 	this.sliderButton.node.setAttribute("class", "sliderButton");
 	this.sliderButton.sliderObject = this;
 	
@@ -136,26 +137,26 @@ function initializeLabels(){
 	for(var i = 0; i < this.values.length; i++){
 		if(this.values[i].label === ""){ 
 			//no label - just a small circle then
-			var sliderMark = this.canvas.circle(this.horizontalPosition, verticalPosition, 2);
+			var sliderMark = this.canvas.circle(this.horizontalPosition+3, verticalPosition, 1);
 			sliderMark.node.setAttribute("class", "sliderMark");
 			
 			sliderMark.click(setUpClickEventHandler(this, i));
 		} else {
 			//draw a circle
-			var sliderMark = this.canvas.circle(this.horizontalPosition, verticalPosition, 5);
+			var sliderMark = this.canvas.circle(this.horizontalPosition+3, verticalPosition, 1);
 			sliderMark.node.setAttribute("class", "sliderMark");
 
 			sliderMark.click(setUpClickEventHandler(this, i));
 
 			//draw a label
 			var sliderLabel = this.canvas.text(this.horizontalPosition + 15, verticalPosition, this.values[i].label);
-			sliderLabel.attr({"text-anchor":"start"});
+			sliderLabel.attr({"text-anchor":"start", "fill":"#444"});
 		}
 		
 		if(this.values[i].active){
 			this.currentValue = i;
 			this.sliderButton.attr({"cy" : verticalPosition});
-			sliderValueDisplay.attr({"y" : verticalPosition});
+			sliderValueDisplay.attr({"y" : verticalPosition, "font-size": 14});
 		}
 		
 		verticalPosition += this.sliderVerticalStep;
@@ -206,9 +207,9 @@ function getNearestValue(yPos){
  */
 function VerticalSlider(targetDiv, values, cSliderStart, cSliderDragged, cSliderEnd){
 	//DRAWING CONSTANTS
-	this.padding = 60;	//how much space to the top and bottom of the slider in the <div>
-	this.horizontalPosition = 60;	//how much is the slider shifted from the left-hand side of the <div>
-	this.sliderHeight = 400;	//how high is the slider
+	this.padding = 10;	//how much space to the top and bottom of the slider in the <div>
+	this.horizontalPosition = 70;	//how much is the slider shifted from the left-hand side of the <div>
+	this.sliderHeight = 250;	//how high is the slider
 
 	//initialize class attributes
 	this.targetDiv = targetDiv;
