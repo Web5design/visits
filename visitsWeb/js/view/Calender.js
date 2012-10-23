@@ -127,43 +127,50 @@ function HoverLabel(cluster){
 	this.locLabel.attr({"font-size":14});
 	this.locLabel.id = "locLabel";
 	
-	var ll = new google.maps.LatLng(cluster.gpsLocs[Math.floor(cluster.gpsLocs.length/2)].lat,cluster.gpsLocs[Math.floor(cluster.gpsLocs.length/2)].lon);
+	var currentCluster = cluster.gpsLocs[Math.floor(cluster.gpsLocs.length/2)];
+	var ll = new google.maps.LatLng(currentCluster.lat,currentCluster.lon);
 	
-	TIMELINEMODEL.geocoder.geocode({'latLng': ll}, function(results, status) {
-	      if (status == google.maps.GeocoderStatus.OK) {
-	    	  
-	    	  var text;
-	    	  
-	    	  for(var i= 0; i< results[0].address_components.length;i++){
-	    		  
-	    		  if(results[0].address_components[i].types[0] == "locality"){
-	    			  text = results[0].address_components[i].long_name;
-	    		  }
-	    		  
-	    	  }
-	    	  
-	    	  if(text == undefined){
-	    		  
-	    		  for(var i= 0; i< results[0].address_components.length;i++){
-		    		  
-		    		  if(results[0].address_components[i].types[1] == "political"){
-		    			  text = results[0].address_components[i].long_name;
-		    			  break;
-		    		  }
-		    		  
-		    	  }
-	    	  }
-	    	  
-	    	  CALENDER.canvas.getById("locLabel").attr({"text":text});
-	    	  
-	      } else {
-	        console.log("Geocoder failed due to: " + status);
-	      }
-	});
-	
-	
-	
-	
+	if(currentCluster.geoCode != null){
+		CALENDER.canvas.getById("locLabel").attr({"text":currentCluster.geoCode});
+		console.log("found cached geocode: " + currentCluster.geoCode);
+	} else {
+		TIMELINEMODEL.geocoder.geocode({'latLng': ll}, 
+			function(cluster){
+				return function(results, status) {
+			      if (status == google.maps.GeocoderStatus.OK) {
+			    	  
+			    	  var text;
+			    	  
+			    	  for(var i= 0; i< results[0].address_components.length;i++){
+			    		  
+			    		  if(results[0].address_components[i].types[0] == "locality"){
+			    			  text = results[0].address_components[i].long_name;
+			    		  }
+			    		  
+			    	  }
+			    	  
+			    	  if(text == undefined){
+			    		  
+			    		  for(var i= 0; i< results[0].address_components.length;i++){
+				    		  
+				    		  if(results[0].address_components[i].types[1] == "political"){
+				    			  text = results[0].address_components[i].long_name;
+				    			  break;
+				    		  }
+				    		  
+				    	  }
+			    	  }
+			    	  
+			    	  CALENDER.canvas.getById("locLabel").attr({"text":text});
+			    	  cluster.geoCode = text;
+			    	  console.log("setting geocode of cluster " + cluster + " to " + text);
+			    	  
+			      } else {
+			        console.log("Geocoder failed due to: " + status);
+			      }
+			};
+		}(currentCluster));
+	}
 };
 
 function drawHoverLabels(cluster){
