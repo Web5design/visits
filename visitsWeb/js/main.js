@@ -12,6 +12,8 @@ var OVERLAYVIEW = undefined;
 
 var CALENDER = undefined;
 
+var MINIMAP = undefined;
+
 var MARKERCOLOR = "#124BB9";
 
 
@@ -104,7 +106,6 @@ function handleSliderUp(slider){
 	OVERLAYVIEW.drawBubbleMasks();
 	
 	
-	
 	$("#marker").fadeIn(1500);
 	$("#masks").fadeIn(1500);
 	$("#connectionLines").fadeIn(1500);
@@ -113,9 +114,6 @@ function handleSliderUp(slider){
 	$("#timeline").fadeIn(500);
 	$("#overview").fadeIn(2500);
 	
-	
-	
-	 
 };
 
 var handleReaderLoad = function(evt){
@@ -167,8 +165,7 @@ var handleReaderLoad = function(evt){
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
 	
-	
-	
+	MINIMAP = new MiniMap("minimap");
 	
 	//overlayView.drawBubblesOverlay();
 	
