@@ -11,7 +11,7 @@ function TimelineView(){
 	this.drawTimeline = drawTimeline;
 	this.hideTimeline = hideTimeline;
 	
-	this.absoluteXtoTime = absoluteXToTime;
+	this.absoluteXtoTime = absoluteXtoTime;
 	this.timeToAbsoluteX = timeToAbsoluteX;
 };
 
@@ -23,7 +23,7 @@ function addProjectionChangedListener(map, i){
     });
 };
 
-function absoluteXToTime(x){
+function absoluteXtoTime(x){
 	var tlX = x - this.x;
 	
 	var deltaT = TIMELINEMODEL.displayedTimeframe / this.div.width();

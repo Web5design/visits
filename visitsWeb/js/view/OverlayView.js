@@ -167,7 +167,10 @@ function drawBubbleMasks(){
 		var borderCircle = this.maskCanvas.circle((maskX + maskRadius), verticalMiddle, maskRadius); //(maskY + circleHeight / 2), maskRadius);
 		borderCircle.attr({"stroke" : "#aaa"});
 		
-		var touchCircle = CALENDER.canvas.circle((maskX + maskRadius), verticalMiddle, maskRadius); //(maskY + circleHeight / 2), maskRadius);
+		
+		/* ========== Interactive Elements =============== */
+		
+		var touchCircle = INTERACTION_AREA.circle((maskX + maskRadius), verticalMiddle, maskRadius); //(maskY + circleHeight / 2), maskRadius);
 		touchCircle.attr({"stroke" : "#aaa", "fill" : "#c00", "opacity" : 0});
 		
 		addBubbleMousehandler(currentBubble, touchCircle);

@@ -12,6 +12,8 @@ var OVERLAYVIEW = undefined;
 
 var CALENDER = undefined;
 
+var INTERACTION_AREA = undefined;
+
 var MARKERCOLOR = "#124BB9";
 
 
@@ -92,6 +94,8 @@ function handleSliderUp(slider){
 	$("#calender").css("display","none");
 	$("#timeline").css("opacity", "1");
 	
+	INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
+	
 	TIMELINEVIEW = new TimelineView();
 	TIMELINEVIEW.drawTimeline();
 	
@@ -109,7 +113,8 @@ function handleSliderUp(slider){
 	$("#masks").fadeIn(1500);
 	$("#connectionLines").fadeIn(1500);
 	$("#calenderBG").fadeIn(1500);
-	$("#calender").fadeIn(1500);
+	$("#calender").fadeIn(1500);	
+	$("#interactionArea").fadeIn(1500);
 	$("#timeline").fadeIn(500);
 	$("#overview").fadeIn(2500);
 	
@@ -156,6 +161,9 @@ var handleReaderLoad = function(evt){
 	TIMELINEMODEL = new TimelineModel(30);
 	TIMELINEMODEL.initializeGeocodesForClusters();
 	
+	INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
+	
+	
 	TIMELINEVIEW = new TimelineView();
 	TIMELINEVIEW.drawTimeline();
 	
@@ -163,6 +171,7 @@ var handleReaderLoad = function(evt){
 	OVERVIEWMAP.drawOverviewMap();
 	
 	CALENDER = new Calender();
+	CALENDER.drawInteractionArea();
 	
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
@@ -180,6 +189,7 @@ var handleReaderLoad = function(evt){
 	$("#connectionLines").fadeIn(1500);
 	$("#calenderBG").fadeIn(1500);
 	$("#calender").fadeIn(1500);
+	$("#interactionArea").fadeIn(1500);
 	$("#timeline").fadeIn(500);
 	$("#overview").fadeIn(2500);
 	

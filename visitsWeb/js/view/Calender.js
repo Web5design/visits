@@ -4,7 +4,6 @@ function Calender(){
 	
 	this.hoverLabel = null;
 	
-	
 	this.drawStartAndEndLabels = drawStartAndEndLabels;
 	this.drawBGCalender = drawBGCalender;
 	this.drawBGItem = drawBGItem;
@@ -12,16 +11,68 @@ function Calender(){
 	this.drawHoverLabels = drawHoverLabels;
 	this.hideHoverLabels = hideHoverLabels;
 	
+	this.drawInteractionArea = drawInteractionArea;
+	
 	this.drawTimestampMarkers = drawTimestampMarkers;
 	
+	//this.drawInteractionArea();
 	this.drawStartAndEndLabels();
 	this.drawBGCalender();
 	
 	this.drawTimestampMarkers();
 	
+	
 	//this.drawHoverLabels(TIMELINEMODEL.displayedTimeframeStart + 90000, TIMELINEMODEL.displayedTimeframeEnd -100000);
 	
 };
+
+function drawInteractionArea(){
+	
+	var tlx = TIMELINEVIEW.x;
+	var tly = TIMELINEVIEW.y;
+	
+	var tlWidth = TIMELINEVIEW.div.width();
+	var tlHeight = TIMELINEVIEW.div.height();
+	
+	var calendar = INTERACTION_AREA.rect(tlx,tly,tlWidth,tlHeight);
+	calendar.attr({"fill":"#c00", "opacity":"0"});
+	
+	/*
+	calendar.mousemove(function(e){
+		drawMarkerConnection(e.pageX);
+	});*/
+	
+}
+
+function drawMarkerConnection(x){
+	
+	//OVERLAYVIEW.connectionLineCanvas.text (200,200,""+x);
+	
+	var ts = TIMELINEVIEW.absoluteXtoTime(x);
+	
+	
+	var tly = TIMELINEVIEW.y;
+	var tlHeight = TIMELINEVIEW.div.height();
+	
+
+	
+	var date = timestampToDateShort(ts);
+	var time = timestampToTime(ts);
+	
+	
+	var labelDate = OVERLAYVIEW.connectionLineCanvas.text(x,tly/2+4,date);
+	labelDate.attr({"font-size":11, "fill": "#444"});
+	
+	var labelTime = OVERLAYVIEW.connectionLineCanvas.text(x,tly/2+16,time);
+	labelTime.attr({"font-size":10, "fill": "#444"});
+	
+	var line = OVERLAYVIEW.connectionLineCanvas.path("M"+x+" "+(tly+4)+"L"+x+" "+ (tlHeight/2+tly));
+	line.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
+	
+	var circle = OVERLAYVIEW.connectionLineCanvas.circle(x,tly,4);
+	circle.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
+	
+}
 
 function drawStartAndEndLabels(){
 	
@@ -127,12 +178,12 @@ function HoverLabel(cluster){
 	this.locLabel.attr({"font-size":14});
 	this.locLabel.id = "locLabel";
 	
-	var currentCluster = cluster.gpsLocs[Math.floor(cluster.gpsLocs.length/2)];
-	var ll = new google.maps.LatLng(currentCluster.lat,currentCluster.lon);
+	var goeCodeGpsLoc = cluster.gpsLocs[Math.floor(cluster.gpsLocs.length/2)];
+	var ll = new google.maps.LatLng(goeCodeGpsLoc.lat,goeCodeGpsLoc.lon);
 	
-	if(currentCluster.geoCode != null){
-		CALENDER.canvas.getById("locLabel").attr({"text":currentCluster.geoCode});
-		console.log("found cached geocode: " + currentCluster.geoCode);
+	if(goeCodeGpsLoc.geoCode != null){
+		CALENDER.canvas.getById("locLabel").attr({"text":goeCodeGpsLoc.geoCode});
+		console.log("found cached geocode: " + goeCodeGpsLoc.geoCode);
 	} else {
 		TIMELINEMODEL.geocoder.geocode({'latLng': ll}, 
 			function(cluster){
@@ -169,7 +220,7 @@ function HoverLabel(cluster){
 			        console.log("Geocoder failed due to: " + status);
 			      }
 			};
-		}(currentCluster));
+		}(goeCodeGpsLoc));
 	}
 };
 
