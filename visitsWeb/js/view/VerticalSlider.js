@@ -93,7 +93,6 @@ function initializeSliderElements(){
 	
 	//init background line of slider
 	this.sliderLine = this.canvas.path("M"+ this.horizontalPosition +","+ this.padding +" L"+(this.horizontalPosition)+"," + (this.sliderHeight + this.padding));
-	//this.sliderLine.attr({"stroke-width":"1px", "width":"1px"});
 	this.sliderLine.node.setAttribute("class", "sliderLine");
 	
 	//init moveable button

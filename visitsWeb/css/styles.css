@@ -40,7 +40,14 @@ body { height: 100%; margin: 0; padding: 0; font-family: Helvetica; }
 .minimapCircle.active { fill: #bbb}
 .minimapCircle.inactive { fill: #fff}
 
-.minimapHandle { stroke-width: 1px; stroke: #777; fill: #fff; width: 1px}
+.minimapHandle { stroke-width: 0.5px; stroke: #777}
+.minimapHandle.active { fill: #ddd; width: 2px}
+.minimapHandle.inactive { fill: #fff; width: 1px}
 
-.minimapHandleLine { stroke:#777; fill: none; opacity:0.5; stroke-dasharray: 9, 5;}
-.minimapHandleBar { stroke:#ccc; fill:#fff; opacity:0.5}
+.minimapHandleLine { stroke:#777; fill: none; stroke-dasharray: 9, 5}
+.minimapHandleLine.active { opacity: 1}
+.minimapHandleLine.inactive { opacity: 0.5}
+
+.minimapHandleBar { stroke:#ccc; }
+.minimapHandleBar.active { fill: #ddd; opacity: 1}
+.minimapHandleBar.inactive { fill: #fff; opacity: 0.6}

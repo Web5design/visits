@@ -120,6 +120,16 @@ function handleSliderUp(slider){
 	
 };
 
+var handleMinimapSliderDown = function(minimap){
+	
+}; 
+var handleMinimapSliderMoved = function(minimap){
+	
+};
+var handleMinimapSliderUp = function(minimap){
+	
+};
+
 var handleReaderLoad = function(evt){
 
 	var resultGpsLoc = new Array();
@@ -173,7 +183,7 @@ var handleReaderLoad = function(evt){
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
 	
-	MINIMAP = new MiniMap("minimap");
+	MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
 	
 	//overlayView.drawBubblesOverlay();
 	

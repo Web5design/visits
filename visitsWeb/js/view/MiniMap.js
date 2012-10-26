@@ -10,11 +10,14 @@ function MiniMap(targetDiv, cMapSliderStart, cMapSliderDragged, cMapSliderEnd){
 	this.padding = 8;	// padding left and right of the minimap to leave space for the slider
 	this.handleWidth  = 16;
 	this.sliderHeight = 32;
-	this.handleBarHeight = 8;
+	this.handleBarHeight = 12;
 	
 	var jQueryDiv = $("#" + targetDiv);
 	
 	this.targetDiv = targetDiv;
+	this.cMapSliderStart = cMapSliderStart;
+	this.cMapSliderDragged = cMapSliderDragged;
+	this.cMapSliderEnd = cMapSliderEnd;
 	
 	this.width = jQueryDiv.width();
 	this.height = jQueryDiv.height();
@@ -57,20 +60,131 @@ MiniMap.prototype.createZoomSlider = function(){
 	var halfHandleWidth = this.handleWidth / 2;
 	var sliderHeight = this.sliderHeight;
 	//var sliderHeight = this.height - (this.largestClusterRadius * 2) - halfHandleWidth;
-	var handlePath = "l" + this.handleWidth + ",0l0," + sliderHeight + "l-"+ halfHandleWidth +"," + halfHandleWidth + "l-" + halfHandleWidth + ",-" + halfHandleWidth + "z";
+	var handlePath = "M0,0l" + this.handleWidth + ",0l0," + sliderHeight + "l-"+ halfHandleWidth +"," + halfHandleWidth + "l-" + halfHandleWidth + ",-" + halfHandleWidth + "z";
 	
-	this.leftHandle = this.canvas.path("M0,0" + handlePath);
-	this.leftHandle.node.setAttribute("class", "minimapHandle inactive");
+	this.leftHandleObj = this.canvas.path(handlePath);
+	this.leftHandleObj.node.setAttribute("class", "minimapHandle inactive");
 	this.leftHandleLine = this.canvas.path("M" + halfHandleWidth + "," + (sliderHeight + halfHandleWidth) + "l0," + (this.height / 2 - sliderHeight));
 	this.leftHandleLine.node.setAttribute("class", "minimapHandleLine inactive");
+	this.leftHandle = this.canvas.set();
+	this.leftHandle.push(this.leftHandleObj, this.leftHandleLine);
+	this.leftHandle.transform("T0,0");
 	
-	this.rightHandle = this.canvas.path("M" + (this.width - this.handleWidth) + ",0" + handlePath);
-	this.rightHandle.node.setAttribute("class", "minimapHandle inactive");
-	this.rightHandleLine = this.canvas.path("M" + (halfHandleWidth + this.width - this.handleWidth) + "," + (sliderHeight + halfHandleWidth) + "l0," + (this.height / 2 - sliderHeight));
+	this.rightHandleObj = this.canvas.path(handlePath);
+	this.rightHandleObj.node.setAttribute("class", "minimapHandle inactive");
+	this.rightHandleLine = this.canvas.path("M" + halfHandleWidth + "," + (sliderHeight + halfHandleWidth) + "l0," + (this.height / 2 - sliderHeight));
 	this.rightHandleLine.node.setAttribute("class", "minimapHandleLine inactive");
+	this.rightHandle = this.canvas.set();
+	this.rightHandle.push(this.rightHandleObj, this.rightHandleLine);
+	this.rightHandle.transform("T" + (this.width - this.handleWidth) + ",0");
 	
 	this.handleBar = this.canvas.rect(this.handleWidth, 0, (this.width - 2 * this.handleWidth), this.handleBarHeight);
 	this.handleBar.node.setAttribute("class", "minimapHandleBar inactive");
+};
+
+/**
+ * @returns Returns the current active handle or null if none is active.
+ */
+MiniMap.prototype.getActiveHandle = function(){
+	var leftHandleClass = this.leftHandleObj.node.getAttribute("class");
+	var rightHandleClass = this.rightHandleObj.node.getAttribute("class");
+	
+	if(leftHandleClass.indexOf("inactive") != -1){
+		this.activeHandleName = "rightHandle";
+		return this.rightHandle;
+	}
+	if(rightHandleClass.indexOf("inactive") != -1){
+		this.activeHandleName = "leftHandle";
+		return this.leftHandle;
+	}
+	
+	return null;
+};
+
+MiniMap.prototype.getInactiveHandle = function(){
+	var leftHandleClass = this.leftHandleObj.node.getAttribute("class");
+	var rightHandleClass = this.rightHandleObj.node.getAttribute("class");
+
+	if(leftHandleClass.indexOf("inactive") != -1)
+		return this.leftHandle;
+	if(rightHandleClass.indexOf("inactive") != -1)
+		return this.rightHandle;
+	
+	return null;
+};
+
+function sliderStarted(x, y, evt){
+	this.activeSliderNode = evt.target;
+	this.activeSliderNode.setAttribute("class", "minimapHandle active");
+	
+	var activeHandle = this.getActiveHandle();
+	var currentTransform = activeHandle[0].transform();
+	
+	//handleTouchOffset is the offset between the mouse cursor and the slider
+	this.handleTouchOffset = (x - $("#" + this.targetDiv).offset().left) - currentTransform[0][1];
+	
+	//callback:
+	this.cMapSliderStart(this);
+};
+
+function sliderMoved(dx, dy, x, y, evt){
+	var activeHandle = this.getActiveHandle();
+	//mouse position relative to the minimap's <div>
+	var relativePosition = x - $("#" + this.targetDiv).offset().left;
+	var targetPosition = relativePosition - this.handleTouchOffset;
+	
+	//make sure that the target position is valid:
+	if(targetPosition < 0){
+		targetPosition = 0;
+	}
+	if(targetPosition + this.handleWidth > this.width){
+		targetPosition = this.width - this.handleWidth;
+	}
+	
+	//make sure that the two sliders don't intersect:
+	var otherTranslation;
+	if(this.activeHandleName == "leftHandle"){
+		otherTranslation = this.rightHandle[0].transform()[0][1];
+		if(targetPosition + this.handleWidth > otherTranslation){
+			targetPosition = otherTranslation - this.handleWidth;
+		}
+	} else if(this.activeHandleName == "rightHandle"){
+		otherTranslation = this.leftHandle[0].transform()[0][1];
+		if(targetPosition < otherTranslation + this.handleWidth){
+			targetPosition = otherTranslation + this.handleWidth;
+		}
+	}
+	
+	activeHandle.transform("T" + targetPosition + ",0");
+	
+	//re-scale the connecting handle bar
+	if(this.activeHandleName == "leftHandle"){
+		this.handleBar.attr({
+			"x" : (targetPosition + this.handleWidth),
+			"width" : (otherTranslation - (targetPosition + this.handleWidth))
+		});
+	} else if(this.activeHandleName == "rightHandle"){
+		this.handleBar.attr({
+			"x" : (otherTranslation + this.handleWidth),
+			"width" : (targetPosition - (otherTranslation + this.handleWidth))
+		});		
+	}
+	
+	//callback:
+	this.cMapSliderDragged(this);
+};
+
+function sliderEnd(evt){
+	this.activeSliderNode.setAttribute("class", "minimapHandle inactive");
+	
+	//callback:
+	this.cMapSliderEnd(this);
+};
+
+
+MiniMap.prototype.attachZoomSliderEventHandlers = function(){
+	this.leftHandle.drag(sliderMoved, sliderStarted, sliderEnd, this);
+	this.rightHandle.drag(sliderMoved, sliderStarted, sliderEnd, this);
 };
 
 MiniMap.prototype.initialize = function(){
@@ -81,4 +195,7 @@ MiniMap.prototype.initialize = function(){
 	
 	//create the zoom slider
 	this.createZoomSlider();
+
+	//attach the event handlers
+	this.attachZoomSliderEventHandlers();
 };
