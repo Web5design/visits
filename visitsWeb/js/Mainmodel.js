@@ -1,4 +1,4 @@
-function Mainmodel(gpsLocs){
+function Mainmodel(gpsLocs, distanceThreshold){
 	
 	this.gpsLocs = gpsLocs;
 	this.timeframeStart = gpsLocs[0].timestamp;
@@ -28,4 +28,10 @@ function Mainmodel(gpsLocs){
 			this.minTimeInterval = t;
 		}
 	}
+	
+	this.clusters = pivotClustering(this.gpsLocs, distanceThreshold);
 }
+
+Mainmodel.prototype.recluster = function(distanceThreshold){
+	this.clusters = pivotClustering(this.gpsLocs, distanceThreshold);
+};

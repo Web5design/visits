@@ -35,12 +35,12 @@ function MiniMap(targetDiv, cMapSliderStart, cMapSliderDragged, cMapSliderEnd){
  */
 MiniMap.prototype.drawMinimap = function(){
 	var availableWidth = this.width - 2 * this.padding;
-	var stepSize = availableWidth / TIMELINEMODEL.displayedTimeframe;
+	var stepSize = availableWidth / MAINMODEL.timeframe;
 	var horizontalPosition = this.padding;
 	
 	//find the cluster with the largest expansion
 	var largestClusterRadius = 0;
-	$.each(TIMELINEMODEL.clusters, function(index, value){ 
+	$.each(MAINMODEL.clusters, function(index, value){ 
 		var currentClusterRadius = (value.timeframe * stepSize) / 2;
 		if(largestClusterRadius < currentClusterRadius) largestClusterRadius = currentClusterRadius;
 	});
@@ -48,9 +48,9 @@ MiniMap.prototype.drawMinimap = function(){
 	
 	this.currentBubbles = new Array();
 	
-	for(var i = 0; i < TIMELINEMODEL.clusters.length; i++){
+	for(var i = 0; i < MAINMODEL.clusters.length; i++){
 
-		var clusterWidth = TIMELINEMODEL.clusters[i].timeframe * stepSize;
+		var clusterWidth = MAINMODEL.clusters[i].timeframe * stepSize;
 		var clusterRadius = clusterWidth / 2;
 		
 		//for dynamic vertical positioning:

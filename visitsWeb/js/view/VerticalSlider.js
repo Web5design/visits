@@ -228,3 +228,10 @@ function VerticalSlider(targetDiv, values, cSliderStart, cSliderDragged, cSlider
 	this.sliderButton.drag(sliderMove, sliderDragStart, sliderDragEnd);
 	
 };
+
+/**
+ * @return the currently active value of the slider
+ */
+VerticalSlider.prototype.getCurrentValue = function(){
+	return Number(this.values[this.currentValue].value);
+};

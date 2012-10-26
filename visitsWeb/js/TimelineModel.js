@@ -8,9 +8,7 @@ function TimelineModel(distanceThreshold){
 	this.displayedGpsLocs = MAINMODEL.gpsLocs;
 	
 	this.geocoder = new google.maps.Geocoder();
-	
-	this.initializeGeocodesForClusters = initializeGeocodesForClusters;
-	
+		
 	//this.clusters = lastElementClustering(this.displayedGpsLocs, 10);
 	this.clusters = pivotClustering(this.displayedGpsLocs, distanceThreshold);
 	
@@ -26,8 +24,4 @@ function TimelineModel(distanceThreshold){
 		//}
 	}
 	*/
-}
-
-function initializeGeocodesForClusters(){
-	
 }

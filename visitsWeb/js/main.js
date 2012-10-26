@@ -13,6 +13,8 @@ var OVERLAYVIEW = undefined;
 var CALENDER = undefined;
 
 var INTERACTION_AREA = undefined;
+
+var DISTANCESLIDER = undefined;
 var MINIMAP = undefined;
 
 var MARKERCOLOR = "#124BB9";
@@ -72,7 +74,7 @@ function handleSliderDown(slider){
 };
 
 function handleSliderMoved(slider){
-	var clusterThreshold = Number(slider.values[slider.currentValue].value) / 1000;
+	var clusterThreshold = DISTANCESLIDER.getCurrentValue() / 1000;
 	TIMELINEMODEL = new TimelineModel(clusterThreshold);
 	OVERLAYVIEW.drawPreviewBubbles();
 };
@@ -98,6 +100,9 @@ function handleSliderUp(slider){
 	$("#minimap").css("display", "none");
 	
 	INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
+	
+	//update the main model's clustering
+	MAINMODEL.recluster(DISTANCESLIDER.getCurrentValue() / 1000);
 	
 	TIMELINEVIEW = new TimelineView();
 	TIMELINEVIEW.drawTimeline();
@@ -167,15 +172,14 @@ var handleReaderLoad = function(evt){
 	                    { value: 600000, label: ""},
 	                    { value: 1000000, label: "Country"}
 	                    ];
-	new VerticalSlider("slider", sliderValues, handleSliderDown, handleSliderMoved, handleSliderUp);
-
-	MAINMODEL = new Mainmodel(resultGpsLoc);
+	DISTANCESLIDER = new VerticalSlider("slider", sliderValues, handleSliderDown, handleSliderMoved, handleSliderUp);
+	var currentDistanceValue = DISTANCESLIDER.getCurrentValue() / 1000;
 	
-	TIMELINEMODEL = new TimelineModel(30);
-	TIMELINEMODEL.initializeGeocodesForClusters();
+	MAINMODEL = new Mainmodel(resultGpsLoc, currentDistanceValue);
+	
+	TIMELINEMODEL = new TimelineModel(currentDistanceValue);
 	
 	INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
-	
 	
 	TIMELINEVIEW = new TimelineView();
 	TIMELINEVIEW.drawTimeline();
