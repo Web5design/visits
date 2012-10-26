@@ -22,7 +22,34 @@ function MiniMap(targetDiv, cMapSliderStart, cMapSliderDragged, cMapSliderEnd){
 	this.width = jQueryDiv.width();
 	this.height = jQueryDiv.height();
 	
+	this.currentBubbles = new Array();
+	
 	this.initialize();
+};
+
+/**
+ * Checks if a given circle is crossing one of the sliders or is within them
+ * @param circle - a circle
+ * @returns 0   - the circle is outside of the sliders
+ * 			0.5 - the circle is crossing one or both of the sliders
+ * 			1   - the circle is within both of the sliders
+ */
+MiniMap.prototype.isWithinSlider = function(circle){
+	var leftPosition = this.leftHandle[0].transform()[0][1] + this.handleWidth / 2;
+	var rightPosition = this.rightHandle[0].transform()[0][1] + this.handleWidth / 2;
+	
+	var position = circle.attr("cx");
+	var radius = circle.attr("r");
+	var leftBorder = position - radius;
+	var rightBorder = position + radius;
+	
+	if(leftBorder >= leftPosition && rightBorder <= rightPosition){
+		return 1;
+	} else if((leftBorder < leftPosition && rightBorder < leftPosition) ||(leftBorder > rightPosition && rightBorder > rightPosition)){
+		return 0;
+	} else {
+		return 0.5;
+	}
 };
 
 MiniMap.prototype.drawMinimap = function(){
@@ -38,6 +65,8 @@ MiniMap.prototype.drawMinimap = function(){
 	});
 	this.largestClusterRadius = largestClusterRadius;
 	
+	this.currentBubbles = new Array();
+	
 	for(var i = 0; i < TIMELINEMODEL.clusters.length; i++){
 
 		var clusterWidth = TIMELINEMODEL.clusters[i].timeframe * stepSize;
@@ -52,10 +81,15 @@ MiniMap.prototype.drawMinimap = function(){
 		var currentCircle = this.canvas.circle(horizontalPosition + clusterRadius, verticalPosition + clusterRadius, clusterRadius);
 		currentCircle.node.setAttribute("class", "minimapCircle active");
 		
+		this.currentBubbles.push(currentCircle);
+		
 		horizontalPosition = horizontalPosition + clusterWidth;
 	}
 };
 
+/**
+ * Draws the zoom slider
+ */
 MiniMap.prototype.createZoomSlider = function(){
 	var halfHandleWidth = this.handleWidth / 2;
 	var sliderHeight = this.sliderHeight;
@@ -64,7 +98,7 @@ MiniMap.prototype.createZoomSlider = function(){
 	
 	this.leftHandleObj = this.canvas.path(handlePath);
 	this.leftHandleObj.node.setAttribute("class", "minimapHandle inactive");
-	this.leftHandleLine = this.canvas.path("M" + halfHandleWidth + "," + (sliderHeight + halfHandleWidth) + "l0," + (this.height / 2 - sliderHeight));
+	this.leftHandleLine = this.canvas.path("M" + halfHandleWidth + "," + (sliderHeight + halfHandleWidth) + "l0," + (this.height / 2 - sliderHeight - halfHandleWidth));
 	this.leftHandleLine.node.setAttribute("class", "minimapHandleLine inactive");
 	this.leftHandle = this.canvas.set();
 	this.leftHandle.push(this.leftHandleObj, this.leftHandleLine);
@@ -72,7 +106,7 @@ MiniMap.prototype.createZoomSlider = function(){
 	
 	this.rightHandleObj = this.canvas.path(handlePath);
 	this.rightHandleObj.node.setAttribute("class", "minimapHandle inactive");
-	this.rightHandleLine = this.canvas.path("M" + halfHandleWidth + "," + (sliderHeight + halfHandleWidth) + "l0," + (this.height / 2 - sliderHeight));
+	this.rightHandleLine = this.canvas.path("M" + halfHandleWidth + "," + (sliderHeight + halfHandleWidth) + "l0," + (this.height / 2 - sliderHeight - halfHandleWidth));
 	this.rightHandleLine.node.setAttribute("class", "minimapHandleLine inactive");
 	this.rightHandle = this.canvas.set();
 	this.rightHandle.push(this.rightHandleObj, this.rightHandleLine);
@@ -101,18 +135,30 @@ MiniMap.prototype.getActiveHandle = function(){
 	return null;
 };
 
-MiniMap.prototype.getInactiveHandle = function(){
-	var leftHandleClass = this.leftHandleObj.node.getAttribute("class");
-	var rightHandleClass = this.rightHandleObj.node.getAttribute("class");
-
-	if(leftHandleClass.indexOf("inactive") != -1)
-		return this.leftHandle;
-	if(rightHandleClass.indexOf("inactive") != -1)
-		return this.rightHandle;
-	
-	return null;
+/**
+ * Redraws the minimap's circles: sets active/inactive classes and
+ * splits circles if necessary.
+ */
+MiniMap.prototype.updateCircles = function(){
+	//update all bubble classes and split them if necessary
+	for(var i = 0; i < this.currentBubbles.length; i++){
+		var currentBubble = this.currentBubbles[i];
+		var withinTest = this.isWithinSlider(currentBubble);
+		if(withinTest > 0){
+			currentBubble.node.setAttribute("class", "minimapCircle active");
+		} else {
+			currentBubble.node.setAttribute("class", "minimapCircle inactive");			
+		}
+	}
 };
 
+/**
+ * Event handler: slider has been moved for the first time
+ * Note: has to run in the context of the minimap object
+ * @param x - mouse x position
+ * @param y - mouse y position
+ * @param evt - event
+ */
 function sliderStarted(x, y, evt){
 	this.activeSliderNode = evt.target;
 	this.activeSliderNode.setAttribute("class", "minimapHandle active");
@@ -127,6 +173,15 @@ function sliderStarted(x, y, evt){
 	this.cMapSliderStart(this);
 };
 
+/**
+ * Event handler: slider has been moved
+ * Note: has to run in the context of the minimap object
+ * @param dx - difference in mouse x position to last call
+ * @param dy - difference in mouse y position to last call
+ * @param x - mouse x position
+ * @param y - mouse y position
+ * @param evt - event
+ */
 function sliderMoved(dx, dy, x, y, evt){
 	var activeHandle = this.getActiveHandle();
 	//mouse position relative to the minimap's <div>
@@ -170,10 +225,18 @@ function sliderMoved(dx, dy, x, y, evt){
 		});		
 	}
 	
+	//redraw the circles
+	this.updateCircles();
+	
 	//callback:
 	this.cMapSliderDragged(this);
 };
 
+/**
+ * Event handler: slider is no longer moved
+ * Note: has to run in the context of the minimap object
+ * @param evt - event
+ */
 function sliderEnd(evt){
 	this.activeSliderNode.setAttribute("class", "minimapHandle inactive");
 	
@@ -182,19 +245,25 @@ function sliderEnd(evt){
 };
 
 
+/**
+ * Initializes the zoom slider's event handlers
+ */
 MiniMap.prototype.attachZoomSliderEventHandlers = function(){
 	this.leftHandle.drag(sliderMoved, sliderStarted, sliderEnd, this);
 	this.rightHandle.drag(sliderMoved, sliderStarted, sliderEnd, this);
 };
 
+/**
+ * Initializes the graphical elements of the minimap
+ */
 MiniMap.prototype.initialize = function(){
 	this.canvas = Raphael(this.targetDiv, this.width, this.height);
-
-	//load the minimap
-	this.drawMinimap();
 	
 	//create the zoom slider
 	this.createZoomSlider();
+
+	//load the minimap
+	this.drawMinimap();
 
 	//attach the event handlers
 	this.attachZoomSliderEventHandlers();
