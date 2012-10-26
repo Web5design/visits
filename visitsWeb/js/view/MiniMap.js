@@ -292,13 +292,63 @@ function sliderEnd(evt){
 	this.cMapSliderEnd(this);
 };
 
+function barStarted(x, y, evt){
+	this.handleBar.node.setAttribute("class", "minimapHandleBar active");
+
+	var currentPosition = this.handleBar.attr("x");
+	//handleTouchOffset is the offset between the mouse cursor and the handle bar
+	this.handleTouchOffset = (x - $("#" + this.targetDiv).offset().left) - currentPosition;
+
+	//callback:
+	this.cMapSliderStart(this);
+};
+
+function barMoved(dx, dy, x, y, evt){
+	//mouse position relative to the minimap's <div>
+	var relativePosition = x - $("#" + this.targetDiv).offset().left;
+	var targetPosition = relativePosition - this.handleTouchOffset;
+	var handleBarWidth = this.handleBar.attr("width");
+
+	//make sure that the target position is valid:
+	if(targetPosition - this.handleWidth < 0){
+		targetPosition = this.handleWidth;
+	}
+	if(targetPosition + this.handleWidth + handleBarWidth > this.width){
+		targetPosition = this.width - this.handleWidth - handleBarWidth;
+	}
+
+	var diffx = this.handleBar.attr("x") - targetPosition;
+
+	this.handleBar.attr("x", targetPosition);
+	var currentLeftHandlePosition = this.leftHandle[0].transform()[0][1];
+	this.leftHandle.transform("T" + (currentLeftHandlePosition - diffx) + ",0");
+	var currentRightHandlePosition = this.rightHandle[0].transform()[0][1];
+	this.rightHandle.transform("T" + (currentRightHandlePosition - diffx) + ",0");
+	
+	//redraw the circles
+	this.updateCircles();
+	
+	//callback:
+	this.cMapSliderDragged(this);
+};
+
+function barEnd(evt){
+	this.handleBar.node.setAttribute("class", "minimapHandleBar inactive");	
+
+	//callback:
+	this.cMapSliderEnd(this);
+};
 
 /**
  * Initializes the zoom slider's event handlers
  */
 MiniMap.prototype.attachZoomSliderEventHandlers = function(){
+	//attach handlers to the handles
 	this.leftHandle.drag(sliderMoved, sliderStarted, sliderEnd, this);
 	this.rightHandle.drag(sliderMoved, sliderStarted, sliderEnd, this);
+	
+	//attach handlers to the handle bar
+	this.handleBar.drag(barMoved, barStarted, barEnd, this);
 };
 
 /**

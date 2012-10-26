@@ -87,6 +87,7 @@ function handleSliderUp(slider){
 	$("#calender").empty();
 	$("#timeline").empty();
 	$("#overview").empty();
+	$("#minimap").empty();
 	
 	$("#marker").css("display","none");
 	$("#masks").css("display","none");
@@ -94,6 +95,7 @@ function handleSliderUp(slider){
 	$("#calenderBG").css("display","none");
 	$("#calender").css("display","none");
 	$("#timeline").css("opacity", "1");
+	$("#minimap").css("display", "none");
 	
 	INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
 	
@@ -108,6 +110,7 @@ function handleSliderUp(slider){
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
 	
+	MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
 	
 	$("#marker").fadeIn(1500);
 	$("#masks").fadeIn(1500);
@@ -117,15 +120,18 @@ function handleSliderUp(slider){
 	$("#interactionArea").fadeIn(1500);
 	$("#timeline").fadeIn(500);
 	$("#overview").fadeIn(2500);
+	$("#minimap").fadeIn(1500);
 	
 };
 
 var handleMinimapSliderDown = function(minimap){
 	
 }; 
+
 var handleMinimapSliderMoved = function(minimap){
 	
 };
+
 var handleMinimapSliderUp = function(minimap){
 	
 };
