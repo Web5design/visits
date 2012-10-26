@@ -23,15 +23,20 @@ MiniMap.prototype.drawMinimap = function(){
 	var stepSize = availableWidth / TIMELINEMODEL.displayedTimeframe;
 	var horizontalPosition = this.padding;
 	
-	var largestClusterWidth = 0;
-	$.each(TIMELINEMODEL.clusters, function(index, value){});
+	//find the cluster with the largest expansion
+	var largestClusterRadius = 0;
+	$.each(TIMELINEMODEL.clusters, function(index, value){ 
+		var currentClusterRadius = (value.timeframe * stepSize) / 2;
+		if(largestClusterRadius < currentClusterRadius) largestClusterRadius = currentClusterRadius;
+	});
+	this.largestClusterRadius = largestClusterRadius;
 	
 	for(var i = 0; i < TIMELINEMODEL.clusters.length; i++){
 
 		var clusterWidth = TIMELINEMODEL.clusters[i].timeframe * stepSize;
 		var clusterRadius = clusterWidth / 2;
 		
-		var verticalPosition = (this.height / 2.0) - clusterRadius;
+		var verticalPosition = (this.height - this.largestClusterRadius) - clusterRadius - 1;
 		
 		var currentCircle = this.canvas.circle(horizontalPosition + clusterRadius, verticalPosition + clusterRadius, clusterRadius);
 		currentCircle.node.setAttribute("class", "minimapCircle active");
@@ -41,8 +46,8 @@ MiniMap.prototype.drawMinimap = function(){
 };
 
 MiniMap.prototype.createZoomSlider = function(){
-	var sliderHeight = this.height / 4;
 	var halfHandleWidth = this.handleWidth / 2;
+	var sliderHeight = this.height - (this.largestClusterRadius * 2) - halfHandleWidth;
 	var handlePath = "l" + this.handleWidth + ",0l0," + sliderHeight + "l-"+ halfHandleWidth +"," + halfHandleWidth + "l-" + halfHandleWidth + ",-" + halfHandleWidth + "z";
 	
 	this.leftHandle = this.canvas.path("M0,0" + handlePath);
