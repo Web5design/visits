@@ -14,21 +14,25 @@ function MiniMap(targetDiv, cMapSliderStart, cMapSliderDragged, cMapSliderEnd){
 	
 	var jQueryDiv = $("#" + targetDiv);
 	
+	this.width = jQueryDiv.width();
+	this.height = jQueryDiv.height();
+
 	this.targetDiv = targetDiv;
 	this.cMapSliderStart = cMapSliderStart;
 	this.cMapSliderDragged = cMapSliderDragged;
 	this.cMapSliderEnd = cMapSliderEnd;
-	
-	this.width = jQueryDiv.width();
-	this.height = jQueryDiv.height();
-	
+
+	//currentBubbles contains all currently visible bubbles
 	this.currentBubbles = new Array();
+	//virtualBubbles contains pairs of bubbles that are drawn when a bubble is split by a handle
 	this.virtualBubbles = new Array();
 	
 	this.initialize();
 };
 
-
+/**
+ * Draws the minimap bubbles, displays them and puts them into the currentBubbles Array.
+ */
 MiniMap.prototype.drawMinimap = function(){
 	var availableWidth = this.width - 2 * this.padding;
 	var stepSize = availableWidth / TIMELINEMODEL.displayedTimeframe;
@@ -73,6 +77,7 @@ MiniMap.prototype.createZoomSlider = function(){
 	//var sliderHeight = this.height - (this.largestClusterRadius * 2) - halfHandleWidth;
 	var handlePath = "M0,0l" + this.handleWidth + ",0l0," + sliderHeight + "l-"+ halfHandleWidth +"," + halfHandleWidth + "l-" + halfHandleWidth + ",-" + halfHandleWidth + "z";
 	
+	//creates the left handle and the corresponding dashed vertical line
 	this.leftHandleObj = this.canvas.path(handlePath);
 	this.leftHandleObj.node.setAttribute("class", "minimapHandle inactive");
 	this.leftHandleLine = this.canvas.path("M" + halfHandleWidth + "," + (sliderHeight + halfHandleWidth) + "l0," + (this.height / 2 - sliderHeight - halfHandleWidth));
@@ -81,6 +86,7 @@ MiniMap.prototype.createZoomSlider = function(){
 	this.leftHandle.push(this.leftHandleObj, this.leftHandleLine);
 	this.leftHandle.transform("T0,0");
 	
+	//creates the right handle and the corresponding dashed vertical line
 	this.rightHandleObj = this.canvas.path(handlePath);
 	this.rightHandleObj.node.setAttribute("class", "minimapHandle inactive");
 	this.rightHandleLine = this.canvas.path("M" + halfHandleWidth + "," + (sliderHeight + halfHandleWidth) + "l0," + (this.height / 2 - sliderHeight - halfHandleWidth));
@@ -89,6 +95,7 @@ MiniMap.prototype.createZoomSlider = function(){
 	this.rightHandle.push(this.rightHandleObj, this.rightHandleLine);
 	this.rightHandle.transform("T" + (this.width - this.handleWidth) + ",0");
 	
+	//creates the handle bar between the two handles
 	this.handleBar = this.canvas.rect(this.handleWidth, 0, (this.width - 2 * this.handleWidth), this.handleBarHeight);
 	this.handleBar.node.setAttribute("class", "minimapHandleBar inactive");
 };
@@ -113,12 +120,12 @@ MiniMap.prototype.getActiveHandle = function(){
 };
 
 /**
- * Checks if a given circle is crossing one of the sliders or is within them
- * @param circle - a circle
- * @returns 0   - the circle is outside of the sliders
- * 			0.25 - the circle is intersecting with the left slider
- * 			0.5 - the circle is intersecting with the right slider
- * 			1   - the circle is within both of the sliders
+ * Checks if a given bubbles is crossing one of the sliders or is within them
+ * @param circle - the respective bubble
+ * @returns 0   - the bubble is outside of the sliders
+ * 			0.25 - the bubble is intersecting with the left slider
+ * 			0.5 - the bubble is intersecting with the right slider
+ * 			1   - the bubble is within both of the sliders
  */
 MiniMap.prototype.isWithinSlider = function(circle){
 	var leftPosition = this.leftHandle[0].transform()[0][1] + this.handleWidth / 2;
@@ -161,7 +168,7 @@ MiniMap.prototype.updateCircles = function(){
 			//set the actual bubble to inactive
 			currentBubble.node.setAttribute("class", "minimapCircle split");
 			
-			//now show two smaller bubbles
+			//now show two smaller virtual bubbles
 			var crossingPosition;
 			if(withinTest == 0.25){
 				//intersection with left slider
@@ -181,9 +188,11 @@ MiniMap.prototype.updateCircles = function(){
 			var rightCircleWidth = currentBubbleRadius * 2 - leftCircleWidth;
 			var rightCircleCenter = currentBubbleRightBorder - (rightCircleWidth / 2);
 			
+			//draw the two virtual bubbles
 			var leftCircle = this.canvas.circle(leftCircleCenter, currentBubble.attr("cy"), leftCircleWidth / 2);
 			var rightCircle = this.canvas.circle(rightCircleCenter, currentBubble.attr("cy"), rightCircleWidth / 2);
 			
+			//set the right inactive/active classes for the virtual bubbles
 			if(withinTest == 0.25){
 				leftCircle.node.setAttribute("class", "minimapCircle inactive");
 				rightCircle.node.setAttribute("class", "minimapCircle active");
@@ -292,17 +301,33 @@ function sliderEnd(evt){
 	this.cMapSliderEnd(this);
 };
 
+/**
+ * Event handler: bar handle has been moved for the first time
+ * Note: has to run in the context of the minimap object
+ * @param x - mouse x position
+ * @param y - mouse y position
+ * @param evt - event
+ */
 function barStarted(x, y, evt){
 	this.handleBar.node.setAttribute("class", "minimapHandleBar active");
 
 	var currentPosition = this.handleBar.attr("x");
-	//handleTouchOffset is the offset between the mouse cursor and the handle bar
+	//handleTouchOffset is the horizontal offset between the mouse cursor and the handle bar
 	this.handleTouchOffset = (x - $("#" + this.targetDiv).offset().left) - currentPosition;
 
 	//callback:
 	this.cMapSliderStart(this);
 };
 
+/**
+ * Event handler: bar handle has been moved
+ * Note: has to run in the context of the minimap object
+ * @param dx - difference in mouse x position to last call
+ * @param dy - difference in mouse y position to last call
+ * @param x - mouse x position
+ * @param y - mouse y position
+ * @param evt - event
+ */
 function barMoved(dx, dy, x, y, evt){
 	//mouse position relative to the minimap's <div>
 	var relativePosition = x - $("#" + this.targetDiv).offset().left;
@@ -317,9 +342,12 @@ function barMoved(dx, dy, x, y, evt){
 		targetPosition = this.width - this.handleWidth - handleBarWidth;
 	}
 
+	//the horizontal difference since the last call (dx parameter is unreliable...)
 	var diffx = this.handleBar.attr("x") - targetPosition;
 
 	this.handleBar.attr("x", targetPosition);
+	
+	//also move the handles left and right of the handle bar
 	var currentLeftHandlePosition = this.leftHandle[0].transform()[0][1];
 	this.leftHandle.transform("T" + (currentLeftHandlePosition - diffx) + ",0");
 	var currentRightHandlePosition = this.rightHandle[0].transform()[0][1];
@@ -332,6 +360,11 @@ function barMoved(dx, dy, x, y, evt){
 	this.cMapSliderDragged(this);
 };
 
+/**
+ * Event handler: bar handle is no longer moved
+ * Note: has to run in the context of the minimap object
+ * @param evt - event
+ */
 function barEnd(evt){
 	this.handleBar.node.setAttribute("class", "minimapHandleBar inactive");	
 
