@@ -14,9 +14,13 @@ body { height: 100%; margin: 0; padding: 0; font-family: Helvetica; }
 #overview {position:absolute;top:500px;left:20px;height:250px;width:500px;display:none}
 #connectionLines {position:absolute;top:0px;left:0px;height:100%;width:100%;display:none}
 #calender {position:absolute;top:0px;left:0px;height:100%;width:100%;display:none}
+
 #interactionArea {position:absolute;top:0px;left:0px;height:100%;width:100%;display:none}
 
 #slider {position:absolute;top:45px;left:1200px;}
+
+#minimap {position:absolute;top:500px;left:720px;width:200px;height:150px;}
+
 
 
 /* bubble */
@@ -32,4 +36,9 @@ body { height: 100%; margin: 0; padding: 0; font-family: Helvetica; }
 .sliderValueDisplay {fill: #000}
 .sliderMark {fill: #777; stroke-width: 0}
 
-
+/* minimap */
+.minimapVisibleCircle { stroke: #aaa; fill: #bbb}
+.minimapInvisibleCircle { stroke: #aaa; fill: #fff}
+.minimapHandle { stroke-width: 1px; stroke: #777; fill: #fff; width: 1px}
+.minimapHandleLine { stroke:#777; fill: none; opacity:0.5; stroke-dasharray: 9, 5;}
+.minimapHandleBar { stroke:#ccc; fill:#fff; opacity:0.5}
