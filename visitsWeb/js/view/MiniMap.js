@@ -23,34 +23,11 @@ function MiniMap(targetDiv, cMapSliderStart, cMapSliderDragged, cMapSliderEnd){
 	this.height = jQueryDiv.height();
 	
 	this.currentBubbles = new Array();
+	this.virtualBubbles = new Array();
 	
 	this.initialize();
 };
 
-/**
- * Checks if a given circle is crossing one of the sliders or is within them
- * @param circle - a circle
- * @returns 0   - the circle is outside of the sliders
- * 			0.5 - the circle is crossing one or both of the sliders
- * 			1   - the circle is within both of the sliders
- */
-MiniMap.prototype.isWithinSlider = function(circle){
-	var leftPosition = this.leftHandle[0].transform()[0][1] + this.handleWidth / 2;
-	var rightPosition = this.rightHandle[0].transform()[0][1] + this.handleWidth / 2;
-	
-	var position = circle.attr("cx");
-	var radius = circle.attr("r");
-	var leftBorder = position - radius;
-	var rightBorder = position + radius;
-	
-	if(leftBorder >= leftPosition && rightBorder <= rightPosition){
-		return 1;
-	} else if((leftBorder < leftPosition && rightBorder < leftPosition) ||(leftBorder > rightPosition && rightBorder > rightPosition)){
-		return 0;
-	} else {
-		return 0.5;
-	}
-};
 
 MiniMap.prototype.drawMinimap = function(){
 	var availableWidth = this.width - 2 * this.padding;
@@ -136,16 +113,87 @@ MiniMap.prototype.getActiveHandle = function(){
 };
 
 /**
+ * Checks if a given circle is crossing one of the sliders or is within them
+ * @param circle - a circle
+ * @returns 0   - the circle is outside of the sliders
+ * 			0.25 - the circle is intersecting with the left slider
+ * 			0.5 - the circle is intersecting with the right slider
+ * 			1   - the circle is within both of the sliders
+ */
+MiniMap.prototype.isWithinSlider = function(circle){
+	var leftPosition = this.leftHandle[0].transform()[0][1] + this.handleWidth / 2;
+	var rightPosition = this.rightHandle[0].transform()[0][1] + this.handleWidth / 2;
+	
+	var position = circle.attr("cx");
+	var radius = circle.attr("r");
+	var leftBorder = position - radius;
+	var rightBorder = position + radius;
+	
+	if(leftBorder >= leftPosition && rightBorder <= rightPosition){
+		return 1;
+	} else if((leftBorder < leftPosition && rightBorder < leftPosition) || (leftBorder > rightPosition && rightBorder > rightPosition)){
+		return 0;
+	} else if(leftBorder < leftPosition && rightBorder <= rightPosition){
+		return 0.25;
+	} else {
+		return 0.5;
+	}
+};
+
+/**
  * Redraws the minimap's circles: sets active/inactive classes and
  * splits circles if necessary.
  */
 MiniMap.prototype.updateCircles = function(){
+	//remove all virtual bubbles
+	for(var i = 0; i < this.virtualBubbles.length; i++){
+		this.virtualBubbles[i].remove();
+	}
+	this.virtualBubbles = new Array();
+	
 	//update all bubble classes and split them if necessary
 	for(var i = 0; i < this.currentBubbles.length; i++){
 		var currentBubble = this.currentBubbles[i];
 		var withinTest = this.isWithinSlider(currentBubble);
-		if(withinTest > 0){
+		if(withinTest == 1){
 			currentBubble.node.setAttribute("class", "minimapCircle active");
+		} else if(withinTest == 0.5 || withinTest == 0.25){
+			//set the actual bubble to inactive
+			currentBubble.node.setAttribute("class", "minimapCircle split");
+			
+			//now show two smaller bubbles
+			var crossingPosition;
+			if(withinTest == 0.25){
+				//intersection with left slider
+				crossingPosition = this.leftHandle[0].transform()[0][1] + this.handleWidth / 2;
+			} else {
+				//intersection with right slider
+				crossingPosition = this.rightHandle[0].transform()[0][1] + this.handleWidth / 2;
+			}
+			
+			var currentBubblePosition = currentBubble.attr("cx");
+			var currentBubbleRadius = currentBubble.attr("r");
+			var currentBubbleLeftBorder = currentBubblePosition - currentBubbleRadius;
+			var currentBubbleRightBorder = currentBubblePosition + currentBubbleRadius;
+			
+			var leftCircleWidth = (crossingPosition - currentBubbleLeftBorder);
+			var leftCircleCenter = currentBubbleLeftBorder + (leftCircleWidth / 2);
+			var rightCircleWidth = currentBubbleRadius * 2 - leftCircleWidth;
+			var rightCircleCenter = currentBubbleRightBorder - (rightCircleWidth / 2);
+			
+			var leftCircle = this.canvas.circle(leftCircleCenter, currentBubble.attr("cy"), leftCircleWidth / 2);
+			var rightCircle = this.canvas.circle(rightCircleCenter, currentBubble.attr("cy"), rightCircleWidth / 2);
+			
+			if(withinTest == 0.25){
+				leftCircle.node.setAttribute("class", "minimapCircle inactive");
+				rightCircle.node.setAttribute("class", "minimapCircle active");
+			} else {
+				leftCircle.node.setAttribute("class", "minimapCircle active");
+				rightCircle.node.setAttribute("class", "minimapCircle inactive");				
+			}
+			
+			this.virtualBubbles.push(leftCircle, rightCircle);
+			
 		} else {
 			currentBubble.node.setAttribute("class", "minimapCircle inactive");			
 		}
@@ -258,12 +306,12 @@ MiniMap.prototype.attachZoomSliderEventHandlers = function(){
  */
 MiniMap.prototype.initialize = function(){
 	this.canvas = Raphael(this.targetDiv, this.width, this.height);
-	
-	//create the zoom slider
-	this.createZoomSlider();
 
 	//load the minimap
 	this.drawMinimap();
+	
+	//create the zoom slider
+	this.createZoomSlider();
 
 	//attach the event handlers
 	this.attachZoomSliderEventHandlers();
