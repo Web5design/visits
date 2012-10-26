@@ -22,6 +22,9 @@ function MiniMap(targetDiv, cMapSliderStart, cMapSliderDragged, cMapSliderEnd){
 	this.cMapSliderDragged = cMapSliderDragged;
 	this.cMapSliderEnd = cMapSliderEnd;
 
+	this.leftBorderBubbleIndex = 0;
+	this.rightBorderBubbleIndex = MAINMODEL.clusters.length - 1;
+	
 	//currentBubbles contains all currently visible bubbles
 	this.currentBubbles = new Array();
 	//virtualBubbles contains pairs of bubbles that are drawn when a bubble is split by a handle
@@ -158,12 +161,19 @@ MiniMap.prototype.updateCircles = function(){
 	}
 	this.virtualBubbles = new Array();
 	
+	this.leftBorderBubbleIndex = -1;
+	this.rightBorderBubbleIndex = -1;
+	
 	//update all bubble classes and split them if necessary
 	for(var i = 0; i < this.currentBubbles.length; i++){
 		var currentBubble = this.currentBubbles[i];
 		var withinTest = this.isWithinSlider(currentBubble);
 		if(withinTest == 1){
 			currentBubble.node.setAttribute("class", "minimapCircle active");
+			
+			if(this.leftBorderBubbleIndex == -1){
+				this.leftBorderBubbleIndex = i;
+			}
 		} else if(withinTest == 0.5 || withinTest == 0.25){
 			//set the actual bubble to inactive
 			currentBubble.node.setAttribute("class", "minimapCircle split");
@@ -204,7 +214,11 @@ MiniMap.prototype.updateCircles = function(){
 			this.virtualBubbles.push(leftCircle, rightCircle);
 			
 		} else {
-			currentBubble.node.setAttribute("class", "minimapCircle inactive");			
+			currentBubble.node.setAttribute("class", "minimapCircle inactive");		
+			
+			if(this.rightBorderBubbleIndex == -1){
+				this.rightBorderBubbleIndex = i;
+			}
 		}
 	}
 };

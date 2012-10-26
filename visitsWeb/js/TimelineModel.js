@@ -1,11 +1,15 @@
-function TimelineModel(distanceThreshold){
+function TimelineModel(mainModelStartIndex, mainModelEndIndex, distanceThreshold){
 	
-	this.displayedTimeframeStart = MAINMODEL.timeframeStart;
-	this.displayedTimeframeEnd = MAINMODEL.timeframeEnd;
+	this.gpsLocs = MAINMODEL.gpsLocs;
+	this.displayedTimeframeStart = MAINMODEL.gpsLocs[mainModelStartIndex].timestamp;
+	this.displayedTimeframeEnd = MAINMODEL.gpsLocs[mainModelEndIndex].timestamp;
 	
 	this.displayedTimeframe = this.displayedTimeframeEnd -this.displayedTimeframeStart;
 	
-	this.displayedGpsLocs = MAINMODEL.gpsLocs;
+	this.displayedGpsLocs = new Array();
+	for(var i = mainModelStartIndex; i <= mainModelEndIndex; i++){
+		this.displayedGpsLocs.push(MAINMODEL.gpsLocs[i]);
+	}
 	
 	this.geocoder = new google.maps.Geocoder();
 		

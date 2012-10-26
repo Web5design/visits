@@ -67,6 +67,25 @@ function readKmlLocations(kmlText){
 	return result;
 };
 
+/**
+ * 
+ * @return an Array with start and end index in the main model's gpsLocs
+ */
+function mapMinimapSlidersToRange(){
+	/*var leftIndex = MINIMAP.leftBorderBubbleIndex;
+	var rightIndex = MINIMAP.rightBorderBubbleIndex;
+	var mainModelLeftIndex = -1;
+	var mainModelRightIndex = -1;
+	
+	for(var i = 0; i < MAINMODEL.gpsLocs.length; i++){
+		var currentLoc = MAINMODEL.gpsLocs[i];
+		
+		if(currentLoc ===)
+	}
+	*/
+	return [0, MAINMODEL.gpsLocs.length - 1];
+};
+
 function handleSliderDown(slider){
 	OVERLAYVIEW.hideMarkers();
 	TIMELINEVIEW.hideTimeline();
@@ -74,8 +93,9 @@ function handleSliderDown(slider){
 };
 
 function handleSliderMoved(slider){
+	var mainmodelRange = mapMinimapSlidersToRange();
 	var clusterThreshold = DISTANCESLIDER.getCurrentValue() / 1000;
-	TIMELINEMODEL = new TimelineModel(clusterThreshold);
+	TIMELINEMODEL = new TimelineModel(mainmodelRange[0], mainmodelRange[1], clusterThreshold);
 	OVERLAYVIEW.drawPreviewBubbles();
 };
 
@@ -138,7 +158,40 @@ var handleMinimapSliderMoved = function(minimap){
 };
 
 var handleMinimapSliderUp = function(minimap){
+	/*$("#marker").empty();
+	$("#masks").empty();
+	$("#connectionLines").empty();
+	$("#calender").empty();
+	$("#timeline").empty();
+	$("#overview").empty();
+	$("#minimap").empty();
 	
+	$("#marker").css("display","none");
+	$("#masks").css("display","none");
+	$("#connectionLines").css("display","none");
+	$("#calenderBG").css("display","none");
+	$("#calender").css("display","none");
+	$("#timeline").css("opacity", "1");
+	$("#minimap").css("display", "none");
+	
+	INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
+	
+	var mainModelIndices = mapMinimapSlidersToRange();
+	TIMELINEMODEL = new TimelineModel(mainModelIndices[0], mainModelIndices[1], DISTANCESLIDER.getCurrentValue() / 1000);
+	
+	TIMELINEVIEW = new TimelineView();
+	TIMELINEVIEW.drawTimeline();
+	
+	OVERVIEWMAP = new OverviewMap();
+	OVERVIEWMAP.drawOverviewMap();
+
+	CALENDER = new Calender();
+	
+	OVERLAYVIEW = new OverlayView();
+	OVERLAYVIEW.drawBubbleMasks();
+	
+	MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
+	*/
 };
 
 var handleReaderLoad = function(evt){
@@ -177,7 +230,7 @@ var handleReaderLoad = function(evt){
 	
 	MAINMODEL = new Mainmodel(resultGpsLoc, currentDistanceValue);
 	
-	TIMELINEMODEL = new TimelineModel(currentDistanceValue);
+	TIMELINEMODEL = new TimelineModel(0, MAINMODEL.gpsLocs.length - 1, currentDistanceValue);
 	
 	INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
 	
