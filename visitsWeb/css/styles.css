@@ -37,8 +37,11 @@ body { height: 100%; margin: 0; padding: 0; font-family: Helvetica; }
 .sliderMark {fill: #777; stroke-width: 0}
 
 /* minimap */
-.minimapVisibleCircle { stroke: #aaa; fill: #bbb}
-.minimapInvisibleCircle { stroke: #aaa; fill: #fff}
+.minimapCircle { stroke: #aaa }
+.minimapCircle.active { fill: #bbb}
+.minimapCircle.inactive { fill: #fff}
+
 .minimapHandle { stroke-width: 1px; stroke: #777; fill: #fff; width: 1px}
+
 .minimapHandleLine { stroke:#777; fill: none; opacity:0.5; stroke-dasharray: 9, 5;}
 .minimapHandleBar { stroke:#ccc; fill:#fff; opacity:0.5}

@@ -23,6 +23,9 @@ MiniMap.prototype.drawMinimap = function(){
 	var stepSize = availableWidth / TIMELINEMODEL.displayedTimeframe;
 	var horizontalPosition = this.padding;
 	
+	var largestClusterWidth = 0;
+	$.each(TIMELINEMODEL.clusters, function(index, value){});
+	
 	for(var i = 0; i < TIMELINEMODEL.clusters.length; i++){
 
 		var clusterWidth = TIMELINEMODEL.clusters[i].timeframe * stepSize;
@@ -31,7 +34,7 @@ MiniMap.prototype.drawMinimap = function(){
 		var verticalPosition = (this.height / 2.0) - clusterRadius;
 		
 		var currentCircle = this.canvas.circle(horizontalPosition + clusterRadius, verticalPosition + clusterRadius, clusterRadius);
-		currentCircle.node.setAttribute("class", "minimapVisibleCircle");
+		currentCircle.node.setAttribute("class", "minimapCircle active");
 		
 		horizontalPosition = horizontalPosition + clusterWidth;
 	}
@@ -43,17 +46,17 @@ MiniMap.prototype.createZoomSlider = function(){
 	var handlePath = "l" + this.handleWidth + ",0l0," + sliderHeight + "l-"+ halfHandleWidth +"," + halfHandleWidth + "l-" + halfHandleWidth + ",-" + halfHandleWidth + "z";
 	
 	this.leftHandle = this.canvas.path("M0,0" + handlePath);
-	this.leftHandle.node.setAttribute("class", "minimapHandle");
-	this.leftHandleLine = this.canvas.path("M" + halfHandleWidth + "," + (sliderHeight + halfHandleWidth) + "l0," + (this.height / 2));
-	this.leftHandleLine.node.setAttribute("class", "minimapHandleLine");
+	this.leftHandle.node.setAttribute("class", "minimapHandle inactive");
+	this.leftHandleLine = this.canvas.path("M" + halfHandleWidth + "," + (sliderHeight + halfHandleWidth) + "l0," + (this.height - sliderHeight));
+	this.leftHandleLine.node.setAttribute("class", "minimapHandleLine inactive");
 	
 	this.rightHandle = this.canvas.path("M" + (this.width - this.handleWidth) + ",0" + handlePath);
-	this.rightHandle.node.setAttribute("class", "minimapHandle");
-	this.rightHandleLine = this.canvas.path("M" + (halfHandleWidth + this.width - this.handleWidth) + "," + (sliderHeight + halfHandleWidth) + "l0," + (this.height / 2));
-	this.rightHandleLine.node.setAttribute("class", "minimapHandleLine");
+	this.rightHandle.node.setAttribute("class", "minimapHandle inactive");
+	this.rightHandleLine = this.canvas.path("M" + (halfHandleWidth + this.width - this.handleWidth) + "," + (sliderHeight + halfHandleWidth) + "l0," + (this.height - sliderHeight));
+	this.rightHandleLine.node.setAttribute("class", "minimapHandleLine inactive");
 	
 	this.handleBar = this.canvas.rect(this.handleWidth, 0, (this.width - 2 * this.handleWidth), this.handleBarHeight);
-	this.handleBar.node.setAttribute("class", "minimapHandleBar");
+	this.handleBar.node.setAttribute("class", "minimapHandleBar inactive");
 };
 
 MiniMap.prototype.initialize = function(){
