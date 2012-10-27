@@ -126,6 +126,7 @@ MiniMap.prototype.getActiveHandle = function(){
  * Checks if a given bubbles is crossing one of the sliders or is within them
  * @param circle - the respective bubble
  * @returns 0   - the bubble is outside of the sliders
+ * 			0.1 - the bubble is intersecting with both of the sliders
  * 			0.25 - the bubble is intersecting with the left slider
  * 			0.5 - the bubble is intersecting with the right slider
  * 			1   - the bubble is within both of the sliders
@@ -143,6 +144,8 @@ MiniMap.prototype.isWithinSlider = function(circle){
 		return 1;
 	} else if((leftBorder < leftPosition && rightBorder < leftPosition) || (leftBorder > rightPosition && rightBorder > rightPosition)){
 		return 0;
+	} else if((leftBorder < leftPosition && rightBorder > leftPosition) && (leftBorder < rightPosition && rightBorder > rightPosition)){
+		return 0.1;
 	} else if(leftBorder < leftPosition && rightBorder <= rightPosition){
 		return 0.25;
 	} else {
@@ -174,18 +177,25 @@ MiniMap.prototype.updateCircles = function(){
 			if(this.leftBorderBubbleIndex == -1){
 				this.leftBorderBubbleIndex = i;
 			}
-		} else if(withinTest == 0.5 || withinTest == 0.25){
+		} else if(withinTest == 0.5 || withinTest == 0.25 || withinTest == 0.1){
 			//set the actual bubble to inactive
 			currentBubble.node.setAttribute("class", "minimapCircle split");
 			
-			//now show two smaller virtual bubbles
+			//now show two or three smaller virtual bubbles
 			var crossingPosition;
 			if(withinTest == 0.25){
 				//intersection with left slider
 				crossingPosition = this.leftHandle[0].transform()[0][1] + this.handleWidth / 2;
-			} else {
+			} else if(withinTest == 0.5) {
 				//intersection with right slider
 				crossingPosition = this.rightHandle[0].transform()[0][1] + this.handleWidth / 2;
+			} else if(withinTest == 0.1){
+				//intersection with both sliders
+				crossingPosition = new Array();
+				crossingPosition.push(
+						this.leftHandle[0].transform()[0][1] + this.handleWidth / 2,
+						this.rightHandle[0].transform()[0][1] + this.handleWidth / 2
+				);
 			}
 			
 			var currentBubblePosition = currentBubble.attr("cx");
@@ -193,25 +203,42 @@ MiniMap.prototype.updateCircles = function(){
 			var currentBubbleLeftBorder = currentBubblePosition - currentBubbleRadius;
 			var currentBubbleRightBorder = currentBubblePosition + currentBubbleRadius;
 			
-			var leftCircleWidth = (crossingPosition - currentBubbleLeftBorder);
-			var leftCircleCenter = currentBubbleLeftBorder + (leftCircleWidth / 2);
-			var rightCircleWidth = currentBubbleRadius * 2 - leftCircleWidth;
-			var rightCircleCenter = currentBubbleRightBorder - (rightCircleWidth / 2);
+			var circleWidths = new Array();
+			var circleCenters = new Array();
 			
-			//draw the two virtual bubbles
-			var leftCircle = this.canvas.circle(leftCircleCenter, currentBubble.attr("cy"), leftCircleWidth / 2);
-			var rightCircle = this.canvas.circle(rightCircleCenter, currentBubble.attr("cy"), rightCircleWidth / 2);
-			
-			//set the right inactive/active classes for the virtual bubbles
-			if(withinTest == 0.25){
-				leftCircle.node.setAttribute("class", "minimapCircle inactive");
-				rightCircle.node.setAttribute("class", "minimapCircle active");
+			if(withinTest == 0.25 || withinTest == 0.5){
+				circleWidths.push((crossingPosition - currentBubbleLeftBorder));	//left circle width
+				circleWidths.push((currentBubbleRadius * 2 - circleWidths[0]));		//right circle width
+				circleCenters.push(currentBubbleLeftBorder + circleWidths[0] / 2);	//left circle center
+				circleCenters.push(currentBubbleRightBorder - (circleWidths[1] / 2));	//right circle center
 			} else {
-				leftCircle.node.setAttribute("class", "minimapCircle active");
-				rightCircle.node.setAttribute("class", "minimapCircle inactive");				
+				circleWidths.push((crossingPosition[0] - currentBubbleLeftBorder));	//left circle width
+				circleWidths.push((crossingPosition[1] - crossingPosition[0]));		//middle circle width
+				circleWidths.push((currentBubbleRightBorder - crossingPosition[1]));	//right circle width
+				circleCenters.push(currentBubbleLeftBorder + circleWidths[0] / 2);	//left circle center
+				circleCenters.push(crossingPosition[0] + circleWidths[1] / 2);		//middle circle center
+				circleCenters.push(crossingPosition[1] + circleWidths[2] / 2);		//right circle center
 			}
 			
-			this.virtualBubbles.push(leftCircle, rightCircle);
+			//draw the virtual bubbles
+			for(var j = 0; j < circleWidths.length; j++){
+				var newBubble = this.canvas.circle(circleCenters[j], currentBubble.attr("cy"), circleWidths[j] / 2);
+				this.virtualBubbles.push(newBubble);
+			}	
+			
+			//set the right inactive/active classes for the virtual bubbles
+			var vBubbleArrayLength = this.virtualBubbles.length;
+			if(withinTest == 0.25){
+				this.virtualBubbles[vBubbleArrayLength - 2].node.setAttribute("class", "minimapCircle inactive");
+				this.virtualBubbles[vBubbleArrayLength - 1].node.setAttribute("class", "minimapCircle active");
+			} else if(withinTest == 0.5){
+				this.virtualBubbles[vBubbleArrayLength - 2].node.setAttribute("class", "minimapCircle active");
+				this.virtualBubbles[vBubbleArrayLength - 1].node.setAttribute("class", "minimapCircle inactive");				
+			} else if(withinTest == 0.1){
+				this.virtualBubbles[vBubbleArrayLength - 3].node.setAttribute("class", "minimapCircle inactive");
+				this.virtualBubbles[vBubbleArrayLength - 2].node.setAttribute("class", "minimapCircle active");
+				this.virtualBubbles[vBubbleArrayLength - 1].node.setAttribute("class", "minimapCircle inactive");
+			}
 			
 		} else {
 			currentBubble.node.setAttribute("class", "minimapCircle inactive");		
