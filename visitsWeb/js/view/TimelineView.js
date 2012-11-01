@@ -109,10 +109,33 @@ function drawTimeline(){
 	}
 };
 
-function updateTimeline(){
-	
-};
-
 function hideTimeline(){
 	this.div.css("opacity","0.0");
 }
+
+
+TimelineView.prototype.updateTimeline = function(minimapBubbleStates){
+	for(var i = 0; i < this.visibleMapBubbles.length; i++){
+		var currentBubble = this.visibleMapBubbles[i];
+		for(var j = 0; j < minimapBubbleStates.length; j++){
+			var currentBubbleState = minimapBubbleStates[j];
+			
+			if(currentBubble.cluster.id == currentBubbleState.cluster.id){
+				//check state of the bubble
+				switch(currentBubbleState.state){
+				case "visible":
+					break;
+				case "split2l":
+					break;
+				case "split2r":
+					break;
+				case "split3":
+					break;
+				case "invisible":
+					currentBubble.div.remove();
+					break;
+				}
+			}
+		}
+	}
+};

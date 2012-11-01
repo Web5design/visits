@@ -59,3 +59,4 @@ TimelineModel.prototype.tsToGpsLocTs = function(ts){
 		}
 	}
 };
+
