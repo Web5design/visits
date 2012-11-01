@@ -34,12 +34,12 @@ function drawInteractionArea(){
 	var tlWidth = TIMELINEVIEW.div.width();
 	var tlHeight = TIMELINEVIEW.div.height();
 	
-	var calendar = INTERACTION_AREA.rect(tlx,tly,tlWidth,tlHeight);
+	var calendar = INTERACTION_AREA.rect(tlx,tly,tlWidth,tlHeight/2);
 	calendar.attr({"fill":"#c00", "opacity":"0"});
 	
 	
 	calendar.mousemove(function(e){
-		OVERLAYVIEW.drawHoverCurve(e.pageX);
+		OVERLAYVIEW.drawHoverCurve(e.pageX,e.pageY);
 	});
 	
 	calendar.mouseout(function(e){
