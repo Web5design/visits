@@ -1,4 +1,21 @@
-function drawMarkersAndLines(map, i){
+
+function OverlayView(){
+	//initialize overlay
+	this.markerCanvas = Raphael("marker",window.innerWidth,750);
+	this.maskCanvas = Raphael("masks",window.innerWidth,750);
+	this.connectionLineCanvas = Raphael("connectionLines",window.innerWidth,750);
+	this.previewBubblesCanvas = Raphael("previewBubbles",window.innerWidth,750);
+	
+	this.minimumCircleRadiusOnOverviewMap = 2;
+	
+	this.hoverline = undefined;
+	
+	this.markers = new Array();
+
+};
+
+
+OverlayView.prototype.drawMarkersAndLines = function(map, i){
 	
 	var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
 	
@@ -15,7 +32,7 @@ function drawMarkersAndLines(map, i){
 	  });
 };
 
-function drawOverviewMarker(currentBubble){
+OverlayView.prototype.drawOverviewMarker =function(currentBubble){
 	
 	var overviewMarker = new Object();
 	
@@ -41,20 +58,61 @@ function drawOverviewMarker(currentBubble){
 	
 };
 
+OverlayView.prototype.removeHoverline = function(){
+	if(this.hoverline){
+		this.hoverline.remove();
+		this.hoverline = undefined;
+	}
+};
 
-function drawBubbleMarkers(currentBubble){
+
+OverlayView.prototype.drawHoverCurve = function(x){
+	
+	this.removeHoverline();
+	
+	
+	var ts = TIMELINEMODEL.tsToGpsLocTs(TIMELINEVIEW.absoluteXtoTime(x));
+	
+	var xInTL = TIMELINEVIEW.timeToAbsoluteX(ts);
+	
+	
+	var tly = TIMELINEVIEW.y;
+	var tlHeight = TIMELINEVIEW.div.height();
+
+	
+	var date = timestampToDateShort(ts);
+	var time = timestampToTime(ts);
+	
+	
+	var labelDate = this.connectionLineCanvas.text(xInTL,tly/2+4,date);
+	labelDate.attr({"font-size":11, "fill": "#444"});
+	
+	var labelTime = this.connectionLineCanvas.text(xInTL,tly/2+16,time);
+	labelTime.attr({"font-size":10, "fill": "#444"});
+	
+	var line = this.connectionLineCanvas.path("M"+xInTL+" "+(tly+4)+"L"+xInTL+" "+ (tlHeight/2+tly));
+	line.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
+	
+	var circle = this.connectionLineCanvas.circle(xInTL,tly,4);
+	circle.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
+	
+	this.hoverline = this.connectionLineCanvas.set();
+	this.hoverline.push(labelDate,labelTime,line,circle);
+	
+	
+};
+
+OverlayView.prototype.drawBubbleMarkers =function(currentBubble){
 	//draw all markers on the overlay
 	for(var j = 0; j < currentBubble.cluster.gpsLocs.length; j++){
 		var marker = currentBubble.cluster.gpsLocs[j];
 		var markerLatLng = new google.maps.LatLng(marker.lat, marker.lon);
 		var markerPosition = convertPoint(currentBubble.map, markerLatLng);
-		/*
-		var circleMarker = this.canvas.circle(markerPosition.x + Number(currentBubble.x), markerPosition.y + Number(currentBubble.y), 4);
-		circleMarker.attr({"fill" : "#0000cc", "opacity" : 0.7, "stroke" : "#fff", "stroke-width" : "2px"});
-		*/
 		
 		var markerX = markerPosition.x + Number(currentBubble.x)  + Number(TIMELINEVIEW.x);
 		var markerY = markerPosition.y + Number(currentBubble.y)  + Number(TIMELINEVIEW.y);
+		
+		
 		
 		var crossString  = "M" + (markerX -2.5) + "," + (markerY -2.5) + " ";
 		crossString = crossString + "L" + (markerX + 2.5) + "," + (markerY + 2.5) + " ";
@@ -72,11 +130,17 @@ function drawBubbleMarkers(currentBubble){
 		var cross = this.markerCanvas.path(crossString);
 		cross.attr({"stroke" : MARKERCOLOR, "stroke-width" : 2 , "stroke-linecap" : "round", "opacity" : 0.9});
 		
+		var marker = this.markerCanvas.set();
+		
+		marker.push(crossBg,cross);
+		
+		this.markers[currentBubble.cluster.gpsLocs[j].timestamp] = marker;
+		
 	}	
 };
 
 
-function drawConnectionCurve(currentBubble){
+OverlayView.prototype.drawConnectionCurve = function(currentBubble){
 	
 	var curveTopX = currentBubble.x + currentBubble.width / 2  + Number(TIMELINEVIEW.x);
 	var curveTopY = currentBubble.y + currentBubble.width + Number(TIMELINEVIEW.y);
@@ -91,7 +155,7 @@ function drawConnectionCurve(currentBubble){
 	
 };
 
-function drawBubbleMasks(){
+OverlayView.prototype.drawBubbleMasks = function(){
 	this.maskCanvas.clear();
 	
 	var upperMaskPath = "";
@@ -196,7 +260,7 @@ function drawBubbleMasks(){
 };
 
 
-function drawPreviewBubbles(){
+OverlayView.prototype.drawPreviewBubbles = function(){
 	
 	$("#previewBubbles").css("display","block");
 	
@@ -224,32 +288,9 @@ function drawPreviewBubbles(){
 		horizontalPosition = horizontalPosition + radius * 2;
 	}
 	
-}
+};
 
-function hideMarkers(){
+OverlayView.prototype.hideMarkers = function (){
 	this.markerCanvas.clear();
-}
-
-function OverlayView(){
-	//initialize overlay
-	this.markerCanvas = Raphael("marker",window.innerWidth,750);
-	this.maskCanvas = Raphael("masks",window.innerWidth,750);
-	this.connectionLineCanvas = Raphael("connectionLines",window.innerWidth,750);
-	this.previewBubblesCanvas = Raphael("previewBubbles",window.innerWidth,750);
 	
-	this.minimumCircleRadiusOnOverviewMap = 2;
-	
-	this.drawMarkersAndLines = drawMarkersAndLines;
-	this.drawBubbleMasks = drawBubbleMasks;
-	this.drawConnectionCurve = drawConnectionCurve;
-	
-	this.drawBubbleMarkers = drawBubbleMarkers;
-	
-	this.drawOverviewMarker = drawOverviewMarker;
-	
-	this.hideMarkers = hideMarkers;
-	
-	this.drawPreviewBubbles = drawPreviewBubbles;
-	
-
 };

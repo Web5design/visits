@@ -10,6 +10,7 @@ TimelineModel.prototype.updateWithClustering = function(mainModelStartIndex, mai
 	
 	this.displayedTimeframe = this.displayedTimeframeEnd -this.displayedTimeframeStart;
 	
+	
 	this.displayedGpsLocs = new Array();
 	for(var i = mainModelStartIndex; i <= mainModelEndIndex; i++){
 		this.displayedGpsLocs.push(MAINMODEL.gpsLocs[i]);
@@ -47,4 +48,14 @@ TimelineModel.prototype.updateFromMainmodel = function(){
 	this.geocoder = new google.maps.Geocoder();
 		
 	this.clusters = MAINMODEL.clusters;
+};
+
+
+TimelineModel.prototype.tsToGpsLocTs = function(ts){
+	
+	for (var i=0; i<this.displayedGpsLocs.length;i++){
+		if(this.displayedGpsLocs[i].timestamp >= ts){
+			return this.displayedGpsLocs[i].timestamp; 
+		}
+	}
 };

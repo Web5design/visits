@@ -37,40 +37,14 @@ function drawInteractionArea(){
 	var calendar = INTERACTION_AREA.rect(tlx,tly,tlWidth,tlHeight);
 	calendar.attr({"fill":"#c00", "opacity":"0"});
 	
-	/*
+	
 	calendar.mousemove(function(e){
-		drawMarkerConnection(e.pageX);
-	});*/
+		OVERLAYVIEW.drawHoverCurve(e.pageX);
+	});
 	
-}
-
-function drawMarkerConnection(x){
-	
-	//OVERLAYVIEW.connectionLineCanvas.text (200,200,""+x);
-	
-	var ts = TIMELINEVIEW.absoluteXtoTime(x);
-	
-	
-	var tly = TIMELINEVIEW.y;
-	var tlHeight = TIMELINEVIEW.div.height();
-	
-
-	
-	var date = timestampToDateShort(ts);
-	var time = timestampToTime(ts);
-	
-	
-	var labelDate = OVERLAYVIEW.connectionLineCanvas.text(x,tly/2+4,date);
-	labelDate.attr({"font-size":11, "fill": "#444"});
-	
-	var labelTime = OVERLAYVIEW.connectionLineCanvas.text(x,tly/2+16,time);
-	labelTime.attr({"font-size":10, "fill": "#444"});
-	
-	var line = OVERLAYVIEW.connectionLineCanvas.path("M"+x+" "+(tly+4)+"L"+x+" "+ (tlHeight/2+tly));
-	line.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
-	
-	var circle = OVERLAYVIEW.connectionLineCanvas.circle(x,tly,4);
-	circle.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
+	calendar.mouseout(function(e){
+		OVERLAYVIEW.removeHoverline();
+	});
 	
 }
 
