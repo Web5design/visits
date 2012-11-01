@@ -90,8 +90,15 @@ OverlayView.prototype.drawHoverCurve = function(x,y){
 	var date = timestampToDateShort(ts);
 	var time = timestampToTime(ts);
 	
-	var markerX = this.markers[ts].x;
-	var markerY = this.markers[ts].y;
+	if (this.markers[ts]){
+		
+		var markerX = this.markers[ts].x;
+		var markerY = this.markers[ts].y;
+	}else{
+		var markerX = xInTL;
+		var markerY = tlHeight/2+tly;
+	}
+	
 	
 	if(this.selectedMarker){
 		this.selectedMarker.remove();
@@ -112,13 +119,13 @@ OverlayView.prototype.drawHoverCurve = function(x,y){
 	var labelTime = this.connectionLineCanvas.text(xInTL,tly/2+12,time);
 	labelTime.attr({"font-size":10, "fill": "#444"});
 	
-	if(y-tly > 30){
+	if(y-tly > 50){
 
 		var line = this.connectionLineCanvas.path("M"+xInTL+" "+tly+" L "+x+" "+y+" Q "+controlX+" "+controlY+" "+markerX+" "+markerY);
-		line.attr({"stroke" : MARKERCOLOR, "stroke-width" : "1", "opacity" : 0.7});
+		line.attr({"stroke" : MARKERCOLOR, "stroke-width" : "1.5", "opacity" : 0.7});
 	}else{
-		var line = this.connectionLineCanvas.path("M"+xInTL+" "+tly+" L "+markerX+" "+markerY);
-		line.attr({"stroke" : MARKERCOLOR, "stroke-width" : "1", "opacity" : 0.7});
+		var line = this.connectionLineCanvas.path("M"+xInTL+" "+tly+" Q "+xInTL+" "+markerY+" "+markerX+" "+markerY);
+		line.attr({"stroke" : MARKERCOLOR, "stroke-width" : "1.5", "opacity" : 0.7});
 	}
 	
 	var circle = this.connectionLineCanvas.circle(xInTL,tly-4,4);
@@ -140,24 +147,24 @@ OverlayView.prototype.drawBubbleMarkers =function(currentBubble){
 		var markerX = markerPosition.x + Number(currentBubble.x)  + Number(TIMELINEVIEW.x);
 		var markerY = markerPosition.y + Number(currentBubble.y)  + Number(TIMELINEVIEW.y);
 		
-		/*
+		var touchCircle = INTERACTION_AREA.circle(markerX, markerY, 3); //(maskY + circleHeight / 2), maskRadius);
+		touchCircle.node.marker = currentBubble.cluster.gpsLocs[j];
+		touchCircle.attr({"stroke" : "#aaa", "fill" : "#c00", "opacity" : 0});
 		
 		
-		var crossString  = "M" + (markerX -2.5) + "," + (markerY -2.5) + " ";
-		crossString = crossString + "L" + (markerX + 2.5) + "," + (markerY + 2.5) + " ";
-		crossString = crossString + "M" + (markerX - 2.5) + "," + (markerY + 2.5) + " ";
-		crossString = crossString + "L" + (markerX + 2.5) + "," + (markerY - 2.5);
+		touchCircle.mouseover(function(e){
+			
+			var x = TIMELINEVIEW.timeToAbsoluteX(e.target.marker.timestamp);
+			var y = TIMELINEVIEW.y+4;
+						
+			OVERLAYVIEW.drawHoverCurve(x,y);
+		});
 		
-		var crossBg = this.markerCanvas.path(crossString);
-		crossBg.attr({"stroke" : "#fff", "stroke-width" : 4 , "stroke-linecap" : "round", "opacity" : 0.7});
+		touchCircle.mouseout(function(e){
+			
+			OVERLAYVIEW.removeHoverline();
+		});
 		
-		crossString  = "M" + (markerX -2) + "," + (markerY -2) + " ";
-		crossString = crossString + "L" + (markerX + 2) + "," + (markerY + 2) + " ";
-		crossString = crossString + "M" + (markerX - 2) + "," + (markerY + 2) + " ";
-		crossString = crossString + "L" + (markerX + 2) + "," + (markerY - 2);
-		
-		var cross = this.markerCanvas.path(crossString);
-		cross.attr({"stroke" : MARKERCOLOR, "stroke-width" : 2 , "stroke-linecap" : "round", "opacity" : 0.9});*/
 		
 		var markerSet = this.createMarkerSet(markerX, markerY, 2);
 		
@@ -174,8 +181,6 @@ OverlayView.prototype.drawBubbleMarkers =function(currentBubble){
 };
 
 OverlayView.prototype.createMarkerSet = function(markerX,markerY,strokewidth){
-	
-	
 	
 	var crossString  = "M" + (markerX -(strokewidth+0.25*strokewidth)) + "," + (markerY -(strokewidth+0.25*strokewidth)) + " ";
 	crossString = crossString + "L" + (markerX + (strokewidth+0.25*strokewidth)) + "," + (markerY + (strokewidth+0.25*strokewidth)) + " ";
