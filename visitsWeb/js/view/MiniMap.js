@@ -22,16 +22,16 @@ function MiniMap(targetDiv, cMapSliderStart, cMapSliderDragged, cMapSliderEnd){
 	this.cMapSliderDragged = cMapSliderDragged;
 	this.cMapSliderEnd = cMapSliderEnd;
 	
-	//currentBubbles contains all currently visible bubbles
-	this.currentBubbles = new Array();
-	//dictionary with the mapping between visible bubbles and the main model's clusters
-	this.bubbleDictionary = new Array();
-	
-	//virtualBubbles contains pairs of bubbles that are drawn when a bubble is split by a handle
-	this.virtualBubbles = new Array();
-	
 	this.initialize();
 };
+
+//dictionary with the mapping between visible bubbles and the main model's clusters
+MiniMap.prototype.bubbleDictionary = new Array();
+//currentBubbles contains all currently visible bubbles
+MiniMap.prototype.currentBubbles = new Array();
+//virtualBubbles contains pairs of bubbles that are drawn when a bubble is split by a handle
+MiniMap.prototype.virtualBubbles = new Array();
+
 
 /**
  * Draws the minimap bubbles, displays them and puts them into the currentBubbles Array.

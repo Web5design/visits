@@ -159,6 +159,7 @@ var handleMinimapSliderMoved = function(minimap){
 };
 
 var handleMinimapSliderUp = function(minimap){
+	TIMELINEVIEW.updateTimeline(minimap.bubbleDictionary);
 	/*$("#marker").empty();
 	$("#masks").empty();
 	$("#connectionLines").empty();
