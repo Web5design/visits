@@ -132,6 +132,7 @@ function handleSliderUp(slider){
 	OVERVIEWMAP.drawOverviewMap();
 
 	CALENDER = new Calender();
+	CALENDER.drawInteractionArea();
 	
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
