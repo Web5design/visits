@@ -77,10 +77,23 @@ TimelineModel.prototype.updateFromAbsoluteValues = function(leftPosition, rightP
 
 TimelineModel.prototype.tsToGpsLocTs = function(ts){
 	
-	for (var i=0; i<this.displayedGpsLocs.length;i++){
+	var tsOld = this.displayedGpsLocs[0].timestamp;
+	
+	for (var i=1; i<this.displayedGpsLocs.length;i++){
+		
+		var distTs = this.displayedGpsLocs[i].timestamp - tsOld;
+		
 		if(this.displayedGpsLocs[i].timestamp >= ts){
-			return this.displayedGpsLocs[i].timestamp; 
+			if((ts-tsOld) < distTs/2){
+				return tsOld; 
+				
+			}else{
+				
+				return this.displayedGpsLocs[i].timestamp; 
+			}
 		}
+		
+		tsOld = this.displayedGpsLocs[i].timestamp;
 	}
 };
 

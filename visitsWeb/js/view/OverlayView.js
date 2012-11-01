@@ -149,6 +149,7 @@ OverlayView.prototype.drawBubbleMarkers =function(currentBubble){
 		
 		var touchCircle = INTERACTION_AREA.circle(markerX, markerY, 3); //(maskY + circleHeight / 2), maskRadius);
 		touchCircle.node.marker = currentBubble.cluster.gpsLocs[j];
+		touchCircle.node.cluster = currentBubble.cluster;
 		touchCircle.attr({"stroke" : "#aaa", "fill" : "#c00", "opacity" : 0});
 		
 		
@@ -158,11 +159,13 @@ OverlayView.prototype.drawBubbleMarkers =function(currentBubble){
 			var y = TIMELINEVIEW.y+4;
 						
 			OVERLAYVIEW.drawHoverCurve(x,y);
+			CALENDER.drawHoverLabels(e.target.cluster);
 		});
 		
 		touchCircle.mouseout(function(e){
 			
 			OVERLAYVIEW.removeHoverline();
+			CALENDER.hideHoverLabels();
 		});
 		
 		
