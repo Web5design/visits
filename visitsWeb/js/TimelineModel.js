@@ -1,4 +1,8 @@
-function TimelineModel(mainModelStartIndex, mainModelEndIndex, distanceThreshold){
+function TimelineModel(){
+
+};
+
+TimelineModel.prototype.updateWithClustering = function(mainModelStartIndex, mainModelEndIndex, distanceThreshold){
 	
 	this.gpsLocs = MAINMODEL.gpsLocs;
 	this.displayedTimeframeStart = MAINMODEL.gpsLocs[mainModelStartIndex].timestamp;
@@ -16,8 +20,6 @@ function TimelineModel(mainModelStartIndex, mainModelEndIndex, distanceThreshold
 	//this.clusters = lastElementClustering(this.displayedGpsLocs, 10);
 	this.clusters = pivotClustering(this.displayedGpsLocs, distanceThreshold);
 	
-	
-	
 	/*
 	//ausgabe
 	for(var i = 0; i < this.clusters.length; i++){
@@ -28,4 +30,21 @@ function TimelineModel(mainModelStartIndex, mainModelEndIndex, distanceThreshold
 		//}
 	}
 	*/
-}
+};
+
+TimelineModel.prototype.updateFromMainmodel = function(){
+	this.gpsLocs = MAINMODEL.gpsLocs;
+	this.displayedTimeframeStart = MAINMODEL.gpsLocs[0].timestamp;
+	this.displayedTimeframeEnd = MAINMODEL.gpsLocs[MAINMODEL.gpsLocs.length - 1].timestamp;
+	
+	this.displayedTimeframe = this.displayedTimeframeEnd -this.displayedTimeframeStart;
+	
+	this.displayedGpsLocs = new Array();
+	for(var i = 0; i < MAINMODEL.gpsLocs.length; i++){
+		this.displayedGpsLocs.push(MAINMODEL.gpsLocs[i]);
+	}
+	
+	this.geocoder = new google.maps.Geocoder();
+		
+	this.clusters = MAINMODEL.clusters;
+};

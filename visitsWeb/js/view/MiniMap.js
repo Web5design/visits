@@ -21,12 +21,12 @@ function MiniMap(targetDiv, cMapSliderStart, cMapSliderDragged, cMapSliderEnd){
 	this.cMapSliderStart = cMapSliderStart;
 	this.cMapSliderDragged = cMapSliderDragged;
 	this.cMapSliderEnd = cMapSliderEnd;
-
-	this.leftBorderBubbleIndex = 0;
-	this.rightBorderBubbleIndex = MAINMODEL.clusters.length - 1;
 	
 	//currentBubbles contains all currently visible bubbles
 	this.currentBubbles = new Array();
+	//dictionary with the mapping between visible bubbles and the main model's clusters
+	this.bubbleDictionary = new Array();
+	
 	//virtualBubbles contains pairs of bubbles that are drawn when a bubble is split by a handle
 	this.virtualBubbles = new Array();
 	
@@ -66,6 +66,12 @@ MiniMap.prototype.drawMinimap = function(){
 		currentCircle.node.setAttribute("class", "minimapCircle active");
 		
 		this.currentBubbles.push(currentCircle);
+		this.bubbleDictionary.push({
+			bubble: currentCircle,
+			cluster: MAINMODEL.clusters[i],
+			state: "visible",
+			split: 0
+		});
 		
 		horizontalPosition = horizontalPosition + clusterWidth;
 	}
@@ -163,20 +169,15 @@ MiniMap.prototype.updateCircles = function(){
 		this.virtualBubbles[i].remove();
 	}
 	this.virtualBubbles = new Array();
-	
-	this.leftBorderBubbleIndex = -1;
-	this.rightBorderBubbleIndex = -1;
-	
+		
 	//update all bubble classes and split them if necessary
 	for(var i = 0; i < this.currentBubbles.length; i++){
 		var currentBubble = this.currentBubbles[i];
+		var bubbleObject = this.bubbleDictionary[i];
 		var withinTest = this.isWithinSlider(currentBubble);
 		if(withinTest == 1){
 			currentBubble.node.setAttribute("class", "minimapCircle active");
-			
-			if(this.leftBorderBubbleIndex == -1){
-				this.leftBorderBubbleIndex = i;
-			}
+			bubbleObject.state = "visible";
 		} else if(withinTest == 0.5 || withinTest == 0.25 || withinTest == 0.1){
 			//set the actual bubble to inactive
 			currentBubble.node.setAttribute("class", "minimapCircle split");
@@ -240,12 +241,22 @@ MiniMap.prototype.updateCircles = function(){
 				this.virtualBubbles[vBubbleArrayLength - 1].node.setAttribute("class", "minimapCircle inactive");
 			}
 			
+			//finally: set the split state for the bubble object
+			if(withinTest == 0.25){
+				bubbleObject.state = "split2l";
+				bubbleObject.split = circleWidths[vBubbleArrayLength - 2] / (currentBubbleRadius * 2);
+			} else if(withinTest == 0.5){
+				bubbleObject.state = "split2r";
+				bubbleObject.split = circleWidths[vBubbleArrayLength - 2] / (currentBubbleRadius * 2);
+			} else if(withinTest == 0.1){
+				bubbleObject.state = "split3";
+				bubbleObject.split = [circleWidths[vBubbleArrayLength - 3] / (currentBubbleRadius * 2),
+				                      circleWidths[vBubbleArrayLength - 2] / (currentBubbleRadius * 2)];
+			}
+			
 		} else {
 			currentBubble.node.setAttribute("class", "minimapCircle inactive");		
-			
-			if(this.rightBorderBubbleIndex == -1){
-				this.rightBorderBubbleIndex = i;
-			}
+			bubbleObject.state = "invisible";
 		}
 	}
 };

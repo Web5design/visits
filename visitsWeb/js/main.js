@@ -95,7 +95,8 @@ function handleSliderDown(slider){
 function handleSliderMoved(slider){
 	var mainmodelRange = mapMinimapSlidersToRange();
 	var clusterThreshold = DISTANCESLIDER.getCurrentValue() / 1000;
-	TIMELINEMODEL = new TimelineModel(mainmodelRange[0], mainmodelRange[1], clusterThreshold);
+	TIMELINEMODEL = new TimelineModel();
+	TIMELINEMODEL.updateWithClustering(mainmodelRange[0], mainmodelRange[1], clusterThreshold);
 	OVERLAYVIEW.drawPreviewBubbles();
 };
 
@@ -230,7 +231,9 @@ var handleReaderLoad = function(evt){
 	
 	MAINMODEL = new Mainmodel(resultGpsLoc, currentDistanceValue);
 	
-	TIMELINEMODEL = new TimelineModel(0, MAINMODEL.gpsLocs.length - 1, currentDistanceValue);
+	//TIMELINEMODEL = new TimelineModel(0, MAINMODEL.gpsLocs.length - 1, currentDistanceValue);
+	TIMELINEMODEL = new TimelineModel();
+	TIMELINEMODEL.updateFromMainmodel();
 	
 	INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
 	

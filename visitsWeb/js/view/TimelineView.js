@@ -109,6 +109,10 @@ function drawTimeline(){
 	}
 };
 
+function updateTimeline(){
+	
+};
+
 function hideTimeline(){
 	this.div.css("opacity","0.0");
 }

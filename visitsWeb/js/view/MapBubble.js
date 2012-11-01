@@ -8,5 +8,15 @@ function MapBubble(map, i){
 	this.width = this.div.width();
 	this.height = this.div.height();
 	this.overviewMarker;
-	
 }
+
+MapBubble.prototype.update = function(x, y, width, height){
+	this.div.offset({ left:x, top:y});
+	this.div.width(width);
+	this.div.height(height);
+	
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+};
