@@ -159,30 +159,29 @@ var handleMinimapSliderMoved = function(minimap){
 };
 
 var handleMinimapSliderUp = function(minimap){
-	TIMELINEVIEW.updateTimeline(minimap.bubbleDictionary);
-	/*$("#marker").empty();
+	$("#marker").empty();
 	$("#masks").empty();
 	$("#connectionLines").empty();
 	$("#calender").empty();
 	$("#timeline").empty();
 	$("#overview").empty();
-	$("#minimap").empty();
 	
-	$("#marker").css("display","none");
+	var minimapPositions = MINIMAP.getHandlePositions();
+	var leftPosition = minimapPositions[0];
+	var rightPosition = minimapPositions[1];
+
+	TIMELINEMODEL.updateFromAbsoluteValues(leftPosition, rightPosition, DISTANCESLIDER.getCurrentValue() / 1000);
+	TIMELINEVIEW.updateTimeline();
+	
+	/*$("#marker").css("display","none");
 	$("#masks").css("display","none");
 	$("#connectionLines").css("display","none");
 	$("#calenderBG").css("display","none");
 	$("#calender").css("display","none");
 	$("#timeline").css("opacity", "1");
 	$("#minimap").css("display", "none");
-	
+	*/
 	INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
-	
-	var mainModelIndices = mapMinimapSlidersToRange();
-	TIMELINEMODEL = new TimelineModel(mainModelIndices[0], mainModelIndices[1], DISTANCESLIDER.getCurrentValue() / 1000);
-	
-	TIMELINEVIEW = new TimelineView();
-	TIMELINEVIEW.drawTimeline();
 	
 	OVERVIEWMAP = new OverviewMap();
 	OVERVIEWMAP.drawOverviewMap();
@@ -192,8 +191,7 @@ var handleMinimapSliderUp = function(minimap){
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
 	
-	MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
-	*/
+	
 };
 
 var handleReaderLoad = function(evt){

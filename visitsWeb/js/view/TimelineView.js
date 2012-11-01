@@ -6,13 +6,6 @@ function TimelineView(){
 	this.bottomMaskHeight = 25;
 	
 	this.visibleMapBubbles = new Array();
-	
-
-	this.drawTimeline = drawTimeline;
-	this.hideTimeline = hideTimeline;
-	
-	this.absoluteXtoTime = absoluteXtoTime;
-	this.timeToAbsoluteX = timeToAbsoluteX;
 };
 
 function addProjectionChangedListener(map, i){
@@ -23,7 +16,7 @@ function addProjectionChangedListener(map, i){
     });
 };
 
-function absoluteXtoTime(x){
+TimelineView.prototype.absoluteXtoTime = function(x){
 	var tlX = x - this.x;
 	
 	var deltaT = TIMELINEMODEL.displayedTimeframe / this.div.width();
@@ -32,7 +25,7 @@ function absoluteXtoTime(x){
 	
 };
 
-function timeToAbsoluteX(t){
+TimelineView.prototype.timeToAbsoluteX = function(t){
 	
 	var deltaT = t-TIMELINEMODEL.displayedTimeframeStart;
 	
@@ -42,7 +35,7 @@ function timeToAbsoluteX(t){
 	
 };
 
-function drawTimeline(){
+TimelineView.prototype.drawTimeline = function(){
 	
 	loadedMaps = 0;
 	
@@ -109,33 +102,27 @@ function drawTimeline(){
 	}
 };
 
-function hideTimeline(){
+TimelineView.prototype.hideTimeline = function(){
 	this.div.css("opacity","0.0");
-}
+};
 
 
-TimelineView.prototype.updateTimeline = function(minimapBubbleStates){
+TimelineView.prototype.updateTimeline = function(){
+	var availableWidth = this.div.width();
+	var availableHeight = this.div.height();
+	
+	var stepSize = availableWidth / TIMELINEMODEL.displayedTimeframe;
+	var horizontalPosition = 0;
+
 	for(var i = 0; i < this.visibleMapBubbles.length; i++){
 		var currentBubble = this.visibleMapBubbles[i];
-		for(var j = 0; j < minimapBubbleStates.length; j++){
-			var currentBubbleState = minimapBubbleStates[j];
-			
-			if(currentBubble.cluster.id == currentBubbleState.cluster.id){
-				//check state of the bubble
-				switch(currentBubbleState.state){
-				case "visible":
-					break;
-				case "split2l":
-					break;
-				case "split2r":
-					break;
-				case "split3":
-					break;
-				case "invisible":
-					currentBubble.div.remove();
-					break;
-				}
-			}
-		}
+
+		var clusterWidth = currentBubble.timeframe * stepSize;
+		
+		var verticalPosition = (availableHeight / 2.0) - (clusterWidth / 2.0);
+		
+		
+		var clusterHeight = clusterWidth + this.bottomMaskHeight;
+
 	}
 };

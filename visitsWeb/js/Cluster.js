@@ -3,13 +3,13 @@ function Cluster(){
 	
 	this.clusterBounds = new google.maps.LatLngBounds();
 	
-	this.timeframeStart;
-	this.timeframeEnd;
+	this.timeframeStart = undefined;
+	this.timeframeEnd = undefined;
 	
-	//unique id of each cluster is a string consisting of start + end time
-	this.id = this.timeframeStart + this.timeframeEnd;
+	//unique id of each cluster is a string consisting of start + end time (initially undefined)
+	this.id = undefined;
 	
-	this.timeframe;
+	this.timeframe = undefined;
 	
 }
 
@@ -29,7 +29,9 @@ Cluster.prototype.addLoc = function (gpsLoc, nextGpsLoc){
 	
 	
 	this.clusterBounds.extend(new google.maps.LatLng(gpsLoc.lat, gpsLoc.lon)); 
-	
+
+	this.id = this.timeframeStart + " " + this.timeframeEnd;
+
 	/*if(this.gpsLocs.length == 1){
 		//add artificial point to enlarge bounds
 		this.clusterBounds.extend(new google.maps.LatLng(gpsLoc.lat + 0.000001, gpsLoc.lon + 0.000001));
