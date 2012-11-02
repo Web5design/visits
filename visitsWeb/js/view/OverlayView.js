@@ -249,26 +249,26 @@ OverlayView.prototype.drawBubbleMasks = function(){
 	
 	//corner points:
 	var upperLeft = {
-			"x": Number(TIMELINEVIEW.x) - 1,
-			"y": Number(TIMELINEVIEW.y + minBubbleY) - 1
+			"x": -1,
+			"y": Number(minBubbleY) - 1
 	};
 	var upperRight = {
-			"x": Number(TIMELINEVIEW.x + TIMELINEVIEW.div.width()) + 1,
-			"y": Number(TIMELINEVIEW.y + minBubbleY) - 1
+			"x": Number(TIMELINEVIEW.div.width()) + 1,
+			"y": Number(minBubbleY) - 1
 	};
 	var lowerRight = {
-			"x": Number(TIMELINEVIEW.x + TIMELINEVIEW.div.width()) + 1,
-			"y": Number(minBubbleY + maxBubbleHeight + TIMELINEVIEW.y + 1)
+			"x": Number(TIMELINEVIEW.div.width()) + 1,
+			"y": Number(minBubbleY + maxBubbleHeight + 1)
 	};
 	var lowerLeft = {
-			"x": Number(TIMELINEVIEW.x) - 1,
-			"y": Number(minBubbleY + maxBubbleHeight + TIMELINEVIEW.y + 1)
+			"x": -1,
+			"y": Number(minBubbleY + maxBubbleHeight + 1)
 	};
 
 	var verticalMiddle = Number(upperRight.y + ((lowerRight.y - upperRight.y) / 2) - (TIMELINEVIEW.bottomMaskHeight / 2));
 	
 	//draw circles
-	upperMaskPath = "M" + (Number(TIMELINEVIEW.x)) + "," + verticalMiddle;
+	upperMaskPath = "M0," + verticalMiddle;
 	lowerMaskPath = upperMaskPath;
 	
 	var addBubbleMousehandler = function(currentBubble, touchCircle){
@@ -287,8 +287,8 @@ OverlayView.prototype.drawBubbleMasks = function(){
 	for(var i = 0; i < TIMELINEVIEW.visibleMapBubbles.length; i++){
 		var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
 		
-		var maskX = Number(currentBubble.x)  + Number(TIMELINEVIEW.x);
-		var maskY = Number(currentBubble.y)  + Number(TIMELINEVIEW.y);
+		var maskX = Number(currentBubble.x);
+		var maskY = Number(currentBubble.y);
 		var maskWidth = currentBubble.width;
 		var maskRadius = Number(maskWidth / 2.0);
 		var maskHeight = Number(currentBubble.height + 1);
@@ -391,11 +391,11 @@ OverlayView.prototype.updateBorderCircles = function(){
 		if(currentCluster.id != "empty"){
 			if(currentCluster.timeframeStart != lastCluster.timeframeStart || currentCluster.timeframeEnd != lastCluster.timeframeEnd){
 				//current cluster was split
-				var leftx = TIMELINEVIEW.timeToAbsoluteX(currentCluster.timeframeStart);
-				var rightx = TIMELINEVIEW.timeToAbsoluteX(currentCluster.timeframeEnd);
+				var leftx = TIMELINEVIEW.timeToRelativeX(currentCluster.timeframeStart);
+				var rightx = TIMELINEVIEW.timeToRelativeX(currentCluster.timeframeEnd);
 				var width = rightx - leftx;
-				var oldleftx = TIMELINEVIEW.timeToAbsoluteX(lastCluster.timeframeStart);
-				var oldrightx = TIMELINEVIEW.timeToAbsoluteX(lastCluster.timeframeEnd);
+				var oldleftx = TIMELINEVIEW.timeToRelativeX(lastCluster.timeframeStart);
+				var oldrightx = TIMELINEVIEW.timeToRelativeX(lastCluster.timeframeEnd);
 				var oldwidth = oldrightx - oldleftx;
 				//determine if left or right
 				if(currentCluster.timeframeStart > lastCluster.timeframeStart){
@@ -414,14 +414,14 @@ OverlayView.prototype.updateBorderCircles = function(){
 		var currentCluster = currentMapBubble.cluster;
 		var currentRaphaelBubble = this.borderCircles[i].raphaelObj;
 
-		var leftx = TIMELINEVIEW.timeToAbsoluteX(currentCluster.timeframeStart);
-		var rightx = TIMELINEVIEW.timeToAbsoluteX(currentCluster.timeframeEnd);
+		var leftx = TIMELINEVIEW.timeToRelativeX(currentCluster.timeframeStart);
+		var rightx = TIMELINEVIEW.timeToRelativeX(currentCluster.timeframeEnd);
 		var middlex = leftx + ((rightx - leftx) / 2);
 
 		if(currentCluster.id == "empty"){
 			//use last coordinate values (before everything turned to zeroes)
-			leftx = TIMELINEVIEW.timeToAbsoluteX(currentCluster.lastCluster.timeframeStart);
-			rightx = TIMELINEVIEW.timeToAbsoluteX(currentCluster.lastCluster.timeframeEnd);
+			leftx = TIMELINEVIEW.timeToRelativeX(currentCluster.lastCluster.timeframeStart);
+			rightx = TIMELINEVIEW.timeToRelativeX(currentCluster.lastCluster.timeframeEnd);
 			middlex = leftx + ((rightx - leftx) / 2) + leftSplitOffset - rightSplitOffset;
 			var clusterWidth = rightx - leftx;
 
@@ -435,12 +435,12 @@ OverlayView.prototype.updateBorderCircles = function(){
 		} else {
 			//if first cluster: use timelinemodel's left border instead
 			if(!foundFirstCluster){
-				leftx = TIMELINEVIEW.timeToAbsoluteX(TIMELINEMODEL.displayedTimeframeStart);
+				leftx = TIMELINEVIEW.timeToRelativeX(TIMELINEMODEL.displayedTimeframeStart);
 				foundFirstCluster = true;
 			}
 			//if last cluster: use timelinemodel's right border instead
 			if(i == this.borderCircles.length - 1){
-				rightx = TIMELINEVIEW.timeToAbsoluteX(TIMELINEMODEL.displayedTimeframeEnd);
+				rightx = TIMELINEVIEW.timeToRelativeX(TIMELINEMODEL.displayedTimeframeEnd);
 			}
 			var middlex = leftx + ((rightx - leftx) / 2);
 			var clusterWidth = rightx - leftx;
