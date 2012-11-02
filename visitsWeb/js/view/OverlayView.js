@@ -113,19 +113,20 @@ OverlayView.prototype.drawHoverCurve = function(x,y){
 	var controlY = markerY;
 	
 	
-	var labelDate = this.connectionLineCanvas.text(xInTL,tly/2+2,date);
-	labelDate.attr({"font-size":11, "fill": "#444"});
+	var labelDate = this.connectionLineCanvas.text(xInTL+5,tly/2+37,date);
+	labelDate.attr({"font-size":11, "fill": "#444", "text-anchor":"start"});
 	
-	var labelTime = this.connectionLineCanvas.text(xInTL,tly/2+14,time);
-	labelTime.attr({"font-size":10, "fill": "#444"});
+	var labelTime = this.connectionLineCanvas.text(xInTL+5,tly/2+49,time);
+	labelTime.attr({"font-size":10, "fill": "#444", "text-anchor":"start"});
 	
 	if(y-tly > 50){
 
 		var line = this.connectionLineCanvas.path("M"+xInTL+" "+tly+" L "+x+" "+y+" Q "+controlX+" "+controlY+" "+markerX+" "+markerY);
-		line.attr({"stroke" : MARKERCOLOR, "stroke-width" : "1.5", "opacity" : 0.7});
+		line.node.setAttribute("class", "hoverline");
 	}else{
 		var line = this.connectionLineCanvas.path("M"+xInTL+" "+tly+" Q "+xInTL+" "+markerY+" "+markerX+" "+markerY);
-		line.attr({"stroke" : MARKERCOLOR, "stroke-width" : "1.5", "opacity" : 0.7});
+		line.node.setAttribute("class", "hoverline");
+
 	}
 	
 	var circle = this.connectionLineCanvas.circle(xInTL,tly-4,4);
@@ -159,13 +160,13 @@ OverlayView.prototype.drawBubbleMarkers =function(currentBubble){
 			var y = TIMELINEVIEW.y+4;
 						
 			OVERLAYVIEW.drawHoverCurve(x,y);
-			//CALENDER.drawHoverLabels(e.target.cluster);
+			CALENDER.drawHoverLabels(e.target.cluster);
 		});
 		
 		touchCircle.mouseout(function(e){
 			
 			OVERLAYVIEW.removeHoverline();
-			//CALENDER.hideHoverLabels();
+			CALENDER.hideHoverLabels();
 		});
 		
 		
