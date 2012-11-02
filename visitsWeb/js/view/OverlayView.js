@@ -232,6 +232,13 @@ OverlayView.prototype.drawConnectionCurve = function(currentBubble){
 OverlayView.prototype.drawBubbleMasks = function(){
 	this.maskCanvas.clear();
 	
+	this.startLine = this.maskCanvas.path("M0 0L0 "+ (TIMELINEVIEW.div.height()/2+0));
+	this.startLine.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
+
+	this.endLine = this.maskCanvas.path("M"+(TIMELINEVIEW.div.width() - 1)+" 0L"+(TIMELINEVIEW.div.width() - 1)+" "+ (TIMELINEVIEW.div.height()/2 + 0));
+	this.endLine.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
+
+	
 	this.borderCircles = new Array();
 	
 	var upperMaskPath = "";
@@ -371,7 +378,7 @@ OverlayView.prototype.drawPreviewBubbles = function(){
 	
 };
 
-OverlayView.prototype.updateBorderCircles = function(){
+OverlayView.prototype.updateBorderCircles = function(postAnimationCallback){
 	//remove the masks
 	this.upperMask.remove();
 	this.lowerMask.remove();
@@ -429,9 +436,9 @@ OverlayView.prototype.updateBorderCircles = function(){
 			currentRaphaelBubble.animate({
 				"cx" : middlex,
 				"r" : (clusterWidth / 2)
-			}, BORDERCIRCLE_ANIMATION_DURATION, "<>", (function(removeBubble){ 
+			}, BORDERCIRCLE_ANIMATION_DURATION, "<>",  (i == 0 ? postAnimationCallback : (function(removeBubble){ 
 					return function(){ removeBubble.remove(); };
-			})(currentRaphaelBubble));
+			})(currentRaphaelBubble)));
 		} else {
 			//if first cluster: use timelinemodel's left border instead
 			if(!foundFirstCluster){
@@ -448,9 +455,7 @@ OverlayView.prototype.updateBorderCircles = function(){
 			currentRaphaelBubble.animate({
 				"cx" : middlex,
 				"r" : (clusterWidth / 2)
-			}, BORDERCIRCLE_ANIMATION_DURATION, "<>", function(){
-				console.log("bubble animation finished. redraw maps and stuff.");
-			});
+			}, BORDERCIRCLE_ANIMATION_DURATION, "<>", (i == 0 ? postAnimationCallback : function(){}));
 		}
 	}
 };

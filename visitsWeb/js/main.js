@@ -165,11 +165,13 @@ var handleMinimapSliderMoved = function(minimap){
 var handleMinimapSliderUp = function(minimap){
 	$("#marker").empty();
 	$("#connectionLines").empty();
+	$("#calender").empty();
 	$("#timeline").empty();
 	$("#overview").empty();
 	
 	$("#connectionLines").css("display","none");
 	$("#calenderBG").css("display","none");
+	$("#calender").css("display","none");
 	$("#timeline").css("opacity", "1");
 	
 	OVERLAYVIEW.hideMarkers();
@@ -180,10 +182,28 @@ var handleMinimapSliderUp = function(minimap){
 	var rightPosition = minimapPositions[1];
 
 	TIMELINEMODEL.updateFromAbsoluteValues(leftPosition, rightPosition, DISTANCESLIDER.getCurrentValue() / 1000);
-	OVERLAYVIEW.updateBorderCircles();
+	OVERLAYVIEW.updateBorderCircles(postAnimationMinimapSliderUp);
 	CALENDER.updateTimestampMarkers();
+};
+
+function postAnimationMinimapSliderUp(){
+	CALENDER = new Calender();
+	CALENDER.drawInteractionArea();
 	
-	//TIMELINEVIEW.updateTimeline();
+	/*TIMELINEVIEW = new TimelineView();
+	TIMELINEVIEW.drawTimeline();
+
+	OVERLAYVIEW = new OverlayView();
+	OVERLAYVIEW.drawBubbleMasks();*/
+		
+	$("#marker").fadeIn(1500);
+	$("#connectionLines").fadeIn(1500);
+	$("#calenderBG").fadeIn(1500);
+	$("#calender").fadeIn(500);	
+	$("#interactionArea").fadeIn(1500);
+	$("#timeline").fadeIn(500);
+	$("#overview").fadeIn(2500);
+
 	
 	/*$("#marker").css("display","none");
 	$("#masks").css("display","none");

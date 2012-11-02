@@ -72,18 +72,12 @@ function drawStartAndEndLabels(){
 	
 	this.startLabelTime = this.canvas.text(tlx-5,tly-13,startTime);
 	this.startLabelTime.attr({"text-anchor":"end", "font-size":11});
-	
-	this.startLine = this.canvas.path("M"+tlx+" "+(tly)+"L"+tlx+" "+ (tlHeight/2+tly));
-	this.startLine.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
-	
+		
 	this.endLabelDate = this.canvas.text(tlx+tlWidth+5,tly-20,endDate);
 	this.endLabelDate.attr({"text-anchor":"start", "font-size":13});
 	
 	this.endLabelTime = this.canvas.text(tlx+tlWidth+5,tly-13,endTime);
 	this.endLabelTime.attr({"text-anchor":"start", "font-size":11});
-	
-	this.endLine = this.canvas.path("M"+(tlx+tlWidth)+" "+(tly)+"L"+(tlx+tlWidth)+" "+ (tlHeight/2 + tly));
-	this.endLine.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
 	
 };
 
