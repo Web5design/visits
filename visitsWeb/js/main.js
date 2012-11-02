@@ -168,6 +168,10 @@ var handleMinimapSliderUp = function(minimap){
 	$("#timeline").empty();
 	$("#overview").empty();
 	
+	$("#connectionLines").css("display","none");
+	$("#calenderBG").css("display","none");
+	$("#timeline").css("opacity", "1");
+	
 	OVERLAYVIEW.hideMarkers();
 	TIMELINEVIEW.hideTimeline();
 	

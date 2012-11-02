@@ -37,7 +37,8 @@ function drawInteractionArea(){
 	var tlHeight = TIMELINEVIEW.div.height();
 	
 	var calendar = INTERACTION_AREA.rect(tlx,tly,tlWidth,tlHeight/2);
-	calendar.attr({"fill":"#c00", "opacity":"0"});
+	calendar.attr({"fill":"#0c0", "opacity":"0"});
+	calendar.toBack();
 	
 	
 	calendar.mousemove(function(e){

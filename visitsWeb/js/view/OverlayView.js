@@ -153,7 +153,7 @@ OverlayView.prototype.drawBubbleMarkers =function(currentBubble){
 		var touchCircle = INTERACTION_AREA.circle(markerX, markerY, 3); //(maskY + circleHeight / 2), maskRadius);
 		touchCircle.node.marker = currentBubble.cluster.gpsLocs[j];
 		touchCircle.node.cluster = currentBubble.cluster;
-		touchCircle.attr({"stroke" : "#aaa", "fill" : "#c00", "opacity" : 0});
+		touchCircle.attr({"stroke" : "#aaa", "fill" : "#00c", "opacity" : 0.0});
 		
 		
 		touchCircle.mouseover(function(e){
@@ -315,8 +315,8 @@ OverlayView.prototype.drawBubbleMasks = function(){
 		
 		/* ========== Interactive Elements =============== */
 		
-		var touchCircle = INTERACTION_AREA.circle((maskX + maskRadius), verticalMiddle, maskRadius); //(maskY + circleHeight / 2), maskRadius);
-		touchCircle.attr({"stroke" : "#aaa", "fill" : "#c00", "opacity" : 0});
+		var touchCircle = INTERACTION_AREA.circle((maskX + maskRadius) + TIMELINEVIEW.x, verticalMiddle + TIMELINEVIEW.y, maskRadius); //(maskY + circleHeight / 2), maskRadius);
+		touchCircle.attr({"stroke" : "#aaa", "fill" : "#c00", "opacity" : 0.0});
 		
 		addBubbleMousehandler(currentBubble, touchCircle);
 		touchCircle.toFront();
