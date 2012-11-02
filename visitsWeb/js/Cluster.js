@@ -42,23 +42,32 @@ Cluster.prototype.addLoc = function (gpsLoc, nextGpsLoc){
 	}*/
 };
 
-Cluster.prototype.clusterWithCluster = function(cluster){
+/**
+ * 
+ * @returns a copy of the current cluster
+ */
+Cluster.prototype.copy = function(){
 	var newCluster = new Cluster();
 	
-	for(var i = 0; i < cluster.gpsLocs.length; i++){
-		newCluster.gpsLocs.push(cluster.gpsLocs[i]);
+	for(var i = 0; i < this.gpsLocs.length; i++){
+		newCluster.gpsLocs.push(this.gpsLocs[i]);
 	}
-	newCluster.timeframeStart = cluster.timeframeStart;
-	newCluster.timeframeEnd = cluster.timeframeEnd;
-	newCluster.timeframe = cluster.timeframe;
-	newCluster.clusterBounds = new google.maps.LatLngBounds(cluster.clusterBounds.getSouthWest(), cluster.clusterBounds.getNorthEast());
-	newCluster.id = cluster.id;
+	newCluster.timeframeStart = this.timeframeStart;
+	newCluster.timeframeEnd = this.timeframeEnd;
+	newCluster.timeframe = this.timeframe;
+	newCluster.clusterBounds = new google.maps.LatLngBounds(this.clusterBounds.getSouthWest(), this.clusterBounds.getNorthEast());
+	newCluster.id = this.id;
 	
 	return newCluster;
 };
 
+/**
+ * 
+ * @param timeframeStart
+ * @param timeframeEnd
+ */
 Cluster.prototype.updateClusterLimits = function(timeframeStart, timeframeEnd){
-	this.lastCluster = this.clusterWithCluster(this);
+	this.lastCluster = this.copy();
 	
 	var newGpsLocs = new Array();
 	

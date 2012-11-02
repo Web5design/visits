@@ -139,6 +139,8 @@ function handleSliderUp(slider){
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
 	
+	CALENDER.drawTimestampMarkers();
+	
 	MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
 	
 	$("#marker").fadeIn(1500);
@@ -168,14 +170,14 @@ var handleMinimapSliderUp = function(minimap){
 	$("#calender").empty();
 	$("#timeline").empty();
 	$("#overview").empty();
-	
+
+	OVERLAYVIEW.hideMarkers();
+
 	$("#connectionLines").css("display","none");
 	$("#calenderBG").css("display","none");
 	$("#calender").css("display","none");
 	$("#timeline").css("opacity", "1");
 	
-	OVERLAYVIEW.hideMarkers();
-	TIMELINEVIEW.hideTimeline();
 	
 	var minimapPositions = MINIMAP.getHandlePositions();
 	var leftPosition = minimapPositions[0];
@@ -187,23 +189,27 @@ var handleMinimapSliderUp = function(minimap){
 };
 
 function postAnimationMinimapSliderUp(){
+	TIMELINEVIEW = new TimelineView();
+	TIMELINEVIEW.drawTimeline();
+	
+	OVERVIEWMAP = new OverviewMap();
+	OVERVIEWMAP.drawOverviewMap();
+
 	CALENDER = new Calender();
 	CALENDER.drawInteractionArea();
 	
-	/*TIMELINEVIEW = new TimelineView();
-	TIMELINEVIEW.drawTimeline();
-
 	OVERLAYVIEW = new OverlayView();
-	OVERLAYVIEW.drawBubbleMasks();*/
-		
+	OVERLAYVIEW.drawBubbleMasks();
+
+	CALENDER.drawTimestampMarkers();
+
 	$("#marker").fadeIn(1500);
 	$("#connectionLines").fadeIn(1500);
 	$("#calenderBG").fadeIn(1500);
-	$("#calender").fadeIn(500);	
+	$("#calender").fadeIn(1500);	
 	$("#interactionArea").fadeIn(1500);
 	$("#timeline").fadeIn(500);
 	$("#overview").fadeIn(2500);
-
 	
 	/*$("#marker").css("display","none");
 	$("#masks").css("display","none");

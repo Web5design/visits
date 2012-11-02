@@ -71,7 +71,17 @@ TimelineModel.prototype.updateFromAbsoluteValues = function(leftPosition, rightP
 			this.displayedGpsLocs.push(currentGpsLoc);
 		}
 	}
-	
+
+	this.clusters = new Array();
+	for(var i = 0; i < MAINMODEL.clusters.length; i++){
+		var currentCluster = MAINMODEL.clusters[i].copy();
+		currentCluster.updateClusterLimits(this.displayedTimeframeStart, this.displayedTimeframeEnd);
+		if(currentCluster.id == "empty"){
+			//cluster is outside
+		} else {
+			this.clusters.push(currentCluster);
+		}
+	}
 	//this.clusters = pivotClustering(this.displayedGpsLocs, distanceThreshold);
 };
 
