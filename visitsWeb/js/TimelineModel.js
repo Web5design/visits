@@ -72,7 +72,7 @@ TimelineModel.prototype.updateFromAbsoluteValues = function(leftPosition, rightP
 		}
 	}
 	
-	this.clusters = pivotClustering(this.displayedGpsLocs, distanceThreshold);
+	//this.clusters = pivotClustering(this.displayedGpsLocs, distanceThreshold);
 };
 
 TimelineModel.prototype.tsToGpsLocTs = function(ts){

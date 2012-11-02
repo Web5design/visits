@@ -11,6 +11,8 @@ function OverlayView(){
 	this.hoverline = undefined;
 	
 	this.markers = new Array();
+
+	this.borderCircles = new Array();
 	
 	this.selectedMarker = undefined;
 
@@ -230,6 +232,8 @@ OverlayView.prototype.drawConnectionCurve = function(currentBubble){
 OverlayView.prototype.drawBubbleMasks = function(){
 	this.maskCanvas.clear();
 	
+	this.borderCircles = new Array();
+	
 	var upperMaskPath = "";
 	var lowerMaskPath = "";
 	
@@ -303,6 +307,11 @@ OverlayView.prototype.drawBubbleMasks = function(){
 		var borderCircle = this.maskCanvas.circle((maskX + maskRadius), verticalMiddle, maskRadius); //(maskY + circleHeight / 2), maskRadius);
 		borderCircle.attr({"stroke" : "#aaa"});
 		
+		this.borderCircles.push({
+			mapBubble: currentBubble,
+			raphaelObj: borderCircle
+		});
+		
 		
 		/* ========== Interactive Elements =============== */
 		
@@ -320,13 +329,13 @@ OverlayView.prototype.drawBubbleMasks = function(){
 	lowerMaskPath = lowerMaskPath + "L" + lowerLeft.x + "," + lowerLeft.y;
 	lowerMaskPath = lowerMaskPath + "Z";
 
-	var upperMask = this.maskCanvas.path(upperMaskPath);
-	upperMask.attr({"fill" : "#fff", "stroke-width" : "0px", "stroke" : "black"});
-	upperMask.toBack();
+	this.upperMask = this.maskCanvas.path(upperMaskPath);
+	this.upperMask.attr({"fill" : "#fff", "stroke-width" : "0px", "stroke" : "black"});
+	this.upperMask.toBack();
 
-	var lowerMask = this.maskCanvas.path(lowerMaskPath);
-	lowerMask.attr({"fill" : "#fff", "stroke-width" : "0px", "stroke" : "black"});
-	lowerMask.toBack();
+	this.lowerMask = this.maskCanvas.path(lowerMaskPath);
+	this.lowerMask.attr({"fill" : "#fff", "stroke-width" : "0px", "stroke" : "black"});
+	this.lowerMask.toBack();
 
 
 };
@@ -360,6 +369,90 @@ OverlayView.prototype.drawPreviewBubbles = function(){
 		horizontalPosition = horizontalPosition + radius * 2;
 	}
 	
+};
+
+OverlayView.prototype.updateBorderCircles = function(){
+	//remove the masks
+	this.upperMask.remove();
+	this.lowerMask.remove();
+	
+	for(var i = 0; i < this.borderCircles.length; i++){
+		var currentCluster = this.borderCircles[i].mapBubble.cluster;
+		currentCluster.updateClusterLimits(TIMELINEMODEL.displayedTimeframeStart, TIMELINEMODEL.displayedTimeframeEnd);
+	}
+	
+	var foundFirstCluster = false;
+	var leftSplitOffset = 0;
+	var rightSplitOffset = 0;
+	for(var i = 0; i < this.borderCircles.length; i++){
+		var currentCluster = this.borderCircles[i].mapBubble.cluster;
+		var lastCluster = currentCluster.lastCluster;
+		
+		if(currentCluster.id != "empty"){
+			if(currentCluster.timeframeStart != lastCluster.timeframeStart || currentCluster.timeframeEnd != lastCluster.timeframeEnd){
+				//current cluster was split
+				var leftx = TIMELINEVIEW.timeToAbsoluteX(currentCluster.timeframeStart);
+				var rightx = TIMELINEVIEW.timeToAbsoluteX(currentCluster.timeframeEnd);
+				var width = rightx - leftx;
+				var oldleftx = TIMELINEVIEW.timeToAbsoluteX(lastCluster.timeframeStart);
+				var oldrightx = TIMELINEVIEW.timeToAbsoluteX(lastCluster.timeframeEnd);
+				var oldwidth = oldrightx - oldleftx;
+				//determine if left or right
+				if(currentCluster.timeframeStart > lastCluster.timeframeStart){
+					//left split
+					leftSplitOffset = (oldwidth - width);
+				} else if(currentCluster.timeframeEnd < lastCluster.timeframeEnd){
+					//right split
+					rightSplitOffset = (oldwidth - width);
+				}
+			}
+		}
+	}
+	
+	for(var i = 0; i < this.borderCircles.length; i++){
+		var currentMapBubble = this.borderCircles[i].mapBubble;
+		var currentCluster = currentMapBubble.cluster;
+		var currentRaphaelBubble = this.borderCircles[i].raphaelObj;
+
+		var leftx = TIMELINEVIEW.timeToAbsoluteX(currentCluster.timeframeStart);
+		var rightx = TIMELINEVIEW.timeToAbsoluteX(currentCluster.timeframeEnd);
+		var middlex = leftx + ((rightx - leftx) / 2);
+
+		if(currentCluster.id == "empty"){
+			//use last coordinate values (before everything turned to zeroes)
+			leftx = TIMELINEVIEW.timeToAbsoluteX(currentCluster.lastCluster.timeframeStart);
+			rightx = TIMELINEVIEW.timeToAbsoluteX(currentCluster.lastCluster.timeframeEnd);
+			middlex = leftx + ((rightx - leftx) / 2) + leftSplitOffset - rightSplitOffset;
+			var clusterWidth = rightx - leftx;
+
+			//make the bubble disappear: animate to zero radius, then remove
+			currentRaphaelBubble.animate({
+				"cx" : middlex,
+				"r" : (clusterWidth / 2)
+			}, 2000, "<>", (function(removeBubble){ 
+					return function(){ removeBubble.remove(); };
+			})(currentRaphaelBubble));
+		} else {
+			//if first cluster: use timelinemodel's left border instead
+			if(!foundFirstCluster){
+				leftx = TIMELINEVIEW.timeToAbsoluteX(TIMELINEMODEL.displayedTimeframeStart);
+				foundFirstCluster = true;
+			}
+			//if last cluster: use timelinemodel's right border instead
+			if(i == this.borderCircles.length - 1){
+				rightx = TIMELINEVIEW.timeToAbsoluteX(TIMELINEMODEL.displayedTimeframeEnd);
+			}
+			var middlex = leftx + ((rightx - leftx) / 2);
+			var clusterWidth = rightx - leftx;
+
+			currentRaphaelBubble.animate({
+				"cx" : middlex,
+				"r" : (clusterWidth / 2)
+			}, 2000, "<>", function(){
+				console.log("bubble animation finished. redraw maps and stuff.");
+			});
+		}
+	}
 };
 
 OverlayView.prototype.hideMarkers = function (){

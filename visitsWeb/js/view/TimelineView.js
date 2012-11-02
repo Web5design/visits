@@ -35,6 +35,10 @@ TimelineView.prototype.timeToAbsoluteX = function(t){
 	
 };
 
+TimelineView.prototype.timeToRelativeX = function(t){
+	return this.timeToAbsoluteX(t) - this.x;
+};
+
 TimelineView.prototype.drawTimeline = function(){
 	
 	loadedMaps = 0;
@@ -59,7 +63,6 @@ TimelineView.prototype.drawTimeline = function(){
 		this.div.append('<div class="map_container" id="map_container' + i + '" style="width:' + clusterWidth + 'px;height:' + clusterHeight + 'px;left:'+horizontalPosition+'px;top:'+verticalPosition+'px;"></div>');
 		
 		var currentClusterContainer = $("#map_container"+i);
-		
 		currentClusterContainer.append('<div class="map_canvas" id="map_canvas' + i + '" style="width:' + clusterWidth + 'px;height:' + clusterHeight + 'px;"></div>');
 						
 		//load the google maps
@@ -112,17 +115,28 @@ TimelineView.prototype.updateTimeline = function(){
 	var availableHeight = this.div.height();
 	
 	var stepSize = availableWidth / TIMELINEMODEL.displayedTimeframe;
-	var horizontalPosition = 0;
 
 	for(var i = 0; i < this.visibleMapBubbles.length; i++){
 		var currentBubble = this.visibleMapBubbles[i];
+		var currentCluster = currentBubble.cluster;
 
-		var clusterWidth = currentBubble.timeframe * stepSize;
-		
+		var leftx = this.timeToRelativeX(currentCluster.timeframeStart);
+		var rightx = this.timeToRelativeX(currentCluster.timeframeEnd);
+		var clusterWidth = rightx - leftx;
 		var verticalPosition = (availableHeight / 2.0) - (clusterWidth / 2.0);
-		
 		
 		var clusterHeight = clusterWidth + this.bottomMaskHeight;
 
+		currentBubble.update(leftx, verticalPosition, clusterWidth, clusterWidth);
 	}
+	
+	var leftestPosition = this.timeToAbsoluteX(this.visibleMapBubbles[0].cluster.gpsLocs[0].timestamp);
+	var lastBubbleCluster = this.visibleMapBubbles[this.visibleMapBubbles.length - 1].cluster;
+	var lastCoordinate = lastBubbleCluster.gpsLocs[lastBubbleCluster.length - 1];
+	var rightestPosition = this.timeToAbsoluteX(lastCoordinate.timestamp);
+	var maskWidth = rightestPosition - leftestPosition;
+	var currentWidth = $("#timeline").width();
+	var scaleratio = maskWidth / currentWidth;
+	
+	OVERLAYVIEW.maskSet.transform("T" + leftestPosition + ",0s" + scaleratio);
 };

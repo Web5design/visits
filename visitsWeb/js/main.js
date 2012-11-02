@@ -140,6 +140,7 @@ function handleSliderUp(slider){
 	MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
 	
 	$("#marker").fadeIn(1500);
+	$("#maskcontainer").fadeIn(1500);
 	$("#masks").fadeIn(1500);
 	$("#connectionLines").fadeIn(1500);
 	$("#calenderBG").fadeIn(1500);
@@ -160,19 +161,17 @@ var handleMinimapSliderMoved = function(minimap){
 };
 
 var handleMinimapSliderUp = function(minimap){
-	$("#marker").empty();
-	$("#masks").empty();
-	$("#connectionLines").empty();
-	$("#calender").empty();
-	$("#timeline").empty();
-	$("#overview").empty();
+	OVERLAYVIEW.hideMarkers();
+	TIMELINEVIEW.hideTimeline();
 	
 	var minimapPositions = MINIMAP.getHandlePositions();
 	var leftPosition = minimapPositions[0];
 	var rightPosition = minimapPositions[1];
 
 	TIMELINEMODEL.updateFromAbsoluteValues(leftPosition, rightPosition, DISTANCESLIDER.getCurrentValue() / 1000);
-	TIMELINEVIEW.updateTimeline();
+	OVERLAYVIEW.updateBorderCircles();
+	
+	//TIMELINEVIEW.updateTimeline();
 	
 	/*$("#marker").css("display","none");
 	$("#masks").css("display","none");
@@ -182,7 +181,7 @@ var handleMinimapSliderUp = function(minimap){
 	$("#timeline").css("opacity", "1");
 	$("#minimap").css("display", "none");
 	*/
-	INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
+	/*INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
 	
 	OVERVIEWMAP = new OverviewMap();
 	OVERVIEWMAP.drawOverviewMap();
@@ -191,7 +190,7 @@ var handleMinimapSliderUp = function(minimap){
 	
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
-	
+	*/
 	
 };
 
@@ -257,6 +256,7 @@ var handleReaderLoad = function(evt){
 	$("#dropbox").fadeOut(500);
 	$("svg").fadeIn(1500);
 	$("#marker").fadeIn(1500);
+	$("#maskcontainer").fadeIn(1500);
 	$("#masks").fadeIn(1500);
 	$("#connectionLines").fadeIn(1500);
 	$("#calenderBG").fadeIn(1500);
