@@ -152,50 +152,56 @@ function HoverLabel(cluster){
 	this.locLabel.attr({"font-size":14});
 	this.locLabel.id = "locLabel";
 	
-	var goeCodeGpsLoc = cluster.gpsLocs[Math.floor(cluster.gpsLocs.length/2)];
-	var ll = new google.maps.LatLng(goeCodeGpsLoc.lat,goeCodeGpsLoc.lon);
+	var geoCodeGpsLoc = cluster.gpsLocs[Math.floor(cluster.gpsLocs.length/2)];
+	var ll = new google.maps.LatLng(geoCodeGpsLoc.lat,geoCodeGpsLoc.lon);
 	
-	if(goeCodeGpsLoc.geoCode != null){
-		CALENDER.canvas.getById("locLabel").attr({"text":goeCodeGpsLoc.geoCode});
-		console.log("found cached geocode: " + goeCodeGpsLoc.geoCode);
+	if(geoCodeGpsLoc.geoCode != null){
+		var text = geoCodeToLabel(geoCodeGpsLoc.geoCode, google.maps.GeocoderStatus.OK);
+		CALENDER.canvas.getById("locLabel").attr({"text":text});
+		
+		console.log("found cached geocode: " + geoCodeGpsLoc.geoCode);
 	} else {
 		TIMELINEMODEL.geocoder.geocode({'latLng': ll}, 
 			function(cluster){
-				return function(results, status) {
-			      if (status == google.maps.GeocoderStatus.OK) {
-			    	  
-			    	  var text;
-			    	  
-			    	  for(var i= 0; i< results[0].address_components.length;i++){
-			    		  
-			    		  if(results[0].address_components[i].types[0] == "locality"){
-			    			  text = results[0].address_components[i].long_name;
-			    		  }
-			    		  
-			    	  }
-			    	  
-			    	  if(text == undefined){
-			    		  
-			    		  for(var i= 0; i< results[0].address_components.length;i++){
-				    		  
-				    		  if(results[0].address_components[i].types[1] == "political"){
-				    			  text = results[0].address_components[i].long_name;
-				    			  break;
-				    		  }
-				    		  
-				    	  }
-			    	  }
-			    	  
+				return function(results, status){
+					var text = geoCodeToLabel(results, status);
 			    	  CALENDER.canvas.getById("locLabel").attr({"text":text});
-			    	  cluster.geoCode = text;
-			    	  console.log("setting geocode of cluster " + cluster + " to " + text);
-			    	  
-			      } else {
-			        console.log("Geocoder failed due to: " + status);
-			      }
-			};
-		}(goeCodeGpsLoc));
+			    	  cluster.geoCode = results;
+				};
+				
+		}(geoCodeGpsLoc));
 	}
+};
+
+function geoCodeToLabel(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+  	  
+  	  var text;
+  	  
+  	  var slidervalue = DISTANCESLIDER.getCurrentValue();
+  	  
+  	  for(var i=0; i<MAINMODEL.geocodeLookup.length; i++){
+  		  if(MAINMODEL.geocodeLookup[i].distance >= slidervalue){
+  			  for(var j= 0; j< results[0].address_components.length;j++){
+  				  
+  				  if(MAINMODEL.geocodeLookup[i].type == results[0].address_components[j].types[0]){
+  					  text = results[0].address_components[j].long_name; 
+  					  
+  					  //break out of outer loop
+  					  i = MAINMODEL.geocodeLookup.length;
+  					  break;
+  				  }
+  				  
+  			  }
+  		  }
+  	  }
+  	  
+  	  return text;
+  	  console.log("setting geocode of cluster " + cluster + " to " + results);
+  	  
+    } else {
+      console.log("Geocoder failed due to: " + status);
+    }
 };
 
 function drawHoverLabels(cluster){
