@@ -19,6 +19,8 @@ var MINIMAP = undefined;
 
 var MARKERCOLOR = "#124BB9";
 
+var BORDERCIRCLE_ANIMATION_DURATION = 1500;
+
 
 function readKmlLocations(kmlText){
 	var result = new Array();
@@ -161,6 +163,11 @@ var handleMinimapSliderMoved = function(minimap){
 };
 
 var handleMinimapSliderUp = function(minimap){
+	$("#marker").empty();
+	$("#connectionLines").empty();
+	$("#timeline").empty();
+	$("#overview").empty();
+	
 	OVERLAYVIEW.hideMarkers();
 	TIMELINEVIEW.hideTimeline();
 	
@@ -170,6 +177,7 @@ var handleMinimapSliderUp = function(minimap){
 
 	TIMELINEMODEL.updateFromAbsoluteValues(leftPosition, rightPosition, DISTANCESLIDER.getCurrentValue() / 1000);
 	OVERLAYVIEW.updateBorderCircles();
+	CALENDER.updateTimestampMarkers();
 	
 	//TIMELINEVIEW.updateTimeline();
 	
@@ -241,13 +249,13 @@ var handleReaderLoad = function(evt){
 	
 	OVERVIEWMAP = new OverviewMap();
 	OVERVIEWMAP.drawOverviewMap();
-	
-	CALENDER = new Calender();
-	CALENDER.drawInteractionArea();
-	
+
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
 	
+	CALENDER = new Calender();
+	CALENDER.drawInteractionArea();
+		
 	MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
 	
 	//overlayView.drawBubblesOverlay();

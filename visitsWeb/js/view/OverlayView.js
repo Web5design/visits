@@ -429,7 +429,7 @@ OverlayView.prototype.updateBorderCircles = function(){
 			currentRaphaelBubble.animate({
 				"cx" : middlex,
 				"r" : (clusterWidth / 2)
-			}, 2000, "<>", (function(removeBubble){ 
+			}, BORDERCIRCLE_ANIMATION_DURATION, "<>", (function(removeBubble){ 
 					return function(){ removeBubble.remove(); };
 			})(currentRaphaelBubble));
 		} else {
@@ -448,7 +448,7 @@ OverlayView.prototype.updateBorderCircles = function(){
 			currentRaphaelBubble.animate({
 				"cx" : middlex,
 				"r" : (clusterWidth / 2)
-			}, 2000, "<>", function(){
+			}, BORDERCIRCLE_ANIMATION_DURATION, "<>", function(){
 				console.log("bubble animation finished. redraw maps and stuff.");
 			});
 		}
