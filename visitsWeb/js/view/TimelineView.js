@@ -6,13 +6,6 @@ function TimelineView(){
 	this.bottomMaskHeight = 25;
 	
 	this.visibleMapBubbles = new Array();
-	
-
-	this.drawTimeline = drawTimeline;
-	this.hideTimeline = hideTimeline;
-	
-	this.absoluteXtoTime = absoluteXtoTime;
-	this.timeToAbsoluteX = timeToAbsoluteX;
 };
 
 function addProjectionChangedListener(map, i){
@@ -23,7 +16,7 @@ function addProjectionChangedListener(map, i){
     });
 };
 
-function absoluteXtoTime(x){
+TimelineView.prototype.absoluteXtoTime = function(x){
 	var tlX = x - this.x;
 	
 	var deltaT = TIMELINEMODEL.displayedTimeframe / this.div.width();
@@ -32,7 +25,7 @@ function absoluteXtoTime(x){
 	
 };
 
-function timeToAbsoluteX(t){
+TimelineView.prototype.timeToAbsoluteX = function(t){
 	
 	var deltaT = t-TIMELINEMODEL.displayedTimeframeStart;
 	
@@ -42,7 +35,11 @@ function timeToAbsoluteX(t){
 	
 };
 
-function drawTimeline(){
+TimelineView.prototype.timeToRelativeX = function(t){
+	return this.timeToAbsoluteX(t) - this.x;
+};
+
+TimelineView.prototype.drawTimeline = function(){
 	
 	loadedMaps = 0;
 	
@@ -66,7 +63,6 @@ function drawTimeline(){
 		this.div.append('<div class="map_container" id="map_container' + i + '" style="width:' + clusterWidth + 'px;height:' + clusterHeight + 'px;left:'+horizontalPosition+'px;top:'+verticalPosition+'px;"></div>');
 		
 		var currentClusterContainer = $("#map_container"+i);
-		
 		currentClusterContainer.append('<div class="map_canvas" id="map_canvas' + i + '" style="width:' + clusterWidth + 'px;height:' + clusterHeight + 'px;"></div>');
 						
 		//load the google maps
@@ -109,33 +105,38 @@ function drawTimeline(){
 	}
 };
 
-function hideTimeline(){
+TimelineView.prototype.hideTimeline = function(){
 	this.div.css("opacity","0.0");
-}
+};
 
 
-TimelineView.prototype.updateTimeline = function(minimapBubbleStates){
+TimelineView.prototype.updateTimeline = function(){
+	var availableWidth = this.div.width();
+	var availableHeight = this.div.height();
+	
+	var stepSize = availableWidth / TIMELINEMODEL.displayedTimeframe;
+
 	for(var i = 0; i < this.visibleMapBubbles.length; i++){
 		var currentBubble = this.visibleMapBubbles[i];
-		for(var j = 0; j < minimapBubbleStates.length; j++){
-			var currentBubbleState = minimapBubbleStates[j];
-			
-			if(currentBubble.cluster.id == currentBubbleState.cluster.id){
-				//check state of the bubble
-				switch(currentBubbleState.state){
-				case "visible":
-					break;
-				case "split2l":
-					break;
-				case "split2r":
-					break;
-				case "split3":
-					break;
-				case "invisible":
-					currentBubble.div.remove();
-					break;
-				}
-			}
-		}
+		var currentCluster = currentBubble.cluster;
+
+		var leftx = this.timeToRelativeX(currentCluster.timeframeStart);
+		var rightx = this.timeToRelativeX(currentCluster.timeframeEnd);
+		var clusterWidth = rightx - leftx;
+		var verticalPosition = (availableHeight / 2.0) - (clusterWidth / 2.0);
+		
+		var clusterHeight = clusterWidth + this.bottomMaskHeight;
+
+		currentBubble.update(leftx, verticalPosition, clusterWidth, clusterWidth);
 	}
+	
+	var leftestPosition = this.timeToAbsoluteX(this.visibleMapBubbles[0].cluster.gpsLocs[0].timestamp);
+	var lastBubbleCluster = this.visibleMapBubbles[this.visibleMapBubbles.length - 1].cluster;
+	var lastCoordinate = lastBubbleCluster.gpsLocs[lastBubbleCluster.length - 1];
+	var rightestPosition = this.timeToAbsoluteX(lastCoordinate.timestamp);
+	var maskWidth = rightestPosition - leftestPosition;
+	var currentWidth = $("#timeline").width();
+	var scaleratio = maskWidth / currentWidth;
+	
+	OVERLAYVIEW.maskSet.transform("T" + leftestPosition + ",0s" + scaleratio);
 };

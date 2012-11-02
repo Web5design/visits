@@ -50,6 +50,30 @@ TimelineModel.prototype.updateFromMainmodel = function(){
 	this.clusters = MAINMODEL.clusters;
 };
 
+TimelineModel.prototype.updateFromAbsoluteValues = function(leftPosition, rightPosition, distanceThreshold){	
+	var leftAbsolutePosition = (leftPosition * TIMELINEVIEW.div.width()) + TIMELINEVIEW.x;
+	var rightAbsolutePosition = (rightPosition * TIMELINEVIEW.div.width()) + TIMELINEVIEW.x;
+	
+	var leftTime = TIMELINEVIEW.absoluteXtoTime(leftAbsolutePosition);
+	var rightTime = TIMELINEVIEW.absoluteXtoTime(rightAbsolutePosition);
+
+	console.log("converting (" + leftPosition + ", " + rightPosition + ") to (" + leftAbsolutePosition + ", " + rightAbsolutePosition + ") and (" + leftTime + ", " + rightTime + ")");
+
+	this.displayedTimeframeStart = leftTime;
+	this.displayedTimeframeEnd = rightTime;
+	
+	this.displayedTimeframe = this.displayedTimeframeEnd -this.displayedTimeframeStart;
+	
+	this.displayedGpsLocs = new Array();
+	for(var i = 0; i < MAINMODEL.gpsLocs.length; i++){
+		var currentGpsLoc = MAINMODEL.gpsLocs[i];
+		if(currentGpsLoc.timestamp >= leftTime && currentGpsLoc.timestamp <= rightTime){
+			this.displayedGpsLocs.push(currentGpsLoc);
+		}
+	}
+	
+	//this.clusters = pivotClustering(this.displayedGpsLocs, distanceThreshold);
+};
 
 TimelineModel.prototype.tsToGpsLocTs = function(ts){
 	

@@ -129,6 +129,19 @@ MiniMap.prototype.getActiveHandle = function(){
 };
 
 /**
+ * @returns Array with two elements: [0]: relative position of left slider (0.0 - 1.0), [1]: relative position of right slider (0.0 - 1.0)
+ */
+MiniMap.prototype.getHandlePositions = function(){
+	var leftPosition = this.leftHandle[0].transform()[0][1];
+	var rightPosition = this.rightHandle[0].transform()[0][1];
+	
+	var relativeLeft = leftPosition / (this.width - this.handleWidth);
+	var relativeRight = rightPosition / (this.width - this.handleWidth);
+	
+	return [relativeLeft, relativeRight];
+};
+
+/**
  * Checks if a given bubbles is crossing one of the sliders or is within them
  * @param circle - the respective bubble
  * @returns 0   - the bubble is outside of the sliders

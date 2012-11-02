@@ -4,6 +4,8 @@ function Calender(){
 	
 	this.hoverLabel = null;
 	
+	this.timestampMarkers = new Array();
+	
 	this.drawStartAndEndLabels = drawStartAndEndLabels;
 	this.drawBGCalender = drawBGCalender;
 	this.drawBGItem = drawBGItem;
@@ -86,19 +88,48 @@ function drawStartAndEndLabels(){
 
 
 function drawTimestampMarkers(){
+	this.timestampMarkers = new Array();
 	
 	var locs = TIMELINEMODEL.displayedGpsLocs;
-	var tly = TIMELINEVIEW.y;
+	var tly = 1;
 	
 	for (var i=0; i<locs.length; i++){
 		
-		var x = TIMELINEVIEW.timeToAbsoluteX(locs[i].timestamp);
+		var x = TIMELINEVIEW.timeToRelativeX(locs[i].timestamp);
 		
-		var marker = this.canvas.circle(x,tly,1);
+		//var marker = this.canvas.circle(x,tly,1);
+		var marker = OVERLAYVIEW.maskCanvas.circle(x, tly, 1);
 		marker.attr({"fill":"#777","opacity" : 0.7, "stroke-width" : "0"});
+	
+		this.timestampMarkers.push({
+			gpsLoc: locs[i],
+			raphaelObj: marker
+		});
 	}
-	
-	
+};
+
+Calender.prototype.updateTimestampMarkers = function(){
+	console.log("updating timestamp markers");
+	for(var i = 0; i < this.timestampMarkers.length; i++){
+		var gpsLoc = this.timestampMarkers[i].gpsLoc;
+		var circle = this.timestampMarkers[i].raphaelObj;
+		
+		var newx = TIMELINEVIEW.timeToRelativeX(gpsLoc.timestamp);
+		var outside = false;
+		if(newx < 0 ||newx > TIMELINEVIEW.div.width()){
+			outside = true;
+		}
+		
+		circle.animate({
+			"cx" : newx
+		}, BORDERCIRCLE_ANIMATION_DURATION, "<>", 
+		(function(circ, toRemove){ 
+			return function(){ 
+				if(toRemove) circ.remove(); 
+			}; 
+		 })(circle, outside)
+		);
+	}
 };
 
 
