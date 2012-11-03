@@ -46,8 +46,11 @@ TimelineModel.prototype.updateFromMainmodel = function(){
 	}
 	
 	this.geocoder = new google.maps.Geocoder();
-		
-	this.clusters = MAINMODEL.clusters;
+	
+	this.clusters = new Array();
+	for(var i = 0; i < MAINMODEL.clusters.length; i++){
+		this.clusters.push(MAINMODEL.clusters[i].copy());
+	}
 };
 
 TimelineModel.prototype.updateFromAbsoluteValues = function(leftPosition, rightPosition, distanceThreshold){	
