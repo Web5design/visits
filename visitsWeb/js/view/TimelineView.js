@@ -8,11 +8,11 @@ function TimelineView(){
 	this.visibleMapBubbles = new Array();
 };
 
-function addProjectionChangedListener(map, i){
+function addProjectionChangedListener(map, currentBubble){
 	
     google.maps.event.addListener(map, 'idle', function(){
 
-    	OVERLAYVIEW.drawMarkersAndLines(map, i);
+    	OVERLAYVIEW.drawMarkersAndLines(map, currentBubble);
     });
 };
 
@@ -57,7 +57,6 @@ TimelineView.prototype.drawTimeline = function(){
 		
 		var verticalPosition = (availableHeight / 2.0) - (clusterWidth / 2.0);
 		
-		
 		var clusterHeight = clusterWidth + this.bottomMaskHeight;
 		
 		this.div.append('<div class="map_container" id="map_container' + i + '" style="width:' + clusterWidth + 'px;height:' + clusterHeight + 'px;left:'+horizontalPosition+'px;top:'+verticalPosition+'px;"></div>');
@@ -93,7 +92,7 @@ TimelineView.prototype.drawTimeline = function(){
 		    
 		    this.visibleMapBubbles.push(currentBubble);
 		    
-		    addProjectionChangedListener(map, i);		    
+		    addProjectionChangedListener(map, currentBubble);//i);		    
 		    
 		} else {
 			var currentBubble = new MapBubble(null,i);
@@ -110,7 +109,7 @@ TimelineView.prototype.hideTimeline = function(){
 };
 
 
-TimelineView.prototype.updateTimeline = function(){
+/*TimelineView.prototype.updateTimeline = function(){
 	var availableWidth = this.div.width();
 	var availableHeight = this.div.height();
 	
@@ -139,4 +138,4 @@ TimelineView.prototype.updateTimeline = function(){
 	var scaleratio = maskWidth / currentWidth;
 	
 	OVERLAYVIEW.maskSet.transform("T" + leftestPosition + ",0s" + scaleratio);
-};
+};*/

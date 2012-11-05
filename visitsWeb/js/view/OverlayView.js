@@ -19,9 +19,9 @@ function OverlayView(){
 };
 
 
-OverlayView.prototype.drawMarkersAndLines = function(map, i){
+OverlayView.prototype.drawMarkersAndLines = function(map, currentBubble){
 	
-	var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
+	//var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
 	
 	this.drawBubbleMarkers(currentBubble);
 	
@@ -29,7 +29,7 @@ OverlayView.prototype.drawMarkersAndLines = function(map, i){
 	
 	this.drawConnectionCurve(currentBubble);
 	
-	$("#map_container" + i).animate({
+	currentBubble.div.animate({
 	    opacity: 1
 	  }, 3500, function() {
 	    // Animation complete.

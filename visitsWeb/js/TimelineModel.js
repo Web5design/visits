@@ -3,8 +3,6 @@ function TimelineModel(){
 };
 
 TimelineModel.prototype.updateWithClustering = function(mainModelStartIndex, mainModelEndIndex, distanceThreshold){
-	
-	this.gpsLocs = MAINMODEL.gpsLocs;
 	this.displayedTimeframeStart = MAINMODEL.gpsLocs[mainModelStartIndex].timestamp;
 	this.displayedTimeframeEnd = MAINMODEL.gpsLocs[mainModelEndIndex].timestamp;
 	
@@ -34,7 +32,6 @@ TimelineModel.prototype.updateWithClustering = function(mainModelStartIndex, mai
 };
 
 TimelineModel.prototype.updateFromMainmodel = function(){
-	this.gpsLocs = MAINMODEL.gpsLocs;
 	this.displayedTimeframeStart = MAINMODEL.gpsLocs[0].timestamp;
 	this.displayedTimeframeEnd = MAINMODEL.gpsLocs[MAINMODEL.gpsLocs.length - 1].timestamp;
 	
@@ -54,9 +51,11 @@ TimelineModel.prototype.updateFromMainmodel = function(){
 };
 
 TimelineModel.prototype.updateFromAbsoluteValues = function(leftPosition, rightPosition, distanceThreshold){	
+	//convert values between 0 and 1 to on-screen coordinates
 	var leftAbsolutePosition = (leftPosition * TIMELINEVIEW.div.width()) + TIMELINEVIEW.x;
 	var rightAbsolutePosition = (rightPosition * TIMELINEVIEW.div.width()) + TIMELINEVIEW.x;
 	
+	//convert on-screen coordinates to timestamps
 	var leftTime = TIMELINEVIEW.absoluteXtoTime(leftAbsolutePosition);
 	var rightTime = TIMELINEVIEW.absoluteXtoTime(rightAbsolutePosition);
 
