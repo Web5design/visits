@@ -19,6 +19,8 @@ var MINIMAP = undefined;
 
 var MARKERCOLOR = "#124BB9";
 
+var BORDERCIRCLE_ANIMATION_DURATION = 1500;
+
 
 function readKmlLocations(kmlText){
 	var result = new Array();
@@ -137,9 +139,12 @@ function handleSliderUp(slider){
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
 	
+	CALENDER.drawTimestampMarkers();
+	
 	MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
 	
 	$("#marker").fadeIn(1500);
+	$("#maskcontainer").fadeIn(1500);
 	$("#masks").fadeIn(1500);
 	$("#connectionLines").fadeIn(1500);
 	$("#calenderBG").fadeIn(1500);
@@ -160,30 +165,61 @@ var handleMinimapSliderMoved = function(minimap){
 };
 
 var handleMinimapSliderUp = function(minimap){
-	TIMELINEVIEW.updateTimeline(minimap.bubbleDictionary);
-	/*$("#marker").empty();
-	$("#masks").empty();
+	$("#marker").empty();
 	$("#connectionLines").empty();
 	$("#calender").empty();
 	$("#timeline").empty();
 	$("#overview").empty();
-	$("#minimap").empty();
+
+	OVERLAYVIEW.hideMarkers();
+
+	$("#connectionLines").css("display","none");
+	$("#calenderBG").css("display","none");
+	$("#calender").css("display","none");
+	$("#timeline").css("opacity", "1");
 	
-	$("#marker").css("display","none");
+	
+	var minimapPositions = MINIMAP.getHandleTimestamps();
+	var leftAbsoluteTime = minimapPositions[0];
+	var rightAbsoluteTime = minimapPositions[1];
+
+	TIMELINEMODEL.updateFromAbsoluteValues(leftAbsoluteTime, rightAbsoluteTime, DISTANCESLIDER.getCurrentValue() / 1000);
+	OVERLAYVIEW.updateBorderCircles(postAnimationMinimapSliderUp);
+	CALENDER.updateTimestampMarkers();
+};
+
+function postAnimationMinimapSliderUp(){
+	TIMELINEVIEW = new TimelineView();
+	TIMELINEVIEW.drawTimeline();
+	
+	OVERVIEWMAP = new OverviewMap();
+	OVERVIEWMAP.drawOverviewMap();
+
+	CALENDER = new Calender();
+	CALENDER.drawInteractionArea();
+	
+	OVERLAYVIEW = new OverlayView();
+	OVERLAYVIEW.drawBubbleMasks();
+
+	CALENDER.drawTimestampMarkers();
+
+	$("#marker").fadeIn(1500);
+	$("#connectionLines").fadeIn(1500);
+	$("#calenderBG").fadeIn(1500);
+	$("#calender").fadeIn(1500);	
+	$("#interactionArea").fadeIn(1500);
+	$("#timeline").fadeIn(500);
+	$("#overview").fadeIn(2500);
+	
+	/*$("#marker").css("display","none");
 	$("#masks").css("display","none");
 	$("#connectionLines").css("display","none");
 	$("#calenderBG").css("display","none");
 	$("#calender").css("display","none");
 	$("#timeline").css("opacity", "1");
 	$("#minimap").css("display", "none");
-	
-	INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
-	
-	var mainModelIndices = mapMinimapSlidersToRange();
-	TIMELINEMODEL = new TimelineModel(mainModelIndices[0], mainModelIndices[1], DISTANCESLIDER.getCurrentValue() / 1000);
-	
-	TIMELINEVIEW = new TimelineView();
-	TIMELINEVIEW.drawTimeline();
+	*/
+	/*INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
 	
 	OVERVIEWMAP = new OverviewMap();
 	OVERVIEWMAP.drawOverviewMap();
@@ -192,9 +228,8 @@ var handleMinimapSliderUp = function(minimap){
 	
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
-	
-	MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
 	*/
+	
 };
 
 var handleReaderLoad = function(evt){
@@ -244,13 +279,13 @@ var handleReaderLoad = function(evt){
 	
 	OVERVIEWMAP = new OverviewMap();
 	OVERVIEWMAP.drawOverviewMap();
-	
-	CALENDER = new Calender();
-	CALENDER.drawInteractionArea();
-	
+
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
 	
+	CALENDER = new Calender();
+	CALENDER.drawInteractionArea();
+		
 	MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
 	
 	//overlayView.drawBubblesOverlay();
@@ -259,6 +294,7 @@ var handleReaderLoad = function(evt){
 	$("#dropbox").fadeOut(500);
 	$("svg").fadeIn(1500);
 	$("#marker").fadeIn(1500);
+	$("#maskcontainer").fadeIn(1500);
 	$("#masks").fadeIn(1500);
 	$("#connectionLines").fadeIn(1500);
 	$("#calenderBG").fadeIn(1500);
@@ -285,4 +321,3 @@ function initialize() {
     
     var myFileReader = new DragAndDropFileReader(handleReaderLoad);
   }
-
