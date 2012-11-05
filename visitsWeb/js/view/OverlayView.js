@@ -317,8 +317,8 @@ OverlayView.prototype.drawBubbleMasks = function(){
 		lowerMaskPath = lowerMaskPath + "A" + maskRadius  + "," + maskRadius + " 0 1,0 " + (maskX + maskWidth) + "," + verticalMiddle;
 		
 		var borderCircle = this.maskCanvas.circle((maskX + maskRadius), verticalMiddle, maskRadius); //(maskY + circleHeight / 2), maskRadius);
-		borderCircle.attr({"stroke" : "#aaa"});
-		
+		borderCircle.node.setAttribute("class", "borderCircle");
+				
 		this.borderCircles.push({
 			mapBubble: currentBubble,
 			raphaelObj: borderCircle
@@ -383,7 +383,28 @@ OverlayView.prototype.drawPreviewBubbles = function(){
 	
 };
 
-OverlayView.prototype.updateBorderCirclesNew = function(postAnimationCallback, oldModelLeftLimit, oldModelRightLimit){
+OverlayView.prototype.calculateCircleExtent = function(leftlimit, rightlimit, timeframeStart, timeframeEnd){
+	var timeframe = timeframeEnd - timeframeStart;
+	
+	var deltaL = leftlimit - timeframeStart;
+	var leftpos = deltaL * TIMELINEVIEW.div.width() / timeframe;
+	
+	var deltaR = rightlimit - timeframeStart;
+	var rightpos = deltaR * TIMELINEVIEW.div.width() / timeframe;
+	
+	var radius = (rightpos - leftpos) / 2;
+	if(radius < 0){
+		radius = 0;
+	}
+	
+	return {
+		"cx" : leftpos + radius,
+		"cy" : TIMELINEVIEW.div.height() / 2,
+		"r" : radius
+	};
+};
+
+OverlayView.prototype.updateBorderCircles = function(postAnimationCallback, oldModelLeftLimit, oldModelRightLimit){
 	//remove the masks
 	this.upperMask.remove();
 	this.lowerMask.remove();
@@ -395,18 +416,92 @@ OverlayView.prototype.updateBorderCirclesNew = function(postAnimationCallback, o
 	var maxTimestamp = Math.max(oldModelRightLimit, newModelRightLimit);
 	
 	for(var i = 0; i < this.borderCircles.length; i++){
-		this.borderCircles[i].mapBubble.remove();
+		this.borderCircles[i].raphaelObj.remove();
 	}
 	this.borderCircles = new Array();
 	
 	for(var i = 0; i < MAINMODEL.clusters.length; i++){
-		var currentCluster = MAINMODEL.clusters[i];
+		var cluster = MAINMODEL.clusters[i];
 		
+		var clusterIntersection = cluster.isWithinRegion(minTimestamp, maxTimestamp);
+		
+		switch(clusterIntersection){
+		case 0:
+			//cluster is outside of limits - draw nothing
+			break;
+		case 0.1:
+			//intersection with both region borders
+			var centerCircleExtent = this.calculateCircleExtent(minTimestamp, maxTimestamp, oldModelLeftLimit, oldModelRightLimit);
+			var leftCircleExtent = this.calculateCircleExtent(cluster.timeframeStart, minTimestamp, oldModelLeftLimit, oldModelRightLimit);
+			var rightCircleExtent = this.calculateCircleExtent(maxTimestamp, cluster.timeframeEnd, oldModelLeftLimit, oldModelRightLimit);
+			
+			var centerCircle = this.maskCanvas.circle(centerCircleExtent.cx, centerCircleExtent.cy, centerCircleExtent.r);
+			var leftCircle = this.maskCanvas.circle(leftCircleExtent.cx, leftCircleExtent.cy, leftCircleExtent.r);
+			var rightCircle = this.maskCanvas.circle(rightCircleExtent.cx, rightCircleExtent.cy, rightCircleExtent.r);
+			centerCircle.node.setAttribute("class", "borderCircle");
+			leftCircle.node.setAttribute("class", "borderCircle");
+			rightCircle.node.setAttribute("class", "borderCircle");
+			
+			var centerCircleTarget = this.calculateCircleExtent(minTimestamp, maxTimestamp, newModelLeftLimit, newModelRightLimit);
+			var leftCircleTarget = this.calculateCircleExtent(cluster.timeframeStart, minTimestamp, newModelLeftLimit, newModelRightLimit);
+			var rightCircleTarget = this.calculateCircleExtent(maxTimestamp, cluster.timeframeEnd, newModelLeftLimit, newModelRightLimit);
+
+			centerCircle.animate({"cx" : centerCircleTarget.cx, "r" : centerCircleTarget.r }, BORDERCIRCLE_ANIMATION_DURATION, "<>", (i == 0 ? postAnimationCallback : function(){}));
+			leftCircle.animate({"cx" : leftCircleTarget.cx, "r" : leftCircleTarget.r }, BORDERCIRCLE_ANIMATION_DURATION, "<>");
+			rightCircle.animate({"cx" : rightCircleTarget.cx, "r" : rightCircleTarget.r }, BORDERCIRCLE_ANIMATION_DURATION, "<>");
+
+			break;
+		case 0.25:
+			//intersection with left region border
+			var leftCircleExtent = this.calculateCircleExtent(cluster.timeframeStart, minTimestamp, oldModelLeftLimit, oldModelRightLimit);
+			var rightCircleExtent = this.calculateCircleExtent(minTimestamp, cluster.timeframeEnd, oldModelLeftLimit, oldModelRightLimit);
+			
+			var leftCircle = this.maskCanvas.circle(leftCircleExtent.cx, leftCircleExtent.cy, leftCircleExtent.r);
+			var rightCircle = this.maskCanvas.circle(rightCircleExtent.cx, rightCircleExtent.cy, rightCircleExtent.r);
+			leftCircle.node.setAttribute("class", "borderCircle");
+			rightCircle.node.setAttribute("class", "borderCircle");
+
+			var leftCircleTarget = this.calculateCircleExtent(cluster.timeframeStart, minTimestamp, newModelLeftLimit, newModelRightLimit);
+			var rightCircleTarget = this.calculateCircleExtent(minTimestamp, cluster.timeframeEnd, newModelLeftLimit, newModelRightLimit);
+
+			leftCircle.animate({"cx" : leftCircleTarget.cx, "r" : leftCircleTarget.r }, BORDERCIRCLE_ANIMATION_DURATION, "<>", (i == 0 ? postAnimationCallback : function(){}));
+			rightCircle.animate({"cx" : rightCircleTarget.cx, "r" : rightCircleTarget.r }, BORDERCIRCLE_ANIMATION_DURATION, "<>");
+
+			break;
+		case 0.5:
+			//intersection with right region border
+			var leftCircleExtent = this.calculateCircleExtent(cluster.timeframeStart, maxTimestamp, oldModelLeftLimit, oldModelRightLimit);
+			var rightCircleExtent = this.calculateCircleExtent(maxTimestamp, cluster.timeframeEnd, oldModelLeftLimit, oldModelRightLimit);
+			
+			var leftCircle = this.maskCanvas.circle(leftCircleExtent.cx, leftCircleExtent.cy, leftCircleExtent.r);
+			var rightCircle = this.maskCanvas.circle(rightCircleExtent.cx, rightCircleExtent.cy, rightCircleExtent.r);
+			leftCircle.node.setAttribute("class", "borderCircle");
+			rightCircle.node.setAttribute("class", "borderCircle");
+			
+			var leftCircleTarget = this.calculateCircleExtent(cluster.timeframeStart, maxTimestamp, newModelLeftLimit, newModelRightLimit);
+			var rightCircleTarget = this.calculateCircleExtent(maxTimestamp, cluster.timeframeEnd, newModelLeftLimit, newModelRightLimit);
+
+			leftCircle.animate({"cx" : leftCircleTarget.cx, "r" : leftCircleTarget.r }, BORDERCIRCLE_ANIMATION_DURATION, "<>", (i == 0 ? postAnimationCallback : function(){}));
+			rightCircle.animate({"cx" : rightCircleTarget.cx, "r" : rightCircleTarget.r }, BORDERCIRCLE_ANIMATION_DURATION, "<>");
+
+			break;
+		case 1:
+			//cluster is within limits
+			var circleExtent = this.calculateCircleExtent(cluster.timeframeStart, cluster.timeframeEnd, oldModelLeftLimit, oldModelRightLimit);
+			
+			var circle = this.maskCanvas.circle(circleExtent.cx, circleExtent.cy, circleExtent.r);
+			circle.node.setAttribute("class", "borderCircle");
+
+			var circleTarget = this.calculateCircleExtent(cluster.timeframeStart, cluster.timeframeEnd, newModelLeftLimit, newModelRightLimit);
+			
+			circle.animate({"cx" : circleTarget.cx, "r" : circleTarget.r }, BORDERCIRCLE_ANIMATION_DURATION, "<>", (i == 0 ? postAnimationCallback : function(){}));
+			break;
+		}
 	}
 	
 };
 
-OverlayView.prototype.updateBorderCircles = function(postAnimationCallback, oldModelLeftLimit, oldModelRightLimit){
+OverlayView.prototype.updateBorderCirclesOld = function(postAnimationCallback, oldModelLeftLimit, oldModelRightLimit){
 	//remove the masks
 	this.upperMask.remove();
 	this.lowerMask.remove();
