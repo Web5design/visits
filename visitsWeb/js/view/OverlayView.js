@@ -378,7 +378,30 @@ OverlayView.prototype.drawPreviewBubbles = function(){
 	
 };
 
-OverlayView.prototype.updateBorderCircles = function(postAnimationCallback){
+OverlayView.prototype.updateBorderCirclesNew = function(postAnimationCallback, oldModelLeftLimit, oldModelRightLimit){
+	//remove the masks
+	this.upperMask.remove();
+	this.lowerMask.remove();
+
+	var newModelLeftLimit = TIMELINEMODEL.displayedTimeframeStart;
+	var newModelRightLimit = TIMELINEMODEL.displayedTimeframeEnd;
+	
+	var minTimestamp = Math.min(oldModelLeftLimit, newModelLeftLimit);
+	var maxTimestamp = Math.max(oldModelRightLimit, newModelRightLimit);
+	
+	for(var i = 0; i < this.borderCircles.length; i++){
+		this.borderCircles[i].mapBubble.remove();
+	}
+	this.borderCircles = new Array();
+	
+	for(var i = 0; i < MAINMODEL.clusters.length; i++){
+		var currentCluster = MAINMODEL.clusters[i];
+		
+	}
+	
+};
+
+OverlayView.prototype.updateBorderCircles = function(postAnimationCallback, oldModelLeftLimit, oldModelRightLimit){
 	//remove the masks
 	this.upperMask.remove();
 	this.lowerMask.remove();
