@@ -142,6 +142,18 @@ MiniMap.prototype.getHandlePositions = function(){
 };
 
 /**
+ * @returns Array with two elements: [0] timestamp of the left slider, [1] timestamp of the right slider
+ */
+MiniMap.prototype.getHandleTimestamps = function(){
+	var handlePositions = this.getHandlePositions();
+	
+	var leftTime = handlePositions[0] * MAINMODEL.timeframe + MAINMODEL.timeframeStart;
+	var rightTime = handlePositions[1] * MAINMODEL.timeframe + MAINMODEL.timeframeStart;
+	
+	return [leftTime, rightTime];
+};
+
+/**
  * Checks if a given bubbles is crossing one of the sliders or is within them
  * @param circle - the respective bubble
  * @returns 0   - the bubble is outside of the sliders

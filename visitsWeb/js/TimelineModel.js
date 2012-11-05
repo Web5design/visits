@@ -50,17 +50,12 @@ TimelineModel.prototype.updateFromMainmodel = function(){
 	}
 };
 
-TimelineModel.prototype.updateFromAbsoluteValues = function(leftPosition, rightPosition, distanceThreshold){	
-	//convert values between 0 and 1 to on-screen coordinates
-	var leftAbsolutePosition = (leftPosition * TIMELINEVIEW.div.width()) + TIMELINEVIEW.x;
-	var rightAbsolutePosition = (rightPosition * TIMELINEVIEW.div.width()) + TIMELINEVIEW.x;
+TimelineModel.prototype.updateFromAbsoluteValues = function(leftTime, rightTime, distanceThreshold){	
+	var hrTimeLeft = new Date(leftTime * 1000);
+	var hrTimeRight = new Date(rightTime * 1000);
 	
-	//convert on-screen coordinates to timestamps
-	var leftTime = TIMELINEVIEW.absoluteXtoTime(leftAbsolutePosition);
-	var rightTime = TIMELINEVIEW.absoluteXtoTime(rightAbsolutePosition);
-
-	console.log("converting (" + leftPosition + ", " + rightPosition + ") to (" + leftAbsolutePosition + ", " + rightAbsolutePosition + ") and (" + leftTime + ", " + rightTime + ")");
-
+	console.log("displaying (" + leftTime + ", " + rightTime + ") (" + hrTimeLeft.toDateString() + ", " + hrTimeRight.toDateString() + ")");
+	
 	this.displayedTimeframeStart = leftTime;
 	this.displayedTimeframeEnd = rightTime;
 	
