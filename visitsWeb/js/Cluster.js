@@ -109,3 +109,11 @@ Cluster.prototype.updateClusterLimits = function(timeframeStart, timeframeEnd){
 		this.id = "empty";
 	}
 };
+
+/**
+ * @param timestamp - timestamp in seconds since the epoch
+ * @returns timestamp is within cluster limits
+ */
+Cluster.prototype.isInside = function(timestamp){
+	return (timestamp >= this.timeframeStart && timestamp <= this.timeframeEnd);
+};
