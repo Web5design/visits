@@ -80,6 +80,7 @@ MiniMap.prototype.drawMinimap = function(){
 		
 		var currentCircle = this.canvas.circle(horizontalPosition + clusterRadius, verticalPosition + clusterRadius, clusterRadius);
 		currentCircle.node.setAttribute("class", "minimapCircle active");
+		currentCircle.toBack();
 		
 		this.currentBubbles.push(currentCircle);
 		this.bubbleDictionary.push({
@@ -265,6 +266,7 @@ MiniMap.prototype.updateCircles = function(){
 			//draw the virtual bubbles
 			for(var j = 0; j < circleWidths.length; j++){
 				var newBubble = this.canvas.circle(circleCenters[j], currentBubble.attr("cy"), circleWidths[j] / 2);
+				newBubble.toBack();
 				this.virtualBubbles.push(newBubble);
 			}	
 			
@@ -482,7 +484,7 @@ MiniMap.prototype.attachZoomSliderEventHandlers = function(){
  */
 MiniMap.prototype.initialize = function(){
 	this.canvas = Raphael(this.targetDiv, this.width, this.height);
-
+	
 	//load the minimap
 	this.drawMinimap();
 	
