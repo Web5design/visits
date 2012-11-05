@@ -29,6 +29,13 @@ TimelineModel.prototype.updateWithClustering = function(mainModelStartIndex, mai
 		//}
 	}
 	*/
+	
+	//calculate bounds for all gps locations (needed for overview map)
+	this.combinedLocationCluster = new Cluster();
+	for(var i = 0; i < this.displayedGpsLocs.length; i++){
+		this.combinedLocationCluster.addLoc(this.displayedGpsLocs[i], (i == this.displayedGpsLocs.length - 1) ? this.displayedGpsLocs[i] : this.displayedGpsLocs[i + 1]);
+	}
+	
 };
 
 TimelineModel.prototype.updateFromMainmodel = function(){
@@ -48,6 +55,14 @@ TimelineModel.prototype.updateFromMainmodel = function(){
 	for(var i = 0; i < MAINMODEL.clusters.length; i++){
 		this.clusters.push(MAINMODEL.clusters[i].copy());
 	}
+	
+	
+	//calculate bounds for all gps locations (needed for overview map)
+	this.combinedLocationCluster = new Cluster();
+	for(var i = 0; i < this.displayedGpsLocs.length; i++){
+		this.combinedLocationCluster.addLoc(this.displayedGpsLocs[i], (i == this.displayedGpsLocs.length - 1) ? this.displayedGpsLocs[i] : this.displayedGpsLocs[i + 1]);
+	}
+	
 };
 
 TimelineModel.prototype.updateFromAbsoluteValues = function(leftTime, rightTime, distanceThreshold){	
@@ -80,6 +95,12 @@ TimelineModel.prototype.updateFromAbsoluteValues = function(leftTime, rightTime,
 		}
 	}
 	//this.clusters = pivotClustering(this.displayedGpsLocs, distanceThreshold);
+	
+	//calculate bounds for all gps locations (needed for overview map)
+	this.combinedLocationCluster = new Cluster();
+	for(var i = 0; i < this.displayedGpsLocs.length; i++){
+		this.combinedLocationCluster.addLoc(this.displayedGpsLocs[i], (i == this.displayedGpsLocs.length - 1) ? this.displayedGpsLocs[i] : this.displayedGpsLocs[i + 1]);
+	}
 };
 
 TimelineModel.prototype.tsToGpsLocTs = function(ts){

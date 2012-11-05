@@ -10,7 +10,7 @@ function OverviewMap(){
 
 function drawOverviewMap(){
 	var clusterWidth = this.div.width();
-	var overallClusterBounds = MAINMODEL.combinedLocationCluster.clusterBounds;
+	var overallClusterBounds = TIMELINEMODEL.combinedLocationCluster.clusterBounds;
 	
     var overviewMapoptions = {
   	      center: new google.maps.LatLng(overallClusterBounds.getCenter().lat(), overallClusterBounds.getCenter().lng()),

@@ -37,12 +37,6 @@ function Mainmodel(gpsLocs, distanceThreshold){
 	this.geocodeLookup[1000000] = "country";
 	
 	*/
-	
-	//calculate bounds for all gps locations (needed for overview map)
-	this.combinedLocationCluster = new Cluster();
-	for(var i = 0; i < this.gpsLocs.length; i++){
-		this.combinedLocationCluster.addLoc(this.gpsLocs[i], (i == this.gpsLocs.length - 1) ? this.gpsLocs[i] : this.gpsLocs[i + 1]);
-	}
 
 	this.timeIntervals = new Array();
 	
