@@ -33,6 +33,22 @@ MiniMap.prototype.currentBubbles = new Array();
 MiniMap.prototype.virtualBubbles = new Array();
 
 
+MiniMap.prototype.removeBubbles = function(){
+	//remove all real bubbles
+	for(var i = 0; i < this.currentBubbles.length; i++){
+		var currentBubble = this.currentBubbles[i];
+		currentBubble.remove();
+	}
+	
+	this.currentBubbles = new Array();
+	
+	//remove all virtual bubbles
+	for(var i = 0; i < this.virtualBubbles.length; i++){
+		this.virtualBubbles[i].remove();
+	}
+	this.virtualBubbles = new Array();
+};
+
 /**
  * Draws the minimap bubbles, displays them and puts them into the currentBubbles Array.
  */
