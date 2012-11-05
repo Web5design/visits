@@ -191,8 +191,15 @@ function HoverLabel(cluster){
 			function(cluster){
 				return function(results, status){
 					var text = geoCodeToLabel(results, status);
+					
+					if(CALENDER.canvas.getById("locLabel")){
 			    	  CALENDER.canvas.getById("locLabel").attr({"text":text});
 			    	  cluster.geoCode = results;
+					}
+					/*else{
+						
+						console.log("erwischt");
+					}*/
 				};
 				
 		}(geoCodeGpsLoc));
