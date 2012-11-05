@@ -117,3 +117,29 @@ Cluster.prototype.updateClusterLimits = function(timeframeStart, timeframeEnd){
 Cluster.prototype.isInside = function(timestamp){
 	return (timestamp >= this.timeframeStart && timestamp <= this.timeframeEnd);
 };
+
+/**
+ * 
+ * @param start - left region border
+ * @param end - right region border
+ * 
+ * @returns 0   - the cluster is outside of the region
+ * 			0.1 - the cluster is intersecting with both of the region borders
+ * 			0.25 - the cluster is intersecting with the left region border
+ * 			0.5 - the cluster is intersecting with the right region border
+ * 			1   - the cluster is within the region
+ *
+ */
+Cluster.prototype.isWithinRegion = function(start, end){
+	if(this.timeframeStart >= start && this.timeframeEnd <= end){
+		return 1;
+	} else if((this.timeframeStart < start && this.timeframeEnd < end) || (this.timeframeStart > end && this.timeframeEnd > end)){
+		return 0;
+	} else if((this.timeframeStart < start && this.timeframeEnd > start) && (this.timeframeStart < end && this.timeframeEnd > end)){
+		return 0.1;
+	} else if(this.timeframeStart < start && this.timeframeEnd <= end){
+		return 0.25;
+	} else {
+		return 0.5;
+	}
+};
