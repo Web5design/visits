@@ -332,4 +332,3 @@ function initialize() {
     
     var myFileReader = new DragAndDropFileReader(handleReaderLoad);
   }
-
