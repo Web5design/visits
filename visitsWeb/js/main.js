@@ -179,11 +179,11 @@ var handleMinimapSliderUp = function(minimap){
 	$("#timeline").css("opacity", "1");
 	
 	
-	var minimapPositions = MINIMAP.getHandlePositions();
-	var leftPosition = minimapPositions[0];
-	var rightPosition = minimapPositions[1];
+	var minimapPositions = MINIMAP.getHandleTimestamps();
+	var leftAbsoluteTime = minimapPositions[0];
+	var rightAbsoluteTime = minimapPositions[1];
 
-	TIMELINEMODEL.updateFromAbsoluteValues(leftPosition, rightPosition, DISTANCESLIDER.getCurrentValue() / 1000);
+	TIMELINEMODEL.updateFromAbsoluteValues(leftAbsoluteTime, rightAbsoluteTime, DISTANCESLIDER.getCurrentValue() / 1000);
 	OVERLAYVIEW.updateBorderCircles(postAnimationMinimapSliderUp);
 	CALENDER.updateTimestampMarkers();
 };
