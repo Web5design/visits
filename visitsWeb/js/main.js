@@ -97,8 +97,19 @@ function handleSliderDown(slider){
 function handleSliderMoved(slider){
 	var mainmodelRange = mapMinimapSlidersToRange();
 	var clusterThreshold = DISTANCESLIDER.getCurrentValue() / 1000;
-	TIMELINEMODEL = new TimelineModel();
-	TIMELINEMODEL.updateWithClustering(mainmodelRange[0], mainmodelRange[1], clusterThreshold);
+	
+	MAINMODEL.recluster(clusterThreshold);
+	MINIMAP.removeBubbles();
+	MINIMAP.drawMinimap();
+	MINIMAP.updateCircles();
+	
+	var minimapPositions = MINIMAP.getHandleTimestamps();
+	var leftAbsoluteTime = minimapPositions[0];
+	var rightAbsoluteTime = minimapPositions[1];
+
+	//TIMELINEMODEL = new TimelineModel();
+	TIMELINEMODEL.updateFromAbsoluteValues(leftAbsoluteTime, rightAbsoluteTime, clusterThreshold);
+	//TIMELINEMODEL.updateWithClustering(mainmodelRange[0], mainmodelRange[1], clusterThreshold);
 	OVERLAYVIEW.drawPreviewBubbles();
 };
 
@@ -112,7 +123,7 @@ function handleSliderUp(slider){
 	$("#calender").empty();
 	$("#timeline").empty();
 	$("#overview").empty();
-	$("#minimap").empty();
+	//$("#minimap").empty();
 	
 	$("#marker").css("display","none");
 	$("#masks").css("display","none");
@@ -120,7 +131,7 @@ function handleSliderUp(slider){
 	$("#calenderBG").css("display","none");
 	$("#calender").css("display","none");
 	$("#timeline").css("opacity", "1");
-	$("#minimap").css("display", "none");
+	//$("#minimap").css("display", "none");
 	
 	INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
 	
@@ -141,7 +152,7 @@ function handleSliderUp(slider){
 	
 	CALENDER.drawTimestampMarkers();
 	
-	MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
+	//MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
 	
 	$("#marker").fadeIn(1500);
 	$("#maskcontainer").fadeIn(1500);
@@ -152,7 +163,7 @@ function handleSliderUp(slider){
 	$("#interactionArea").fadeIn(1500);
 	$("#timeline").fadeIn(500);
 	$("#overview").fadeIn(2500);
-	$("#minimap").fadeIn(1500);
+	//$("#minimap").fadeIn(1500);
 	
 };
 
