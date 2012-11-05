@@ -21,7 +21,34 @@ var MARKERCOLOR = "#124BB9";
 
 var BORDERCIRCLE_ANIMATION_DURATION = 1500;
 
+var SLIDERVALUES = [
+                    { value: 100, label: "Street"},
+                    { value: 200, label: ""},
+                    { value: 1000, label: ""},
+                    { value: 2000, label: "Neighbourhood"},
+                    { value: 5000, label: ""},
+                    { value: 10000, label: ""},
+                    { value: 20000, label: "City"},
+                    { value: 30000, label: "", active:true},
+                    { value: 70000, label: ""},
+                    { value: 100000, label: "Area"},
+                    { value: 300000, label: ""},
+                    { value: 600000, label: ""},
+                    { value: 1000000, label: "Country"}
+                    ];
 
+
+function initialize() {
+    
+    var myFileReader = new DragAndDropFileReader(handleReaderLoad);
+    
+  };
+
+/**
+ * Reads and parses KML Files
+ * @param kmlText
+ * @returns {Array} gpsLocation Array
+ */
 function readKmlLocations(kmlText){
 	var result = new Array();
 	
@@ -70,181 +97,10 @@ function readKmlLocations(kmlText){
 };
 
 /**
- * 
- * @return an Array with start and end index in the main model's gpsLocs
+ * Called when File is dropped into the Dropbox
+ * @param evt
+ * @returns
  */
-function mapMinimapSlidersToRange(){
-	/*var leftIndex = MINIMAP.leftBorderBubbleIndex;
-	var rightIndex = MINIMAP.rightBorderBubbleIndex;
-	var mainModelLeftIndex = -1;
-	var mainModelRightIndex = -1;
-	
-	for(var i = 0; i < MAINMODEL.gpsLocs.length; i++){
-		var currentLoc = MAINMODEL.gpsLocs[i];
-		
-		if(currentLoc ===)
-	}
-	*/
-	return [0, MAINMODEL.gpsLocs.length - 1];
-};
-
-function handleSliderDown(slider){
-	OVERLAYVIEW.hideMarkers();
-	TIMELINEVIEW.hideTimeline();
-	console.log("slider down!!");
-};
-
-function handleSliderMoved(slider){
-	var mainmodelRange = mapMinimapSlidersToRange();
-	var clusterThreshold = DISTANCESLIDER.getCurrentValue() / 1000;
-	
-	MAINMODEL.recluster(clusterThreshold);
-	MINIMAP.removeBubbles();
-	MINIMAP.drawMinimap();
-	MINIMAP.updateCircles();
-	
-	var minimapPositions = MINIMAP.getHandleTimestamps();
-	var leftAbsoluteTime = minimapPositions[0];
-	var rightAbsoluteTime = minimapPositions[1];
-
-	//TIMELINEMODEL = new TimelineModel();
-	TIMELINEMODEL.updateFromAbsoluteValues(leftAbsoluteTime, rightAbsoluteTime, clusterThreshold);
-	//TIMELINEMODEL.updateWithClustering(mainmodelRange[0], mainmodelRange[1], clusterThreshold);
-	OVERLAYVIEW.drawPreviewBubbles();
-};
-
-function handleSliderUp(slider){
-
-	$("#previewBubbles").fadeOut(2000);
-	
-	$("#marker").empty();
-	$("#masks").empty();
-	$("#connectionLines").empty();
-	$("#calender").empty();
-	$("#timeline").empty();
-	$("#overview").empty();
-	//$("#minimap").empty();
-	
-	$("#marker").css("display","none");
-	$("#masks").css("display","none");
-	$("#connectionLines").css("display","none");
-	$("#calenderBG").css("display","none");
-	$("#calender").css("display","none");
-	$("#timeline").css("opacity", "1");
-	//$("#minimap").css("display", "none");
-	
-	INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
-	
-	//update the main model's clustering
-	MAINMODEL.recluster(DISTANCESLIDER.getCurrentValue() / 1000);
-	
-	TIMELINEVIEW = new TimelineView();
-	TIMELINEVIEW.drawTimeline();
-	
-	OVERVIEWMAP = new OverviewMap();
-	OVERVIEWMAP.drawOverviewMap();
-
-	CALENDER = new Calender();
-	CALENDER.drawInteractionArea();
-	
-	OVERLAYVIEW = new OverlayView();
-	OVERLAYVIEW.drawBubbleMasks();
-	
-	CALENDER.drawTimestampMarkers();
-	
-	//MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
-	
-	$("#marker").fadeIn(1500);
-	$("#maskcontainer").fadeIn(1500);
-	$("#masks").fadeIn(1500);
-	$("#connectionLines").fadeIn(1500);
-	$("#calenderBG").fadeIn(1500);
-	$("#calender").fadeIn(1500);	
-	$("#interactionArea").fadeIn(1500);
-	$("#timeline").fadeIn(500);
-	$("#overview").fadeIn(2500);
-	//$("#minimap").fadeIn(1500);
-	
-};
-
-var handleMinimapSliderDown = function(minimap){
-	
-}; 
-
-var handleMinimapSliderMoved = function(minimap){
-	
-};
-
-var handleMinimapSliderUp = function(minimap){
-	$("#marker").empty();
-	$("#connectionLines").empty();
-	$("#calender").empty();
-	$("#timeline").empty();
-	$("#overview").empty();
-
-	OVERLAYVIEW.hideMarkers();
-
-	$("#connectionLines").css("display","none");
-	$("#calenderBG").css("display","none");
-	$("#calender").css("display","none");
-	$("#timeline").css("opacity", "1");
-	
-	var oldModelLeftLimit = TIMELINEMODEL.displayedTimeframeStart;
-	var oldModelRightLimit = TIMELINEMODEL.displayedTimeframeEnd;
-	
-	var minimapPositions = MINIMAP.getHandleTimestamps();
-	var leftAbsoluteTime = minimapPositions[0];
-	var rightAbsoluteTime = minimapPositions[1];
-
-	TIMELINEMODEL.updateFromAbsoluteValues(leftAbsoluteTime, rightAbsoluteTime, DISTANCESLIDER.getCurrentValue() / 1000);
-	OVERLAYVIEW.updateBorderCircles(postAnimationMinimapSliderUp, oldModelLeftLimit, oldModelRightLimit);
-	CALENDER.updateTimestampMarkers();
-};
-
-function postAnimationMinimapSliderUp(){
-	TIMELINEVIEW = new TimelineView();
-	TIMELINEVIEW.drawTimeline();
-	
-	OVERVIEWMAP = new OverviewMap();
-	OVERVIEWMAP.drawOverviewMap();
-
-	CALENDER = new Calender();
-	CALENDER.drawInteractionArea();
-	
-	OVERLAYVIEW = new OverlayView();
-	OVERLAYVIEW.drawBubbleMasks();
-
-	CALENDER.drawTimestampMarkers();
-
-	$("#marker").fadeIn(1500);
-	$("#connectionLines").fadeIn(1500);
-	$("#calenderBG").fadeIn(1500);
-	$("#calender").fadeIn(1500);	
-	$("#interactionArea").fadeIn(1500);
-	$("#timeline").fadeIn(500);
-	$("#overview").fadeIn(2500);
-	
-	/*$("#marker").css("display","none");
-	$("#masks").css("display","none");
-	$("#connectionLines").css("display","none");
-	$("#calenderBG").css("display","none");
-	$("#calender").css("display","none");
-	$("#timeline").css("opacity", "1");
-	$("#minimap").css("display", "none");
-	*/
-	/*INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
-	
-	OVERVIEWMAP = new OverviewMap();
-	OVERVIEWMAP.drawOverviewMap();
-
-	CALENDER = new Calender();
-	
-	OVERLAYVIEW = new OverlayView();
-	OVERLAYVIEW.drawBubbleMasks();
-	*/
-	
-};
-
 var handleReaderLoad = function(evt){
 
 	var resultGpsLoc = new Array();
@@ -260,30 +116,25 @@ var handleReaderLoad = function(evt){
 	} else if(INPUTFILETYPE == "kml"){
 		resultGpsLoc = readKmlLocations(evt.target.result);
 	}
-
-	var sliderValues = [
-	                    { value: 100, label: "Street"},
-	                    { value: 200, label: ""},
-	                    { value: 1000, label: ""},
-	                    { value: 2000, label: "Neighbourhood"},
-	                    { value: 5000, label: ""},
-	                    { value: 10000, label: ""},
-	                    { value: 20000, label: "City"},
-	                    { value: 30000, label: "", active:true},
-	                    { value: 70000, label: ""},
-	                    { value: 100000, label: "Area"},
-	                    { value: 300000, label: ""},
-	                    { value: 600000, label: ""},
-	                    { value: 1000000, label: "Country"}
-	                    ];
-	DISTANCESLIDER = new VerticalSlider("slider", sliderValues, handleSliderDown, handleSliderMoved, handleSliderUp);
+	
+	DISTANCESLIDER = new VerticalSlider("slider", SLIDERVALUES, handleSliderDown, handleSliderMoved, handleSliderUp);
 	var currentDistanceValue = DISTANCESLIDER.getCurrentValue() / 1000;
 	
 	MAINMODEL = new Mainmodel(resultGpsLoc, currentDistanceValue);
 	
-	//TIMELINEMODEL = new TimelineModel(0, MAINMODEL.gpsLocs.length - 1, currentDistanceValue);
 	TIMELINEMODEL = new TimelineModel();
 	TIMELINEMODEL.updateFromMainmodel();
+	
+	$("#dropbox").fadeOut(500);
+	
+	reInitializeAllViews();
+	
+	MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
+
+};
+
+
+function reInitializeAllViews(){
 	
 	INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
 	
@@ -298,39 +149,92 @@ var handleReaderLoad = function(evt){
 	
 	CALENDER = new Calender();
 	CALENDER.drawInteractionArea();
-		
-	MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
 	
-	//overlayView.drawBubblesOverlay();
-	
-	
-	$("#dropbox").fadeOut(500);
-	$("svg").fadeIn(1500);
-	$("#marker").fadeIn(1500);
-	$("#maskcontainer").fadeIn(1500);
-	$("#masks").fadeIn(1500);
-	$("#connectionLines").fadeIn(1500);
-	$("#calenderBG").fadeIn(1500);
-	$("#calender").fadeIn(1500);
-	$("#interactionArea").fadeIn(1500);
+	$("svg").fadeIn(0);
+	$("#marker").fadeIn(1000);
+	$("#maskcontainer").fadeIn(1000);
+	$("#masks").fadeIn(1000);
+	$("#connectionLines").fadeIn(1000);
+	$("#calenderBG").fadeIn(1000);
+	$("#calender").fadeIn(1000);
+	$("#interactionArea").fadeIn(500);
 	$("#timeline").fadeIn(500);
-	$("#overview").fadeIn(2500);
+	$("#overview").fadeIn(1000);
+	
+}
+
+function handleSliderDown(slider){
+	OVERLAYVIEW.hideMarkers();
+	TIMELINEVIEW.hideTimeline();
+	console.log("slider down!!");
+};
+
+function handleSliderMoved(slider){
+	var clusterThreshold = DISTANCESLIDER.getCurrentValue() / 1000;
+	
+	MAINMODEL.recluster(clusterThreshold);
+	MINIMAP.removeBubbles();
+	MINIMAP.drawMinimap();
+	MINIMAP.updateCircles();
+	
+	var minimapPositions = MINIMAP.getHandleTimestamps();
+	var leftAbsoluteTime = minimapPositions[0];
+	var rightAbsoluteTime = minimapPositions[1];
+
+
+	TIMELINEMODEL.updateFromAbsoluteValues(leftAbsoluteTime, rightAbsoluteTime, clusterThreshold);
+	OVERLAYVIEW.drawPreviewBubbles();
+};
+
+function emptyAndHideAllViews(){
+	$("#previewBubbles").empty();
+	$("#interactionArea").empty();
+	$("#marker").empty();
+	$("#connectionLines").empty();
+	$("#calender").empty();
+	$("#timeline").empty();
+	$("#overview").empty();
+	
+	$("#marker").css("display","none");
+	$("#connectionLines").css("display","none");
+	$("#calenderBG").css("display","none");
+	$("#calender").css("display","none");
+	$("#timeline").css("opacity", "1");
+}
+
+function handleSliderUp(slider){
+
+	emptyAndHideAllViews();
+	
+	$("#masks").empty();
+	$("#masks").css("display","none");
+	
+	//update the main model's clustering
+	MAINMODEL.recluster(DISTANCESLIDER.getCurrentValue() / 1000);
+	
+	reInitializeAllViews();
 	
 };
 
-function initialize() {
-    var mapOptions = {
-      center: new google.maps.LatLng(-34.397, 150.644),
-      zoom: 8,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      noClear: true,
-      zoomControl: false,
-      panControl: false,
-      rotateControl: false,
-      scaleControl: false,
-      disableDefaultUI: true
+var handleMinimapSliderDown = function(minimap){
+	
+}; 
 
-    };
-    
-    var myFileReader = new DragAndDropFileReader(handleReaderLoad);
-  }
+var handleMinimapSliderMoved = function(minimap){
+	
+};
+
+var handleMinimapSliderUp = function(minimap){
+	emptyAndHideAllViews();
+	
+	var oldModelLeftLimit = TIMELINEMODEL.displayedTimeframeStart;
+	var oldModelRightLimit = TIMELINEMODEL.displayedTimeframeEnd;
+	
+	var minimapPositions = MINIMAP.getHandleTimestamps();
+	var leftAbsoluteTime = minimapPositions[0];
+	var rightAbsoluteTime = minimapPositions[1];
+
+	TIMELINEMODEL.updateFromAbsoluteValues(leftAbsoluteTime, rightAbsoluteTime, DISTANCESLIDER.getCurrentValue() / 1000);
+	OVERLAYVIEW.updateBorderCircles(reInitializeAllViews, oldModelLeftLimit, oldModelRightLimit);
+	CALENDER.updateTimestampMarkers();
+};
