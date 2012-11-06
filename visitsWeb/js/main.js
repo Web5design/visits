@@ -125,7 +125,7 @@ var handleReaderLoad = function(evt){
 	TIMELINEMODEL = new TimelineModel();
 	TIMELINEMODEL.updateFromMainmodel();
 	
-	$("#dropbox").fadeOut(500);
+	$("#startscreen").fadeOut(500);
 	
 	reInitializeAllViews();
 	
