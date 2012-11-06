@@ -18,12 +18,9 @@ MapBubble.prototype.update = function(x, y, width, height){
 		top: y,
 		width: width,
 		height: height
-	}, 5000, function(){}
+	}, 2000, function(){}
 	);
-	/*this.div.offset({ left:x, top:y});
-	this.div.width(width);
-	this.div.height(height);
-	*/
+
 	
 	this.x = x;
 	this.y = y;

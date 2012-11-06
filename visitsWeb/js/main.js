@@ -125,13 +125,15 @@ var handleReaderLoad = function(evt){
 	TIMELINEMODEL = new TimelineModel();
 	TIMELINEMODEL.updateFromMainmodel();
 	
-	$("#startscreen").fadeOut(500);
-	
+	$("#startscreen").fadeOut(500, initializeViews);
+};
+
+function initializeViews(){
 	reInitializeAllViews();
 	
 	MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
 
-};
+}
 
 
 function reInitializeAllViews(){
@@ -150,16 +152,17 @@ function reInitializeAllViews(){
 	CALENDER = new Calender();
 	CALENDER.drawInteractionArea();
 	
-	$("svg").fadeIn(0);
-	$("#marker").fadeIn(1000);
-	$("#maskcontainer").fadeIn(1000);
-	$("#masks").fadeIn(1000);
-	$("#connectionLines").fadeIn(1000);
-	$("#calenderBG").fadeIn(1000);
-	$("#calender").fadeIn(1000);
-	$("#interactionArea").fadeIn(500);
-	$("#timeline").fadeIn(500);
-	$("#overview").fadeIn(1000);
+	//$("svg").fadeIn(1500);
+	$("#marker").fadeIn(1500);
+	$("#maskcontainer").fadeIn(1500);
+	$("#masks").fadeIn(1500);
+	$("#connectionLines").fadeIn(1500);
+	$("#calenderBG").fadeIn(1500);
+	$("#calender").fadeIn(1500);
+	$("#interactionArea").fadeIn(1500);
+	$("#timeline").fadeIn(1500);
+	$("#overview").fadeIn(500);
+	$("#slider").fadeIn(1500);
 	
 }
 
