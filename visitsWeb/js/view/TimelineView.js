@@ -10,7 +10,7 @@ function TimelineView(){
 
 function addProjectionChangedListener(map, currentBubble){
 	
-    google.maps.event.addListener(map, 'idle', function(){
+    google.maps.event.addListener(map, 'tilesloaded', function(){
 
     	OVERLAYVIEW.drawMarkersAndLines(map, currentBubble);
     });
