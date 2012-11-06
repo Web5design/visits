@@ -133,7 +133,7 @@ Cluster.prototype.isInside = function(timestamp){
 Cluster.prototype.isWithinRegion = function(start, end){
 	if(this.timeframeStart >= start && this.timeframeEnd <= end){
 		return 1;
-	} else if((this.timeframeStart < start && this.timeframeEnd < end) || (this.timeframeStart > end && this.timeframeEnd > end)){
+	} else if((this.timeframeStart < start && this.timeframeEnd < start) || (this.timeframeStart > end && this.timeframeEnd > end)){
 		return 0;
 	} else if((this.timeframeStart < start && this.timeframeEnd > start) && (this.timeframeStart < end && this.timeframeEnd > end)){
 		return 0.1;

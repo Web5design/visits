@@ -19,7 +19,7 @@ var MINIMAP = undefined;
 
 var MARKERCOLOR = "#124BB9";
 
-var BORDERCIRCLE_ANIMATION_DURATION = 1500;
+var BORDERCIRCLE_ANIMATION_DURATION = 15000;
 
 var SLIDERVALUES = [
                     { value: 100, label: "Street"},
