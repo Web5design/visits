@@ -67,3 +67,4 @@ h1 { color: #ddd; font-size: 70px; }
 
 .hoverline{stroke: #124BB9; stroke-width: 2; opacity : 0.7; stroke-dasharray: 2, 2}
 .borderCircle {stroke: #aaa}
+.activeBorder{stroke: #124BB9; stroke-width: 2; opacity : 0.7}

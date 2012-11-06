@@ -45,6 +45,8 @@ OverlayView.prototype.drawOverviewMarker =function(currentBubble){
    	overviewMarker.sw = convertPoint(OVERVIEWMAP.map, currentBubble.cluster.clusterBounds.getSouthWest());
    	overviewMarker.radius = Math.abs(overviewMarker.ne.x - overviewMarker.sw.x);
    	
+   	overviewMarker.radius = 4;
+   	
    	//make sure the circles are large enough to be visible
    	if(overviewMarker.radius < this.minimumCircleRadiusOnOverviewMap){
    		overviewMarker.radius = this.minimumCircleRadiusOnOverviewMap;
@@ -53,10 +55,10 @@ OverlayView.prototype.drawOverviewMarker =function(currentBubble){
    	overviewMarker.pos = convertPoint(OVERVIEWMAP.map, currentBubble.cluster.clusterBounds.getCenter());
    	
 	overviewMarker.fill = this.connectionLineCanvas.circle(overviewMarker.pos.x + Number(OVERVIEWMAP.x), overviewMarker.pos.y + Number(OVERVIEWMAP.y), overviewMarker.radius);
-	overviewMarker.fill.attr({ "fill": MARKERCOLOR, "opacity": "0", "stroke-width" : 0});
+	overviewMarker.fill.attr({ "fill": MARKERCOLOR, "opacity" : 0.9, "stroke-width" : 0});
 	
 	overviewMarker.border = this.connectionLineCanvas.circle(overviewMarker.pos.x + Number(OVERVIEWMAP.x), overviewMarker.pos.y + Number(OVERVIEWMAP.y), overviewMarker.radius);
-	overviewMarker.border.attr({ "stroke": "#aaa"});
+	overviewMarker.border.attr({ "stroke": "#fff", "stroke-width" : 2, "opacity":0.7});
 	
 	currentBubble.overviewMarker = overviewMarker;
 	
@@ -227,6 +229,8 @@ OverlayView.prototype.drawConnectionCurve = function(currentBubble){
 	var connectingCurve = this.connectionLineCanvas.path(connectingCurvePath);
 	connectingCurve.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
 	
+	currentBubble.connectionCurve = connectingCurve;
+	
 };
 
 OverlayView.prototype.drawBubbleMasks = function(){
@@ -282,6 +286,12 @@ OverlayView.prototype.drawBubbleMasks = function(){
 		
 		touchCircle.mouseover(function(){
 			CALENDER.drawHoverLabels(currentBubble.cluster);
+			if(currentBubble.connectionCurve){		
+				currentBubble.connectionCurve.attr({"stroke" : MARKERCOLOR, "stroke-width" : "2", "opacity" : 0.7});
+			}
+			if(currentBubble.borderCircle){				
+				currentBubble.borderCircle.node.setAttribute("class", "activeBorder");
+			}
 		}	
 		);	
 		
@@ -292,6 +302,14 @@ OverlayView.prototype.drawBubbleMasks = function(){
 		
 		touchCircle.mouseout(function(){
 			CALENDER.hideHoverLabels();
+			OVERLAYVIEW.removeHoverline();
+			if(currentBubble.connectionCurve){		
+				currentBubble.connectionCurve.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
+			}
+			if(currentBubble.borderCircle){	
+				currentBubble.borderCircle.node.setAttribute("class", "borderCircle");
+			}
+			
 		}		
 		);	
 	};
@@ -316,9 +334,13 @@ OverlayView.prototype.drawBubbleMasks = function(){
 		upperMaskPath = upperMaskPath + "A" + maskRadius  + "," + maskRadius + " 0 0,1 " + (maskX + maskWidth) + "," + verticalMiddle;
 		lowerMaskPath = lowerMaskPath + "A" + maskRadius  + "," + maskRadius + " 0 1,0 " + (maskX + maskWidth) + "," + verticalMiddle;
 		
+		
+		
 		var borderCircle = this.maskCanvas.circle((maskX + maskRadius), verticalMiddle, maskRadius); //(maskY + circleHeight / 2), maskRadius);
 		borderCircle.node.setAttribute("class", "borderCircle");
-				
+		
+		currentBubble.borderCircle = borderCircle;
+		
 		this.borderCircles.push({
 			mapBubble: currentBubble,
 			raphaelObj: borderCircle
