@@ -11,6 +11,7 @@ function MapBubble(map, i){
 	this.overviewMarker;
 	this.connectionCurve;
 	this.borderCircle;
+	this.overviewMarker;
 }
 
 MapBubble.prototype.update = function(x, y, width, height){
