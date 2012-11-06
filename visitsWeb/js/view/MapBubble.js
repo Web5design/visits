@@ -9,6 +9,8 @@ function MapBubble(map, i){
 	this.width = this.div.width();
 	this.height = this.div.height();
 	this.overviewMarker;
+	this.connectionCurve;
+	this.borderCircle;
 }
 
 MapBubble.prototype.update = function(x, y, width, height){
