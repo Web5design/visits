@@ -137,6 +137,7 @@ function initializeViews(){
 
 
 function reInitializeAllViews(){
+	console.log("reinitializing all views...");
 	
 	INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
 	

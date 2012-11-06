@@ -422,11 +422,12 @@ OverlayView.prototype.calculateCircleExtents = function(cluster, timeframeStart,
 	var rightpos = deltaR * TIMELINEVIEW.div.width() / timeframe;
 	
 	var radius = (rightpos - leftpos) / 2;
-	if(radius < 0)
-		radius = 0;
 	
 	centerCircle.cx = leftpos + radius;
 	centerCircle.cy = TIMELINEVIEW.div.height() / 2;
+
+	if(radius < 0)
+		radius = 0;
 	centerCircle.r = radius;
 	
 	//left circle
@@ -512,6 +513,19 @@ OverlayView.prototype.updateBorderCircles = function(postAnimationCallback, oldM
 		
 		//only draw something if the circle is within the region somewhere
 		if(generalClusterIntersection > 0){
+			var movingOut = false;
+			var movingIn = false;
+			
+			var oldOnScreen = cluster.isWithinRegion(oldModelLeftLimit, oldModelRightLimit);
+			var newOnScreen = cluster.isWithinRegion(newModelLeftLimit, newModelRightLimit);
+
+			if(oldOnScreen == 0 && newOnScreen > 0){
+				movingIn = true;
+			}
+			if(oldOnScreen > 0 && newOnScreen == 0){
+				movingOut = true;
+			}
+
 			var extents = this.calculateCircleExtents(cluster, oldModelLeftLimit, oldModelRightLimit);
 			var targets = this.calculateCircleExtents(cluster, newModelLeftLimit, newModelRightLimit);
 			
@@ -524,18 +538,24 @@ OverlayView.prototype.updateBorderCircles = function(postAnimationCallback, oldM
 			var rightCircleTarget = targets[2];
 			
 			var centerCircle = this.maskCanvas.circle(centerCircleExtent.cx, centerCircleExtent.cy, centerCircleExtent.r);
-			//var leftCircle = this.maskCanvas.circle(leftCircleExtent.cx, leftCircleExtent.cy, leftCircleExtent.r);
-			//var rightCircle = this.maskCanvas.circle(rightCircleExtent.cx, rightCircleExtent.cy, rightCircleExtent.r);
+			var leftCircle = this.maskCanvas.circle(leftCircleExtent.cx, leftCircleExtent.cy, leftCircleExtent.r);
+			var rightCircle = this.maskCanvas.circle(rightCircleExtent.cx, rightCircleExtent.cy, rightCircleExtent.r);
 			centerCircle.node.setAttribute("class", "borderCircle");
 			centerCircle.attr({"fill":"#0f0"});
-//			leftCircle.node.setAttribute("class", "borderCircle");
-//			leftCircle.attr({"fill":"#f00"});
-//			rightCircle.node.setAttribute("class", "borderCircle");
-//			rightCircle.attr({"fill":"#00f"});
+			leftCircle.node.setAttribute("class", "borderCircle");
+			leftCircle.attr({"fill":"#f00"});
+			rightCircle.node.setAttribute("class", "borderCircle");
+			rightCircle.attr({"fill":"#00f"});
+			
+//			if(movingOut){
+//				leftCircleTarget.r = leftCircleExtent.r;
+//				centerCircleTarget.r = centerCircleExtent.r;
+//				rightCircleTarget.r = rightCircleExtent.r;
+//			}
 			
 			centerCircle.animate({"cx" : centerCircleTarget.cx, "r" : centerCircleTarget.r }, BORDERCIRCLE_ANIMATION_DURATION, "<>",  (i == 0 ? postAnimationCallback : function(){}));
-			//leftCircle.animate({"cx" : leftCircleTarget.cx, "r" :leftCircleTarget.r }, BORDERCIRCLE_ANIMATION_DURATION, "<>");
-			//rightCircle.animate({"cx" : rightCircleTarget.cx, "r" : rightCircleTarget.r }, BORDERCIRCLE_ANIMATION_DURATION, "<>");
+			leftCircle.animate({"cx" : leftCircleTarget.cx, "r" :leftCircleTarget.r }, BORDERCIRCLE_ANIMATION_DURATION, "<>");
+			rightCircle.animate({"cx" : rightCircleTarget.cx, "r" : rightCircleTarget.r }, BORDERCIRCLE_ANIMATION_DURATION, "<>");
 			
 			console.log("cluster #" + i + " left from (" + leftCircleExtent.cx + ", " + leftCircleExtent.cy + ", r:" + leftCircleExtent.r + ") to (" + leftCircleTarget.cx + ", " + leftCircleTarget.cy + ", r:" + leftCircleTarget.r + ")");
 			console.log("cluster #" + i + " center from (" + centerCircleExtent.cx + ", " + centerCircleExtent.cy + ", r:" + centerCircleExtent.r + ") to (" + centerCircleTarget.cx + ", " + centerCircleTarget.cy + ", r:" + centerCircleTarget.r + ")");
