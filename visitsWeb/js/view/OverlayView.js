@@ -285,6 +285,11 @@ OverlayView.prototype.drawBubbleMasks = function(){
 		}	
 		);	
 		
+		touchCircle.mousemove(function(e){
+			OVERLAYVIEW.drawHoverCurve(e.pageX, 0);
+		}	
+		);
+		
 		touchCircle.mouseout(function(){
 			CALENDER.hideHoverLabels();
 		}		

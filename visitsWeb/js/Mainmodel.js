@@ -14,8 +14,8 @@ function Mainmodel(gpsLocs, distanceThreshold){
 	                       {distance: 10000 , type: "sublocality" },
 	                       {distance: 20000 , type: "locality" },
 	                       {distance: 30000 , type: "locality" },
-	                       {distance: 70000 , type: "administrative_area_level_2" },
-	                       {distance: 100000 , type: "administrative_area_level_2" },
+	                       {distance: 70000 , type: "administrative_area_level_1" },
+	                       {distance: 100000 , type: "administrative_area_level_1" },
 	                       {distance: 300000 , type: "administrative_area_level_1" },
 	                       {distance: 600000 , type: "administrative_area_level_1" },
 	                       {distance: 1000000 , type: "country" }
