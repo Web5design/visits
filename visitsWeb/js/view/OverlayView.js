@@ -22,13 +22,13 @@ function OverlayView(){
 OverlayView.prototype.drawMarkersAndLines = function(currentBubble){
 	
 	//var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
-	
+		
 	this.drawBubbleMarkers(currentBubble);
-	
+
 	this.drawOverviewMarker(currentBubble);
 	
 	this.drawConnectionCurve(currentBubble);
-	
+
 	currentBubble.div.animate({
 	    opacity: 1
 	  }, 3500, function() {
@@ -258,9 +258,16 @@ OverlayView.prototype.drawBubbleMasks = function(){
 		}
 	}
 	
+	//special case: if the first cluster is empty start drawing with the second cluster
+	var horizontalStart = -1;
+	if(TIMELINEMODEL.clusters[0].gpsLocs.length == 0){
+		var secondCluster = TIMELINEMODEL.clusters[1];
+		horizontalStart = TIMELINEVIEW.timeToRelativeX(secondCluster.timeframeStart) - 1;
+	}
+	
 	//corner points:
 	var upperLeft = {
-			"x": -1,
+			"x": horizontalStart,
 			"y": Number(minBubbleY) - 1
 	};
 	var upperRight = {
@@ -272,14 +279,13 @@ OverlayView.prototype.drawBubbleMasks = function(){
 			"y": Number(minBubbleY + maxBubbleHeight + 1)
 	};
 	var lowerLeft = {
-			"x": -1,
+			"x": horizontalStart,
 			"y": Number(minBubbleY + maxBubbleHeight + 1)
 	};
 
 	var verticalMiddle = Number(upperRight.y + ((lowerRight.y - upperRight.y) / 2) - (TIMELINEVIEW.bottomMaskHeight / 2));
 	
-	//draw circles
-	upperMaskPath = "M0," + verticalMiddle;
+	upperMaskPath = "M" + upperLeft.x + "," + verticalMiddle;
 	lowerMaskPath = upperMaskPath;
 	
 	var addBubbleMousehandler = function(currentBubble, touchCircle){

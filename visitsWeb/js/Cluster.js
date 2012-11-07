@@ -67,8 +67,6 @@ Cluster.prototype.copy = function(){
  * @param timeframeEnd
  */
 Cluster.prototype.updateClusterLimits = function(timeframeStart, timeframeEnd){
-	this.lastCluster = this.copy();
-	
 	var newGpsLocs = new Array();
 	
 	//remove all gpsLocs outside of the new limits
@@ -81,6 +79,8 @@ Cluster.prototype.updateClusterLimits = function(timeframeStart, timeframeEnd){
 	}
 	
 	this.gpsLocs = newGpsLocs;
+	
+	var isIntersecting = (this.timeframeEnd > timeframeStart);
 	
 	if(this.gpsLocs.length > 0){
 		//sort by timestamp
@@ -101,12 +101,18 @@ Cluster.prototype.updateClusterLimits = function(timeframeStart, timeframeEnd){
 		
 		this.id = this.timeframeStart + " " + this.timeframeEnd;
 	} else {
-		//cluster is empty now
-		this.clusterBounds = undefined;
-		this.timeframeStart = undefined;
-		this.timeframeEnd = undefined;
-		this.timeframe = undefined;
-		this.id = "empty";
+		if(isIntersecting){
+			this.timeframeStart = timeframeStart;
+			this.timeframe = this.timeframeEnd - this.timeframeStart;
+			this.id = this.timeframeStart + " " + this.timeframeEnd;
+		} else {
+			//cluster is empty now
+			this.clusterBounds = undefined;
+			this.timeframeStart = undefined;
+			this.timeframeEnd = undefined;
+			this.timeframe = undefined;
+			this.id = "empty";
+		}
 	}
 };
 
