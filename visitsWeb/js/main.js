@@ -19,7 +19,7 @@ var MINIMAP = undefined;
 
 var MARKERCOLOR = "#124BB9";
 
-var BORDERCIRCLE_ANIMATION_DURATION = 5000;
+var BORDERCIRCLE_ANIMATION_DURATION = 1500;
 
 var SLIDERVALUES = [
                     { value: 100, label: "Street"},
@@ -137,6 +137,7 @@ function initializeViews(){
 
 
 function reInitializeAllViews(){
+	console.log("reinitializing all views...");
 	
 	INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
 	
