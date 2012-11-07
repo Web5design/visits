@@ -178,31 +178,33 @@ function HoverLabel(cluster){
 	this.locLabel.attr({"font-size":14});
 	this.locLabel.id = "locLabel";
 	
-	var geoCodeGpsLoc = cluster.gpsLocs[Math.floor(cluster.gpsLocs.length/2)];
-	var ll = new google.maps.LatLng(geoCodeGpsLoc.lat,geoCodeGpsLoc.lon);
-	
-	if(geoCodeGpsLoc.geoCode != null){
-		var text = geoCodeToLabel(geoCodeGpsLoc.geoCode, google.maps.GeocoderStatus.OK);
-		CALENDER.canvas.getById("locLabel").attr({"text":text});
+	if(cluster.gpsLocs.length > 0){
+		var geoCodeGpsLoc = cluster.gpsLocs[Math.floor(cluster.gpsLocs.length/2)];
+		var ll = new google.maps.LatLng(geoCodeGpsLoc.lat,geoCodeGpsLoc.lon);
 		
-		console.log("found cached geocode: " + geoCodeGpsLoc.geoCode);
-	} else {
-		TIMELINEMODEL.geocoder.geocode({'latLng': ll}, 
-			function(cluster){
-				return function(results, status){
-					var text = geoCodeToLabel(results, status);
-					
-					if(CALENDER.canvas.getById("locLabel")){
-			    	  CALENDER.canvas.getById("locLabel").attr({"text":text});
-			    	  cluster.geoCode = results;
-					}
-					/*else{
+		if(geoCodeGpsLoc.geoCode != null){
+			var text = geoCodeToLabel(geoCodeGpsLoc.geoCode, google.maps.GeocoderStatus.OK);
+			CALENDER.canvas.getById("locLabel").attr({"text":text});
+			
+			console.log("found cached geocode: " + geoCodeGpsLoc.geoCode);
+		} else {
+			TIMELINEMODEL.geocoder.geocode({'latLng': ll}, 
+				function(cluster){
+					return function(results, status){
+						var text = geoCodeToLabel(results, status);
 						
-						console.log("erwischt");
-					}*/
-				};
-				
-		}(geoCodeGpsLoc));
+						if(CALENDER.canvas.getById("locLabel")){
+				    	  CALENDER.canvas.getById("locLabel").attr({"text":text});
+				    	  cluster.geoCode = results;
+						}
+						/*else{
+							
+							console.log("erwischt");
+						}*/
+					};
+					
+			}(geoCodeGpsLoc));
+		}
 	}
 };
 

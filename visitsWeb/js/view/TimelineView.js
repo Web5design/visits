@@ -63,7 +63,10 @@ TimelineView.prototype.drawTimeline = function(){
 		
 		var currentClusterContainer = $("#map_container"+i);
 		currentClusterContainer.append('<div class="map_canvas" id="map_canvas' + i + '" style="width:' + clusterWidth + 'px;height:' + clusterHeight + 'px;"></div>');
-						
+		
+		if(TIMELINEMODEL.clusters[i].gpsLocs.length == 0){
+			
+		} else {
 		//load the google maps
 		if(clusterWidth>10){
 			var currentCluster = TIMELINEMODEL.clusters[i];
@@ -85,7 +88,7 @@ TimelineView.prototype.drawTimeline = function(){
 		    	        mapOptions);
 		    
 		    var currentBubble = new MapBubble(map,i);
-		    currentBubble.x = horizontalPosition;
+		    currentBubble.x = this.timeToRelativeX(TIMELINEMODEL.clusters[i].timeframeStart);//horizontalPosition;
 		    currentBubble.y = verticalPosition;
 		    currentBubble.width = clusterWidth;
 		    currentBubble.height = clusterHeight;
@@ -98,9 +101,9 @@ TimelineView.prototype.drawTimeline = function(){
 			var currentBubble = new MapBubble(null,i);
 			this.visibleMapBubbles.push(currentBubble);
 		}
+		}
 		
 		horizontalPosition = horizontalPosition + clusterWidth;
-
 	}
 };
 
