@@ -137,7 +137,6 @@ function initializeViews(){
 	
 	MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
 
-
 }
 
 
@@ -203,7 +202,6 @@ function emptyAndHideAllViews(){
 	$("#connectionLines").empty();
 	$("#calender").empty();
 	$("#timeline").empty();
-	//$("#overview").empty();
 	
 	$("#marker").css("display","none");
 	$("#connectionLines").css("display","none");

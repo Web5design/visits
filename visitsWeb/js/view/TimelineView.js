@@ -9,10 +9,17 @@ function TimelineView(){
 };
 
 function addProjectionChangedListener(map, currentBubble){
-	
     google.maps.event.addListener(map, 'tilesloaded', function(){
-
     	OVERLAYVIEW.drawMarkersAndLines(currentBubble);
+    });
+};
+
+/**
+ * Minimal event handling for empty bubbles: draw only the overview marker, no connection curves or stuff
+ */
+function addMinimalProjectionChangedListener(map, currentBubble){
+    google.maps.event.addListener(map, 'tilesloaded', function(){
+    	OVERLAYVIEW.drawOverviewMarker(currentBubble);
     });
 };
 
@@ -45,6 +52,9 @@ TimelineView.prototype.drawTimeline = function(){
 	
 	visibleMapBubbles = new Array();
 	
+	var emptyMapBubbles = new Array();
+	var pivotVisibleMapBubble = undefined;
+	
 	var availableWidth = this.div.width();
 	var availableHeight = this.div.height();
 	
@@ -67,45 +77,54 @@ TimelineView.prototype.drawTimeline = function(){
 		if(TIMELINEMODEL.clusters[i].gpsLocs.length == 0){
 			
 		} else {
-		//load the google maps
-		if(clusterWidth>10){
-			var currentCluster = TIMELINEMODEL.clusters[i];
-			var clusterBounds = currentCluster.clusterBounds;
-			var maxDistance = haversineLatLng(clusterBounds.getNorthEast(),clusterBounds.getSouthWest());
-			
-		    var mapOptions = {
-		    	      center: new google.maps.LatLng(clusterBounds.getCenter().lat(), clusterBounds.getCenter().lng()),
-		    	      zoom: calculateZoomLevel(clusterBounds.getNorthEast(),clusterBounds.getSouthWest(),clusterWidth),
-		    	      mapTypeId: google.maps.MapTypeId.ROADMAP, 
-		    	      noClear: true,
-		    	      zoomControl: false,
-		    	      panControl: false,
-		    	      rotateControl: false,
-		    	      scaleControl: false,
-		    	      disableDefaultUI: true
-		    	    };
-		    var map = new google.maps.Map(document.getElementById("map_canvas" + i),
-		    	        mapOptions);
-		    
-		    var currentBubble = new MapBubble(map,i);
-		    currentBubble.x = this.timeToRelativeX(TIMELINEMODEL.clusters[i].timeframeStart);//horizontalPosition;
-		    currentBubble.y = verticalPosition;
-		    currentBubble.width = clusterWidth;
-		    currentBubble.height = clusterHeight;
-		    
-		    this.visibleMapBubbles.push(currentBubble);
-		    
-		    addProjectionChangedListener(map, currentBubble);//i);		    
-		    
-		} else {
-			var currentBubble = new MapBubble(null,i);
-			this.visibleMapBubbles.push(currentBubble);
-			
-			
-		}
+			//load the google maps
+			if(clusterWidth>10){
+				var currentCluster = TIMELINEMODEL.clusters[i];
+				var clusterBounds = currentCluster.clusterBounds;
+				var maxDistance = haversineLatLng(clusterBounds.getNorthEast(),clusterBounds.getSouthWest());
+				
+			    var mapOptions = {
+			    	      center: new google.maps.LatLng(clusterBounds.getCenter().lat(), clusterBounds.getCenter().lng()),
+			    	      zoom: calculateZoomLevel(clusterBounds.getNorthEast(),clusterBounds.getSouthWest(),clusterWidth),
+			    	      mapTypeId: google.maps.MapTypeId.ROADMAP, 
+			    	      noClear: true,
+			    	      zoomControl: false,
+			    	      panControl: false,
+			    	      rotateControl: false,
+			    	      scaleControl: false,
+			    	      disableDefaultUI: true
+			    	    };
+			    var map = new google.maps.Map(document.getElementById("map_canvas" + i),
+			    	        mapOptions);
+			    
+			    var currentBubble = new MapBubble(map,i);
+			    currentBubble.x = this.timeToRelativeX(TIMELINEMODEL.clusters[i].timeframeStart);//horizontalPosition;
+			    currentBubble.y = verticalPosition;
+			    currentBubble.width = clusterWidth;
+			    currentBubble.height = clusterHeight;
+			    
+			    this.visibleMapBubbles.push(currentBubble);
+			    
+			    addProjectionChangedListener(map, currentBubble);//i);		    
+			    
+			    pivotVisibleMapBubble = currentBubble;
+			    
+			} else {
+				var currentBubble = new MapBubble(null,i);
+				this.visibleMapBubbles.push(currentBubble);
+				
+				emptyMapBubbles.push(currentBubble);
+			}
 		}
 		
 		horizontalPosition = horizontalPosition + clusterWidth;
+	}
+	
+	if(pivotVisibleMapBubble){
+		for(var i = 0; i < emptyMapBubbles.length; i++){
+			var currentMapBubble = emptyMapBubbles[i];
+			addMinimalProjectionChangedListener(pivotVisibleMapBubble.map, currentMapBubble);
+		}
 	}
 };
 

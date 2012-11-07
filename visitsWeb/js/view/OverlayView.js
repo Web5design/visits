@@ -36,7 +36,8 @@ OverlayView.prototype.drawMarkersAndLines = function(currentBubble){
 	  });
 };
 
-OverlayView.prototype.drawOverviewMarker =function(currentBubble){
+OverlayView.prototype.drawOverviewMarker = function(currentBubble){
+	var bubbleIsEmpty = (currentBubble.map == null);
 	
 	var overviewMarker = new Object();
 	
@@ -44,8 +45,11 @@ OverlayView.prototype.drawOverviewMarker =function(currentBubble){
 	overviewMarker.ne = convertPoint(OVERVIEWMAP.map, currentBubble.cluster.clusterBounds.getNorthEast());
    	overviewMarker.sw = convertPoint(OVERVIEWMAP.map, currentBubble.cluster.clusterBounds.getSouthWest());
    	overviewMarker.radius = Math.abs(overviewMarker.ne.x - overviewMarker.sw.x);
-   	
-   	overviewMarker.radius = 4;
+   	if(bubbleIsEmpty){
+   		overviewMarker.radius = 2;
+   	} else {
+   		overviewMarker.radius = 4;
+   	}
    	
    	//make sure the circles are large enough to be visible
    	if(overviewMarker.radius < this.minimumCircleRadiusOnOverviewMap){
@@ -55,10 +59,18 @@ OverlayView.prototype.drawOverviewMarker =function(currentBubble){
    	overviewMarker.pos = convertPoint(OVERVIEWMAP.map, currentBubble.cluster.clusterBounds.getCenter());
    	
 	overviewMarker.fill = this.connectionLineCanvas.circle(overviewMarker.pos.x + Number(OVERVIEWMAP.x), overviewMarker.pos.y + Number(OVERVIEWMAP.y), overviewMarker.radius);
-	overviewMarker.fill.attr({ "fill": MARKERCOLOR, "opacity" : 0.9, "stroke-width" : 0});
+	if(bubbleIsEmpty){
+		overviewMarker.fill.attr({ "fill" : MARKERCOLOR, "opacity" : 0.9, "stroke-width" : 0});
+	} else {
+		overviewMarker.fill.attr({ "fill": MARKERCOLOR, "opacity" : 0.9, "stroke-width" : 0});
+	}
 	
 	overviewMarker.border = this.connectionLineCanvas.circle(overviewMarker.pos.x + Number(OVERVIEWMAP.x), overviewMarker.pos.y + Number(OVERVIEWMAP.y), overviewMarker.radius);
-	overviewMarker.border.attr({ "stroke": "#fff", "stroke-width" : 2, "opacity":0.9});
+	if(bubbleIsEmpty){
+		overviewMarker.border.attr({ "stroke": "#fff", "stroke-width" : 1, "opacity":0.9});
+	} else {
+		overviewMarker.border.attr({ "stroke": "#fff", "stroke-width" : 2, "opacity":0.9});
+	}
 	
 	currentBubble.overviewMarker = overviewMarker;
 	
@@ -294,14 +306,19 @@ OverlayView.prototype.drawBubbleMasks = function(){
 			CALENDER.drawHoverLabels(currentBubble.cluster);
 			if(currentBubble.connectionCurve){		
 				currentBubble.connectionCurve.attr({"stroke" : MARKERCOLOR, "stroke-width" : "2", "opacity" : 0.7});
+			}
 				
+			if(currentBubble.map == null){
+				currentBubble.overviewMarker.fill.attr({"r": 4});
+				currentBubble.overviewMarker.border.attr({"r": 4});
+			} else {
 				currentBubble.overviewMarker.fill.attr({"r": 6});
-				currentBubble.overviewMarker.border.attr({"r": 6});
+				currentBubble.overviewMarker.border.attr({"r": 6});				
+			}
 				currentBubble.overviewMarker.fill.toFront();
 				currentBubble.overviewMarker.border.toFront();
 				
 				
-			}
 			if(currentBubble.borderCircle){				
 				currentBubble.borderCircle.node.setAttribute("class", "activeBorder");
 			}
@@ -318,9 +335,14 @@ OverlayView.prototype.drawBubbleMasks = function(){
 			OVERLAYVIEW.removeHoverline();
 			if(currentBubble.connectionCurve){		
 				currentBubble.connectionCurve.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
+			}
 				
+			if(currentBubble.map == null){
+				currentBubble.overviewMarker.fill.attr({"r": 2});
+				currentBubble.overviewMarker.border.attr({"r": 2});
+			} else {
 				currentBubble.overviewMarker.fill.attr({"r": 4});
-				currentBubble.overviewMarker.border.attr({"r": 4});
+				currentBubble.overviewMarker.border.attr({"r": 4});				
 			}
 			if(currentBubble.borderCircle){	
 				currentBubble.borderCircle.node.setAttribute("class", "borderCircle");
