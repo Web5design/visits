@@ -163,7 +163,13 @@ function reInitializeAllViews(){
 	$("#interactionArea").fadeIn(1500);
 	$("#timeline").fadeIn(1500);
 	$("#overview").fadeIn(500);
-	$("#slider").fadeIn(1500);
+	
+	
+	$("#slider").animate({
+		"opacity": 1
+	},1500, function(){
+		
+	});
 	
 }
 

@@ -214,6 +214,7 @@ function geoCodeToLabel(results, status) {
   	  var slidervalue = DISTANCESLIDER.getCurrentValue();
   	  
   	  for(var i=0; i<MAINMODEL.geocodeLookup.length; i++){
+  		  
   		  if(MAINMODEL.geocodeLookup[i].distance >= slidervalue){
   			  for(var j= 0; j< results[0].address_components.length;j++){
   				  
@@ -233,6 +234,7 @@ function geoCodeToLabel(results, status) {
   	  console.log("setting geocode of cluster " + cluster + " to " + results);
   	  
     } else {
+    	return "";
       console.log("Geocoder failed due to: " + status);
     }
 };

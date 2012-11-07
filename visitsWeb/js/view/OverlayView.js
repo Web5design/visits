@@ -19,7 +19,7 @@ function OverlayView(){
 };
 
 
-OverlayView.prototype.drawMarkersAndLines = function(map, currentBubble){
+OverlayView.prototype.drawMarkersAndLines = function(currentBubble){
 	
 	//var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
 	
@@ -55,10 +55,10 @@ OverlayView.prototype.drawOverviewMarker =function(currentBubble){
    	overviewMarker.pos = convertPoint(OVERVIEWMAP.map, currentBubble.cluster.clusterBounds.getCenter());
    	
 	overviewMarker.fill = this.connectionLineCanvas.circle(overviewMarker.pos.x + Number(OVERVIEWMAP.x), overviewMarker.pos.y + Number(OVERVIEWMAP.y), overviewMarker.radius);
-	overviewMarker.fill.attr({ "fill": "#fff", "opacity" : 1, "stroke-width" : 0});
+	overviewMarker.fill.attr({ "fill": MARKERCOLOR, "opacity" : 0.9, "stroke-width" : 0});
 	
 	overviewMarker.border = this.connectionLineCanvas.circle(overviewMarker.pos.x + Number(OVERVIEWMAP.x), overviewMarker.pos.y + Number(OVERVIEWMAP.y), overviewMarker.radius);
-	overviewMarker.border.attr({ "stroke": "#777", "stroke-width" : 1, "opacity":1});
+	overviewMarker.border.attr({ "stroke": "#fff", "stroke-width" : 2, "opacity":0.9});
 	
 	currentBubble.overviewMarker = overviewMarker;
 	
@@ -289,9 +289,11 @@ OverlayView.prototype.drawBubbleMasks = function(){
 			if(currentBubble.connectionCurve){		
 				currentBubble.connectionCurve.attr({"stroke" : MARKERCOLOR, "stroke-width" : "2", "opacity" : 0.7});
 				
-				currentBubble.overviewMarker.fill.attr({ "fill": MARKERCOLOR, "opacity" : 0.9, "stroke-width" : 0});
+				currentBubble.overviewMarker.fill.attr({"r": 6});
+				currentBubble.overviewMarker.border.attr({"r": 6});
+				currentBubble.overviewMarker.fill.toFront();
+				currentBubble.overviewMarker.border.toFront();
 				
-				currentBubble.overviewMarker.border.attr({ "stroke": "#fff", "stroke-width" : 2, "opacity":0.7});
 				
 			}
 			if(currentBubble.borderCircle){				
@@ -311,9 +313,8 @@ OverlayView.prototype.drawBubbleMasks = function(){
 			if(currentBubble.connectionCurve){		
 				currentBubble.connectionCurve.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
 				
-				currentBubble.overviewMarker.fill.attr({ "fill": "#fff", "opacity" : 1, "stroke-width" : 0});
-				
-				currentBubble.overviewMarker.border.attr({ "stroke": "#777", "stroke-width" : 1, "opacity":0.7});
+				currentBubble.overviewMarker.fill.attr({"r": 4});
+				currentBubble.overviewMarker.border.attr({"r": 4});
 			}
 			if(currentBubble.borderCircle){	
 				currentBubble.borderCircle.node.setAttribute("class", "borderCircle");
