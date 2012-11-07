@@ -28,8 +28,8 @@ var SLIDERVALUES = [
                     { value: 2000, label: "Neighbourhood"},
                     { value: 5000, label: ""},
                     { value: 10000, label: ""},
-                    { value: 20000, label: "City"},
-                    { value: 30000, label: "", active:true},
+                    { value: 20000, label: "City", active:true},
+                    { value: 30000, label: ""},
                     { value: 70000, label: ""},
                     { value: 100000, label: "Area"},
                     { value: 300000, label: ""},
@@ -117,10 +117,35 @@ var handleReaderLoad = function(evt){
 		resultGpsLoc = readKmlLocations(evt.target.result);
 	}
 	
+	/*
+	var combinedLocationCluster = new Cluster();
+	for(var i = 0; i < resultGpsLoc.length; i++){
+		combinedLocationCluster.addLoc(resultGpsLoc[i], (i == resultGpsLoc.length - 1) ? resultGpsLoc[i] : resultGpsLoc[i + 1]);
+	}
+	
+	var ne = combinedLocationCluster.clusterBounds.getNorthEast();
+	var sw = combinedLocationCluster.clusterBounds.getSouthWest();
+	
+	var dist = haversineLatLng(ne,sw);
+	
+	var distValue;
+	
+	for (var i = 0; i< 7;i++){
+		
+		if(SLIDERVALUES[i].value>= dist*100){
+			SLIDERVALUES[i].active = true;
+			break;
+		}
+		
+	}*/
+	
 	DISTANCESLIDER = new VerticalSlider("slider", SLIDERVALUES, handleSliderDown, handleSliderMoved, handleSliderUp);
+	
 	var currentDistanceValue = DISTANCESLIDER.getCurrentValue() / 1000;
 	
 	MAINMODEL = new Mainmodel(resultGpsLoc, currentDistanceValue);
+	
+	
 	
 	TIMELINEMODEL = new TimelineModel();
 	TIMELINEMODEL.updateFromMainmodel();
