@@ -55,10 +55,10 @@ OverlayView.prototype.drawOverviewMarker =function(currentBubble){
    	overviewMarker.pos = convertPoint(OVERVIEWMAP.map, currentBubble.cluster.clusterBounds.getCenter());
    	
 	overviewMarker.fill = this.connectionLineCanvas.circle(overviewMarker.pos.x + Number(OVERVIEWMAP.x), overviewMarker.pos.y + Number(OVERVIEWMAP.y), overviewMarker.radius);
-	overviewMarker.fill.attr({ "fill": MARKERCOLOR, "opacity" : 0, "stroke-width" : 0});
+	overviewMarker.fill.attr({ "fill": "#fff", "opacity" : 1, "stroke-width" : 0});
 	
 	overviewMarker.border = this.connectionLineCanvas.circle(overviewMarker.pos.x + Number(OVERVIEWMAP.x), overviewMarker.pos.y + Number(OVERVIEWMAP.y), overviewMarker.radius);
-	overviewMarker.border.attr({ "stroke": "#777", "stroke-width" : 1, "opacity":0.7});
+	overviewMarker.border.attr({ "stroke": "#777", "stroke-width" : 1, "opacity":1});
 	
 	currentBubble.overviewMarker = overviewMarker;
 	
@@ -311,7 +311,7 @@ OverlayView.prototype.drawBubbleMasks = function(){
 			if(currentBubble.connectionCurve){		
 				currentBubble.connectionCurve.attr({"stroke" : "#777", "stroke-width" : "1", "opacity" : 0.7});
 				
-				currentBubble.overviewMarker.fill.attr({ "fill": MARKERCOLOR, "opacity" : 0, "stroke-width" : 0});
+				currentBubble.overviewMarker.fill.attr({ "fill": "#fff", "opacity" : 1, "stroke-width" : 0});
 				
 				currentBubble.overviewMarker.border.attr({ "stroke": "#777", "stroke-width" : 1, "opacity":0.7});
 			}
