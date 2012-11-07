@@ -129,9 +129,14 @@ var handleReaderLoad = function(evt){
 };
 
 function initializeViews(){
+	OVERVIEWMAP = new OverviewMap();
+	OVERVIEWMAP.drawOverviewMap();
+
 	reInitializeAllViews();
+	$("#overview").fadeIn(500);
 	
 	MINIMAP = new MiniMap("minimap", handleMinimapSliderDown, handleMinimapSliderMoved, handleMinimapSliderUp);
+
 
 }
 
@@ -144,9 +149,9 @@ function reInitializeAllViews(){
 	TIMELINEVIEW = new TimelineView();
 	TIMELINEVIEW.drawTimeline();
 	
-	OVERVIEWMAP = new OverviewMap();
-	OVERVIEWMAP.drawOverviewMap();
-
+	//OVERVIEWMAP = new OverviewMap();
+	//OVERVIEWMAP.drawOverviewMap();
+	
 	OVERLAYVIEW = new OverlayView();
 	OVERLAYVIEW.drawBubbleMasks();
 	
@@ -162,7 +167,7 @@ function reInitializeAllViews(){
 	$("#calender").fadeIn(1500);
 	$("#interactionArea").fadeIn(1500);
 	$("#timeline").fadeIn(1500);
-	$("#overview").fadeIn(500);
+	//$("#overview").fadeIn(500);
 	$("#slider").fadeIn(1500);
 	
 }
@@ -197,7 +202,7 @@ function emptyAndHideAllViews(){
 	$("#connectionLines").empty();
 	$("#calender").empty();
 	$("#timeline").empty();
-	$("#overview").empty();
+	//$("#overview").empty();
 	
 	$("#marker").css("display","none");
 	$("#connectionLines").css("display","none");
@@ -241,4 +246,5 @@ var handleMinimapSliderUp = function(minimap){
 	TIMELINEMODEL.updateFromAbsoluteValues(leftAbsoluteTime, rightAbsoluteTime, DISTANCESLIDER.getCurrentValue() / 1000);
 	OVERLAYVIEW.updateBorderCircles(reInitializeAllViews, oldModelLeftLimit, oldModelRightLimit);
 	CALENDER.updateTimestampMarkers();
+	OVERVIEWMAP.panToCurrentBounds();
 };

@@ -27,3 +27,8 @@ function drawOverviewMap(){
     this.map = new google.maps.Map(document.getElementById("overview"), overviewMapoptions);
     this.map.fitBounds(overallClusterBounds);
 }
+
+OverviewMap.prototype.panToCurrentBounds = function(){
+	var overallClusterBounds = TIMELINEMODEL.combinedLocationCluster.clusterBounds;
+	this.map.fitBounds(overallClusterBounds);
+};
