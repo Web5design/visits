@@ -231,7 +231,13 @@ OverlayView.prototype.createMarkerSet = function(markerX,markerY,strokewidth){
 OverlayView.prototype.drawConnectionCurve = function(currentBubble){
 	
 	var curveTopX = currentBubble.x + currentBubble.width / 2  + Number(TIMELINEVIEW.x);
-	var curveTopY = currentBubble.y + currentBubble.width + Number(TIMELINEVIEW.y);
+	
+	if(currentBubble.width < TIMELINEVIEW.div.height()){
+		var curveTopY = currentBubble.y + currentBubble.width + Number(TIMELINEVIEW.y);
+	}else{
+		var curveTopY = TIMELINEVIEW.div.height() + Number(TIMELINEVIEW.y);
+		
+	}
 	var curveBottomX = currentBubble.overviewMarker.pos.x + Number(OVERVIEWMAP.x);
 	var curveBottomY = currentBubble.overviewMarker.pos.y + Number(OVERVIEWMAP.y);
 	
