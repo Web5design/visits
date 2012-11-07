@@ -12,7 +12,7 @@ function addProjectionChangedListener(map, currentBubble){
 	
     google.maps.event.addListener(map, 'tilesloaded', function(){
 
-    	OVERLAYVIEW.drawMarkersAndLines(map, currentBubble);
+    	OVERLAYVIEW.drawMarkersAndLines(currentBubble);
     });
 };
 
@@ -100,6 +100,8 @@ TimelineView.prototype.drawTimeline = function(){
 		} else {
 			var currentBubble = new MapBubble(null,i);
 			this.visibleMapBubbles.push(currentBubble);
+			
+			
 		}
 		}
 		
