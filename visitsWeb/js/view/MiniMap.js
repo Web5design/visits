@@ -49,6 +49,29 @@ MiniMap.prototype.removeBubbles = function(){
 	this.virtualBubbles = new Array();
 };
 
+MiniMap.prototype.clickToFitToBubbleLimits = function(currentBubble){
+	console.log("clicked!");
+	var leftBorder = (currentBubble.attr("cx") - currentBubble.attr("r")) - this.handleWidth / 2;
+	var rightBorder = (currentBubble.attr("cx") + currentBubble.attr("r")) - this.handleWidth / 2;
+	
+	this.leftHandle.transform("T"+ leftBorder +",0");
+	this.rightHandle.transform("T"+ rightBorder +",0");
+
+	this.handleBar.attr({
+		"x" : (leftBorder + this.handleWidth),
+		"width" : ((rightBorder - (leftBorder + this.handleWidth)))
+	});
+	
+	//redraw the circles
+	this.updateCircles();
+	
+	//callback:
+	this.cMapSliderEnd(this);
+	
+	currentBubble.lastState = "minimapCircle active";
+};
+
+
 /**
  * Draws the minimap bubbles, displays them and puts them into the currentBubbles Array.
  */
@@ -81,6 +104,19 @@ MiniMap.prototype.drawMinimap = function(){
 		var currentCircle = this.canvas.circle(horizontalPosition + clusterRadius, verticalPosition + clusterRadius, clusterRadius);
 		currentCircle.node.setAttribute("class", "minimapCircle active");
 		currentCircle.toBack();
+		
+		currentCircle.click(
+				(function(c, mm){
+					return function() { 
+						mm.clickToFitToBubbleLimits(c); 
+					};
+				})
+				(currentCircle, this)
+		);
+		currentCircle.hover(
+				(function(c){ return function(){ c.lastState = c.node.getAttribute("class"); c.node.setAttribute("class", "minimapCircle hover");}; })(currentCircle),
+				(function(c){ return function(){ c.node.setAttribute("class", c.lastState);}; })(currentCircle)
+		);
 		
 		this.currentBubbles.push(currentCircle);
 		this.bubbleDictionary.push({
@@ -269,6 +305,7 @@ MiniMap.prototype.updateCircles = function(){
 				newBubble.toBack();
 				this.virtualBubbles.push(newBubble);
 			}	
+			currentBubble.toBack();
 			
 			//set the right inactive/active classes for the virtual bubbles
 			var vBubbleArrayLength = this.virtualBubbles.length;

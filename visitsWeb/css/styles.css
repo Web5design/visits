@@ -45,10 +45,11 @@ h1 { color: #ddd; font-size: 70px; }
 
 /* minimap */
 
-.minimapCircle { stroke: #aaa }
-.minimapCircle.active { stroke: #aaa; fill: #bbb}
-.minimapCircle.inactive { stroke: #aaa; fill:none}
-.minimapCircle.split { stroke: #dedede; fill:none}
+.minimapCircle { stroke: #aaa; fill: #fff }
+.minimapCircle.active { stroke: #aaa; fill: #aaa; opacity: 0.5}
+.minimapCircle.hover { fill: #aaa; opacity: 0.8 }
+.minimapCircle.inactive { stroke: #aaa; fill:#fff}
+.minimapCircle.split { stroke: #dedede; fill:#fff}
 
 .minimapHandle { stroke-width: 0.5px; stroke: #777}
 .minimapHandle.active { fill: #ddd; width: 2px}
