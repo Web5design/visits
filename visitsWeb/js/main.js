@@ -38,8 +38,31 @@ var SLIDERVALUES = [
                     ];
 
 
+function loadDefaultData(){
+	var defaultData = {};
+	defaultData.target = {};
+	defaultData.target.result = {};
+	var file = "data/openpaths_dominikus_vancouvertrip.json";
+	INPUTFILETYPE = "json";
+	$.ajax({
+        type: "GET",
+        url: file,
+        async: false,
+        success: function(data){
+            defaultData.target.result = data;
+        }
+    });
+	handleReaderLoad(defaultData);
+}
+
 function initialize() {
     
+	//prevent iOS scrolling behavior:
+	document.body.addEventListener('touchmove', function(event) {
+		  event.preventDefault();
+	}, false); 
+	
+	$("#dropbox").on("click", loadDefaultData);
     var myFileReader = new DragAndDropFileReader(handleReaderLoad);
     
   };
