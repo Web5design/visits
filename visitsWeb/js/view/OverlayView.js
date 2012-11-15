@@ -357,6 +357,8 @@ OverlayView.prototype.drawBubbleMasks = function(){
 		}		
 		);	
 	};
+	
+	
 
 	for(var i = 0; i < TIMELINEVIEW.visibleMapBubbles.length; i++){
 		var currentBubble = TIMELINEVIEW.visibleMapBubbles[i];
