@@ -203,6 +203,7 @@ function reInitializeAllViews(){
 	CALENDER.drawInteractionArea();
 	
 	//$("svg").fadeIn(1500);
+	$("#markercontainer").fadeIn(1500);
 	$("#marker").fadeIn(1500);
 	$("#maskcontainer").fadeIn(1500);
 	$("#masks").fadeIn(1500);

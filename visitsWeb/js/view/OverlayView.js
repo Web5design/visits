@@ -110,9 +110,10 @@ OverlayView.prototype.drawHoverCurve = function(x,y){
 		
 		var markerX = this.markers[ts].x;
 		var markerY = this.markers[ts].y;
-	}else{
-		var markerX = xInTL;
-		var markerY = tlHeight/2+tly;
+	}
+	else{
+		var markerX = xInTL - TIMELINEVIEW.x;
+		var markerY = tlHeight/2;
 	}
 	
 	
@@ -123,6 +124,10 @@ OverlayView.prototype.drawHoverCurve = function(x,y){
 	this.selectedMarker = this.createMarkerSet(markerX, markerY, 4);
 	
 	this.selectedMarker.toFront();
+	
+	
+	markerX = markerX + TIMELINEVIEW.x;
+	markerY = markerY +TIMELINEVIEW.y;
 	
 	var controlX = xInTL + ((markerY -tly)/(y -tly))*(x-xInTL);
 		
@@ -161,10 +166,10 @@ OverlayView.prototype.drawBubbleMarkers =function(currentBubble){
 		var markerLatLng = new google.maps.LatLng(marker.lat, marker.lon);
 		var markerPosition = convertPoint(currentBubble.map, markerLatLng);
 		
-		var markerX = markerPosition.x + Number(currentBubble.x)  + Number(TIMELINEVIEW.x);
-		var markerY = markerPosition.y + Number(currentBubble.y)  + Number(TIMELINEVIEW.y);
+		var markerX = markerPosition.x + Number(currentBubble.x);
+		var markerY = markerPosition.y + Number(currentBubble.y);
 		
-		var touchCircle = INTERACTION_AREA.circle(markerX, markerY, 3); //(maskY + circleHeight / 2), maskRadius);
+		var touchCircle = INTERACTION_AREA.circle(markerX+TIMELINEVIEW.x, markerY+TIMELINEVIEW.y, 3); //(maskY + circleHeight / 2), maskRadius);
 		touchCircle.node.marker = currentBubble.cluster.gpsLocs[j];
 		touchCircle.node.cluster = currentBubble.cluster;
 		touchCircle.attr({"stroke" : "#aaa", "fill" : "#00c", "opacity" : 0.0});
