@@ -31,16 +31,16 @@ function setSliderValueTo(sliderObj, nextValue){
  */
 function dragSliderTo(y, sliderButton){
 	var parentElement = $("#slider");
-	var targetY = y - parentElement.offset().top;
 	var sliderObj = sliderButton.sliderObject;
 	var sliderPadding = sliderObj.padding;
-	var parentHeight = parentElement.height();
+	var targetY = y - (parentElement.offset().top + sliderPadding);
+	var parentHeight = (parentElement.height() - sliderPadding * 2);
 	
 	//make sure y-position is within bounds:
-	if(targetY - sliderPadding <= 0){
-		targetY = sliderPadding;
-	} else if(targetY + sliderPadding >= parentHeight){
-		targetY = parentHeight - sliderPadding;
+	if(targetY <= 0){
+		targetY = 0;
+	} else if(targetY >= parentHeight){
+		targetY = parentHeight;
 	}
 
 	var nextValue = sliderObj.getNearestValue(targetY);
@@ -174,7 +174,7 @@ function initializeLabels(){
  * @returns the index of the closest value in the values-array
  */
 function getNearestValue(yPos){
-	var posInRange = Math.round((this.values.length - 1) * (yPos - this.padding) / (this.sliderHeight));
+	var posInRange = Math.round((this.values.length - 1) * (yPos / (this.sliderHeight - this.padding)));
 	return posInRange;
 };
 
@@ -208,8 +208,8 @@ function VerticalSlider(targetDiv, values, cSliderStart, cSliderDragged, cSlider
 	//DRAWING CONSTANTS
 	this.padding = 10;	//how much space to the top and bottom of the slider in the <div>
 	this.horizontalPosition = 70;	//how much is the slider shifted from the left-hand side of the <div>
-	this.sliderHeight = 250;	//how high is the slider
-
+	this.sliderHeight = $("#" + targetDiv).height();	//how high is the slider
+	
 	//initialize class attributes
 	this.targetDiv = targetDiv;
 	this.values = values;
