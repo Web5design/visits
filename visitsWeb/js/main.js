@@ -173,8 +173,29 @@ var handleReaderLoad = function(evt){
 	TIMELINEMODEL = new TimelineModel();
 	TIMELINEMODEL.updateFromMainmodel();
 	
+	setSizes();
+	
+	
 	$("#startscreen").fadeOut(500, initializeViews);
 };
+
+function setSizes(){
+	
+	var windowWidth = $(window).width();
+	var windowHeight = $(window).height();
+	
+	$("#connectionLines").attr("style","height:"+ windowWidth + "px");
+	
+	
+	$("#slider").attr("style","left:"+ (windowWidth-200) + "px");
+ 	$("#timeline").attr("style","height:"+ (windowHeight- $("#minimap").height() -20) + "px; width:" + (windowWidth -400) + "px");
+ 	$("#maskcontainer").attr("style","height:"+ (windowHeight- $("#minimap").height() -20) + "px; width:" + (windowWidth -400) + "px");
+ 	$("#markercontainer").attr("style","height:"+ (windowHeight- $("#minimap").height() -20) + "px; width:" + (windowWidth -400) + "px");
+ 	
+ 	
+	$("#overview").attr("style","top:"+ (windowHeight- $("#overview").height() -10) + "px; left:" + (windowWidth/2- $("#overview").width() -10) + "px");
+	$("#minimap").attr("style","top:"+ (windowHeight- $("#minimap").height() -10) + "px; left:" + (windowWidth/2 +10) + "px");
+}
 
 function initializeViews(){
 	OVERVIEWMAP = new OverviewMap();

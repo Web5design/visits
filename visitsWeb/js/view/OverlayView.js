@@ -1,10 +1,10 @@
 
 function OverlayView(){
 	//initialize overlay
-	this.markerCanvas = Raphael("marker",window.innerWidth,750);
-	this.maskCanvas = Raphael("masks",window.innerWidth,750);
-	this.connectionLineCanvas = Raphael("connectionLines",window.innerWidth,750);
-	this.previewBubblesCanvas = Raphael("previewBubbles",window.innerWidth,750);
+	this.markerCanvas = Raphael("marker",window.innerWidth,window.innerHeight);
+	this.maskCanvas = Raphael("masks",window.innerWidth,window.innerHeight);
+	this.connectionLineCanvas = Raphael("connectionLines",window.innerWidth,window.innerHeight);
+	this.previewBubblesCanvas = Raphael("previewBubbles",window.innerWidth,window.innerHeight);
 	
 	this.minimumCircleRadiusOnOverviewMap = 2;
 	
