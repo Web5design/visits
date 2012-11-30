@@ -440,18 +440,23 @@ OverlayView.prototype.drawPreviewBubbles = function(){
 	
 	for(var i = 0; i < TIMELINEMODEL.clusters.length; i++){
 		
-		var radius = TIMELINEMODEL.clusters[i].timeframe * stepSize / 2;
-		
-		var verticalPosition = (availableHeight / 2.0) - (radius);
-		
-		var maskX = horizontalPosition + radius + TIMELINEVIEW.x;
-		var maskY = verticalPosition + radius + TIMELINEVIEW.y;
-
-		
-		var borderCircle = this.previewBubblesCanvas.circle(maskX, maskY, radius);
-		borderCircle.attr({"fill" : "#aaa", "stroke-width" : "0px", "opacity" : 0.2});
-		
-		horizontalPosition = horizontalPosition + radius * 2;
+		//the timeline model might contain bubbles without gps locs (just as placeholders
+		//for time frames and to keep the timelineview layout from breaking). therefore, only
+		//draw preview bubbles that actually contain gps locs
+		if(TIMELINEMODEL.clusters[i].gpsLocs.length > 0){
+			var radius = TIMELINEMODEL.clusters[i].timeframe * stepSize / 2;
+			
+			var verticalPosition = (availableHeight / 2.0) - (radius);
+			
+			var maskX = horizontalPosition + radius + TIMELINEVIEW.x;
+			var maskY = verticalPosition + radius + TIMELINEVIEW.y;
+	
+			
+			var borderCircle = this.previewBubblesCanvas.circle(maskX, maskY, radius);
+			borderCircle.attr({"fill" : "#aaa", "stroke-width" : "0px", "opacity" : 0.2});
+			
+			horizontalPosition = horizontalPosition + radius * 2;
+		}
 	}
 	
 };
