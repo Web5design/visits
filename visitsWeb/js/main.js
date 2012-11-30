@@ -188,9 +188,9 @@ function setSizes(){
 	
 	
 	$("#slider").attr("style","left:"+ (windowWidth-200) + "px");
- 	$("#timeline").attr("style","height:"+ (windowHeight- $("#minimap").height() -20) + "px; width:" + (windowWidth -400) + "px");
- 	$("#maskcontainer").attr("style","height:"+ (windowHeight- $("#minimap").height() -20) + "px; width:" + (windowWidth -400) + "px");
- 	$("#markercontainer").attr("style","height:"+ (windowHeight- $("#minimap").height() -20) + "px; width:" + (windowWidth -400) + "px");
+ 	$("#timeline").attr("style","height:"+ (windowHeight- $("#minimap").height() -100) + "px; width:" + (windowWidth -400) + "px");
+ 	$("#maskcontainer").attr("style","height:"+ (windowHeight- $("#minimap").height() -100) + "px; width:" + (windowWidth -400) + "px");
+ 	$("#markercontainer").attr("style","height:"+ (windowHeight- $("#minimap").height() -100) + "px; width:" + (windowWidth -400) + "px");
  	
  	
 	$("#overview").attr("style","top:"+ (windowHeight- $("#overview").height() -10) + "px; left:" + (windowWidth/2- $("#overview").width() -10) + "px");
