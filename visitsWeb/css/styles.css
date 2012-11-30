@@ -27,7 +27,7 @@ h1 { color: #ddd; font-size: 70px; }
 
 #interactionArea {position:absolute;top:0px;left:0px;height:100%;width:100%;display:none}
 
-#slider {position:absolute;top:45px;left:1200px;opacity:0}
+#slider {position:absolute;top:45px;left:1200px;opacity:0;height:350px}
 #minimap {position:absolute;top:560px;left:650px;width:450px;height:200px;}
 
 
