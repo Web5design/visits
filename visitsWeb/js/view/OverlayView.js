@@ -121,7 +121,7 @@ OverlayView.prototype.drawHoverCurve = function(x,y){
 		this.selectedMarker.remove();
 	}
 	
-	this.selectedMarker = this.createMarkerSet(markerX, markerY, 4);
+	this.selectedMarker = this.createMarkerSet(markerX, markerY, 4,false);
 	
 	this.selectedMarker.toFront();
 	
@@ -191,7 +191,7 @@ OverlayView.prototype.drawBubbleMarkers =function(currentBubble){
 		});
 		
 		
-		var markerSet = this.createMarkerSet(markerX, markerY, 2);
+		var markerSet = this.createMarkerSet(markerX, markerY, 2,marker.removed);
 		
 		var marker = new Object();
 		
@@ -205,7 +205,7 @@ OverlayView.prototype.drawBubbleMarkers =function(currentBubble){
 	}	
 };
 
-OverlayView.prototype.createMarkerSet = function(markerX,markerY,strokewidth){
+OverlayView.prototype.createMarkerSet = function(markerX,markerY,strokewidth,removed){
 	
 	var crossString  = "M" + (markerX -(strokewidth+0.25*strokewidth)) + "," + (markerY -(strokewidth+0.25*strokewidth)) + " ";
 	crossString = crossString + "L" + (markerX + (strokewidth+0.25*strokewidth)) + "," + (markerY + (strokewidth+0.25*strokewidth)) + " ";
@@ -221,7 +221,11 @@ OverlayView.prototype.createMarkerSet = function(markerX,markerY,strokewidth){
 	crossString = crossString + "L" + (markerX + strokewidth) + "," + (markerY - strokewidth);
 	
 	var cross = this.markerCanvas.path(crossString);
-	cross.attr({"stroke" : MARKERCOLOR, "stroke-width" : strokewidth , "stroke-linecap" : "round", "opacity" : 0.9});
+	if(removed){
+		cross.attr({"stroke" : "#cc0000", "stroke-width" : strokewidth , "stroke-linecap" : "round", "opacity" : 0.9});		
+	}else{
+		cross.attr({"stroke" : MARKERCOLOR, "stroke-width" : strokewidth , "stroke-linecap" : "round", "opacity" : 0.9});
+	}
 	
 	var markerSet = this.markerCanvas.set();
 	

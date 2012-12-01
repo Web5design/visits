@@ -21,6 +21,8 @@ var MARKERCOLOR = "#124BB9";
 
 var BORDERCIRCLE_ANIMATION_DURATION = 1500;
 
+var DELTATIMEFORLOCS = (0.00002315);
+
 var SLIDERVALUES = [
                     { value: 100, label: "Street"},
                     { value: 200, label: ""},
@@ -82,14 +84,19 @@ function readKmlLocations(kmlText){
 	
 	var relevantKmlTextLines = relevantKmlText.split("\n");
 	var currentCoord = new GpsLoc(undefined,undefined,undefined);
-	for(var i = 0; i < relevantKmlTextLines.length; i++){
+
+	
+	for(var i = 0; i < relevantKmlTextLines.length; i=i+1){
+		
 		var currentLine = relevantKmlTextLines[i];
 		currentLine = jQuery.trim(currentLine);
+		
 		if(currentLine.indexOf("<when>") != -1){
 			currentLine = currentLine.slice(6);	//remove front part ('<when>')
 			currentLine = currentLine.slice(0, currentLine.length - 7); //remove end part ('</when>')
+			
 			currentWhen = new Date(currentLine);
-			console.log("converted when: " + currentLine + " to: " + currentWhen.toDateString() + " and: " + currentWhen.getTime());
+			//console.log("converted when: " + currentLine + " to: " + currentWhen.toDateString() + " and: " + currentWhen.getTime());
 			currentCoord.timestamp = currentWhen.getTime() / 1000.0;		//convert to seconds
 			
 			//check if current point is finished
@@ -97,10 +104,12 @@ function readKmlLocations(kmlText){
 				result.push(currentCoord);
 				currentCoord = new GpsLoc(undefined, undefined, undefined);
 			}
-		} else if(currentLine.indexOf("<gx:coord>") != -1){
+		} 
+		
+		else if(currentLine.indexOf("<gx:coord>") != -1){
 			currentLine = currentLine.slice(10);	//remove front part ('<gx:coord>')
 			currentLine = currentLine.slice(0, currentLine.length - 11); //remove end part ('</gx:coord>')
-			console.log("parsing coord: " + currentLine);
+			//console.log("parsing coord: " + currentLine);
 			var splitCoordString = currentLine.split(" ");
 			//first value is lon, then lat, then altitude
 			currentCoord.lon = splitCoordString[0];
@@ -112,7 +121,9 @@ function readKmlLocations(kmlText){
 				currentCoord = new GpsLoc(undefined, undefined, undefined);
 			}
 			
-		} else {
+		} 
+		
+		else {
 			console.log("unknown type of line: " + currentLine);
 		}
 	}
@@ -130,6 +141,8 @@ var handleReaderLoad = function(evt){
 
 	if(INPUTFILETYPE == "json"){
 		var extLocationHistory = JSON.parse(evt.target.result);
+		
+		console.log("Number of GPSLocs in File: " +extLocationHistory.length);
 	
 		for(var i = 0; i < extLocationHistory.length; i++){
 			var extLocation = extLocationHistory[i];
@@ -137,36 +150,52 @@ var handleReaderLoad = function(evt){
 			resultGpsLoc.push(location);
 		}
 	} else if(INPUTFILETYPE == "kml"){
+		
 		resultGpsLoc = readKmlLocations(evt.target.result);
 	}
 	
-	/*
-	var combinedLocationCluster = new Cluster();
-	for(var i = 0; i < resultGpsLoc.length; i++){
-		combinedLocationCluster.addLoc(resultGpsLoc[i], (i == resultGpsLoc.length - 1) ? resultGpsLoc[i] : resultGpsLoc[i + 1]);
-	}
+	var filteredGPSLocs = new Array();
 	
-	var ne = combinedLocationCluster.clusterBounds.getNorthEast();
-	var sw = combinedLocationCluster.clusterBounds.getSouthWest();
 	
-	var dist = haversineLatLng(ne,sw);
 	
-	var distValue;
+	var curLoc = resultGpsLoc[0];
+	filteredGPSLocs.push(curLoc);
 	
-	for (var i = 0; i< 7;i++){
+	var start = curLoc.timestamp;
+	var end = resultGpsLoc[resultGpsLoc.length-1].timestamp;
+	
+	var timeframe = end-start;
+	
+	var minDeltaT = timeframe* DELTATIMEFORLOCS;
+	
+	console.log("minDeltaT "+ minDeltaT /60 +" min");
+	
+	for (var i=1;i<resultGpsLoc.length;i++){
 		
-		if(SLIDERVALUES[i].value>= dist*100){
-			SLIDERVALUES[i].active = true;
-			break;
+		var oldLoc = filteredGPSLocs[filteredGPSLocs.length-1];
+		curLoc = resultGpsLoc[i];
+		
+		var distance = haversine(oldLoc,curLoc);
+		
+		if (curLoc.timestamp - oldLoc.timestamp >= minDeltaT && distance>= 0.1){
+
+			filteredGPSLocs.push(curLoc);
+			
+		}else{
+			console.log("clean " + i);
+			
+			curLoc.removed = true;
 		}
 		
-	}*/
+	}
+	
+	console.log(filteredGPSLocs.length);
 	
 	DISTANCESLIDER = new VerticalSlider("slider", SLIDERVALUES, handleSliderDown, handleSliderMoved, handleSliderUp);
 	
 	var currentDistanceValue = DISTANCESLIDER.getCurrentValue() / 1000;
 	
-	MAINMODEL = new Mainmodel(resultGpsLoc, currentDistanceValue);
+	MAINMODEL = new Mainmodel(filteredGPSLocs, currentDistanceValue);
 	
 	
 	
@@ -210,7 +239,7 @@ function initializeViews(){
 
 
 function reInitializeAllViews(){
-	console.log("reinitializing all views...");
+	//console.log("reinitializing all views...");
 	
 	INTERACTION_AREA = Raphael("interactionArea",window.innerWidth,window.innerHeight);
 	
@@ -245,7 +274,7 @@ function reInitializeAllViews(){
 function handleSliderDown(slider){
 	OVERLAYVIEW.hideMarkers();
 	TIMELINEVIEW.hideTimeline();
-	console.log("slider down!!");
+	//console.log("slider down!!");
 };
 
 function handleSliderMoved(slider){
