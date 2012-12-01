@@ -133,6 +133,9 @@ OverlayView.prototype.drawHoverCurve = function(x,y){
 		
 	var controlY = markerY;
 	
+	var bgRect = this.connectionLineCanvas.rect(xInTL,tly/2+27,58,30,5);
+	bgRect.attr({"fill" : "#fff", "stroke-width":"0", "opacity" : "0.85"});
+	
 	
 	var labelDate = this.connectionLineCanvas.text(xInTL+5,tly/2+37,date);
 	labelDate.attr({"font-size":11, "fill": "#444", "text-anchor":"start"});
@@ -154,7 +157,7 @@ OverlayView.prototype.drawHoverCurve = function(x,y){
 	circle.attr({"stroke" : MARKERCOLOR, "stroke-width" : "1", "opacity" : 0.7});
 	
 	this.hoverline = this.connectionLineCanvas.set();
-	this.hoverline.push(labelDate,labelTime,line,circle);
+	this.hoverline.push(labelDate,labelTime,line,circle,bgRect);
 	
 	
 };
