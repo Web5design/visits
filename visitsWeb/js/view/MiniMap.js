@@ -102,6 +102,7 @@ MiniMap.prototype.drawMinimap = function(){
 		var currentCircle = this.canvas.circle(horizontalPosition + clusterRadius, verticalPosition + clusterRadius, clusterRadius);
 		currentCircle.node.setAttribute("class", "minimapCircle active");
 		currentCircle.lastState = currentCircle.node.getAttribute("class");
+		currentCircle.cluster = MAINMODEL.clusters[i];
 		currentCircle.toBack();
 		
 		currentCircle.click(
@@ -245,6 +246,8 @@ MiniMap.prototype.updateCircles = function(){
 		var currentBubble = this.currentBubbles[i];
 		var withinTest = this.isWithinSlider(currentBubble);
 		
+		console.log("bubble " + i + ": " + withinTest);
+		
 		if(withinTest == 1){
 			currentBubble.node.setAttribute("class", "minimapCircle active");
 			currentBubble.lastState = currentBubble.node.getAttribute("class");
@@ -295,6 +298,8 @@ MiniMap.prototype.updateCircles = function(){
 			if(circleWidths.length == 2 && (circleWidths[0] < 0.01 || circleWidths[1] < 0.01)){
 				//when clicking on a bubble, the crossing are so precise that the neighbouring bubbles
 				//are split as well - into two virtual bubbles, one with (practically) 0 radius - prevent that!
+			
+				currentBubble.node.setAttribute("class", "minimapCircle inactive");
 			} else {		
 				//console.log("drawing " + circleWidths.length + " virtual bubbles:");
 				//draw the virtual bubbles
@@ -303,7 +308,7 @@ MiniMap.prototype.updateCircles = function(){
 					var newBubble = this.canvas.circle(circleCenters[j], currentBubble.attr("cy"), circleWidths[j] / 2);
 					newBubble.toBack();
 					this.virtualBubbles.push(newBubble);
-				}	
+				}
 				currentBubble.toBack();
 				
 				//set the right inactive/active classes for the virtual bubbles
