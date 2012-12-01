@@ -25,8 +25,6 @@ function MiniMap(targetDiv, cMapSliderStart, cMapSliderDragged, cMapSliderEnd){
 	this.initialize();
 };
 
-//dictionary with the mapping between visible bubbles and the main model's clusters
-MiniMap.prototype.bubbleDictionary = new Array();
 //currentBubbles contains all currently visible bubbles
 MiniMap.prototype.currentBubbles = new Array();
 //virtualBubbles contains pairs of bubbles that are drawn when a bubble is split by a handle
@@ -59,7 +57,7 @@ MiniMap.prototype.clickToFitToBubbleLimits = function(currentBubble){
 
 	this.handleBar.attr({
 		"x" : (leftBorder + this.handleWidth),
-		"width" : ((rightBorder - (leftBorder + this.handleWidth)))
+		"width" : Math.max(0, ((rightBorder - (leftBorder + this.handleWidth))))
 	});
 	
 	//redraw the circles
@@ -103,6 +101,7 @@ MiniMap.prototype.drawMinimap = function(){
 		
 		var currentCircle = this.canvas.circle(horizontalPosition + clusterRadius, verticalPosition + clusterRadius, clusterRadius);
 		currentCircle.node.setAttribute("class", "minimapCircle active");
+		currentCircle.lastState = currentCircle.node.getAttribute("class");
 		currentCircle.toBack();
 		
 		currentCircle.click(
@@ -119,13 +118,6 @@ MiniMap.prototype.drawMinimap = function(){
 		);
 		
 		this.currentBubbles.push(currentCircle);
-		this.bubbleDictionary.push({
-			bubble: currentCircle,
-			cluster: MAINMODEL.clusters[i],
-			state: "visible",
-			split: 0
-		});
-		
 		horizontalPosition = horizontalPosition + clusterWidth;
 	}
 };
@@ -251,14 +243,15 @@ MiniMap.prototype.updateCircles = function(){
 	//update all bubble classes and split them if necessary
 	for(var i = 0; i < this.currentBubbles.length; i++){
 		var currentBubble = this.currentBubbles[i];
-		var bubbleObject = this.bubbleDictionary[i];
 		var withinTest = this.isWithinSlider(currentBubble);
+		
 		if(withinTest == 1){
 			currentBubble.node.setAttribute("class", "minimapCircle active");
-			bubbleObject.state = "visible";
+			currentBubble.lastState = currentBubble.node.getAttribute("class");
 		} else if(withinTest == 0.5 || withinTest == 0.25 || withinTest == 0.1){
 			//set the actual bubble to inactive
 			currentBubble.node.setAttribute("class", "minimapCircle split");
+			currentBubble.lastState = currentBubble.node.getAttribute("class");
 			
 			//now show two or three smaller virtual bubbles
 			var crossingPosition;
@@ -299,44 +292,37 @@ MiniMap.prototype.updateCircles = function(){
 				circleCenters.push(crossingPosition[1] + circleWidths[2] / 2);		//right circle center
 			}
 			
-			//draw the virtual bubbles
-			for(var j = 0; j < circleWidths.length; j++){
-				var newBubble = this.canvas.circle(circleCenters[j], currentBubble.attr("cy"), circleWidths[j] / 2);
-				newBubble.toBack();
-				this.virtualBubbles.push(newBubble);
-			}	
-			currentBubble.toBack();
-			
-			//set the right inactive/active classes for the virtual bubbles
-			var vBubbleArrayLength = this.virtualBubbles.length;
-			if(withinTest == 0.25){
-				this.virtualBubbles[vBubbleArrayLength - 2].node.setAttribute("class", "minimapCircle inactive");
-				this.virtualBubbles[vBubbleArrayLength - 1].node.setAttribute("class", "minimapCircle active");
-			} else if(withinTest == 0.5){
-				this.virtualBubbles[vBubbleArrayLength - 2].node.setAttribute("class", "minimapCircle active");
-				this.virtualBubbles[vBubbleArrayLength - 1].node.setAttribute("class", "minimapCircle inactive");				
-			} else if(withinTest == 0.1){
-				this.virtualBubbles[vBubbleArrayLength - 3].node.setAttribute("class", "minimapCircle inactive");
-				this.virtualBubbles[vBubbleArrayLength - 2].node.setAttribute("class", "minimapCircle active");
-				this.virtualBubbles[vBubbleArrayLength - 1].node.setAttribute("class", "minimapCircle inactive");
+			if(circleWidths.length == 2 && (circleWidths[0] < 0.01 || circleWidths[1] < 0.01)){
+				//when clicking on a bubble, the crossing are so precise that the neighbouring bubbles
+				//are split as well - into two virtual bubbles, one with (practically) 0 radius - prevent that!
+			} else {		
+				//console.log("drawing " + circleWidths.length + " virtual bubbles:");
+				//draw the virtual bubbles
+				for(var j = 0; j < circleWidths.length; j++){
+					//console.log("    r" + j + ": " + circleWidths[j]);
+					var newBubble = this.canvas.circle(circleCenters[j], currentBubble.attr("cy"), circleWidths[j] / 2);
+					newBubble.toBack();
+					this.virtualBubbles.push(newBubble);
+				}	
+				currentBubble.toBack();
+				
+				//set the right inactive/active classes for the virtual bubbles
+				var vBubbleArrayLength = this.virtualBubbles.length;
+				if(withinTest == 0.25){
+					this.virtualBubbles[vBubbleArrayLength - 2].node.setAttribute("class", "minimapCircle inactive");
+					this.virtualBubbles[vBubbleArrayLength - 1].node.setAttribute("class", "minimapCircle active");
+				} else if(withinTest == 0.5){
+					this.virtualBubbles[vBubbleArrayLength - 2].node.setAttribute("class", "minimapCircle active");
+					this.virtualBubbles[vBubbleArrayLength - 1].node.setAttribute("class", "minimapCircle inactive");				
+				} else if(withinTest == 0.1){
+					this.virtualBubbles[vBubbleArrayLength - 3].node.setAttribute("class", "minimapCircle inactive");
+					this.virtualBubbles[vBubbleArrayLength - 2].node.setAttribute("class", "minimapCircle active");
+					this.virtualBubbles[vBubbleArrayLength - 1].node.setAttribute("class", "minimapCircle inactive");
+				}
 			}
-			
-			//finally: set the split state for the bubble object
-			if(withinTest == 0.25){
-				bubbleObject.state = "split2l";
-				bubbleObject.split = circleWidths[vBubbleArrayLength - 2] / (currentBubbleRadius * 2);
-			} else if(withinTest == 0.5){
-				bubbleObject.state = "split2r";
-				bubbleObject.split = circleWidths[vBubbleArrayLength - 2] / (currentBubbleRadius * 2);
-			} else if(withinTest == 0.1){
-				bubbleObject.state = "split3";
-				bubbleObject.split = [circleWidths[vBubbleArrayLength - 3] / (currentBubbleRadius * 2),
-				                      circleWidths[vBubbleArrayLength - 2] / (currentBubbleRadius * 2)];
-			}
-			
 		} else {
 			currentBubble.node.setAttribute("class", "minimapCircle inactive");		
-			bubbleObject.state = "invisible";
+			currentBubble.lastState = currentBubble.node.getAttribute("class");
 		}
 	}
 };
