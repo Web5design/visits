@@ -102,7 +102,6 @@ MiniMap.prototype.drawMinimap = function(){
 		var currentCircle = this.canvas.circle(horizontalPosition + clusterRadius, verticalPosition + clusterRadius, clusterRadius);
 		currentCircle.node.setAttribute("class", "minimapCircle active");
 		currentCircle.lastState = currentCircle.node.getAttribute("class");
-		currentCircle.cluster = MAINMODEL.clusters[i];
 		currentCircle.toBack();
 		
 		currentCircle.click(

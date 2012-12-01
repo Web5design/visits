@@ -97,9 +97,14 @@ TimelineModel.prototype.updateFromAbsoluteValues = function(leftTime, rightTime,
 	//this.clusters = pivotClustering(this.displayedGpsLocs, distanceThreshold);
 	
 	//calculate bounds for all gps locations (needed for overview map)
+	//BUT: if we look at only a section of the full gpslocs ignore the last one
 	this.combinedLocationCluster = new Cluster();
 	for(var i = 0; i < this.displayedGpsLocs.length; i++){
-		this.combinedLocationCluster.addLoc(this.displayedGpsLocs[i], (i == this.displayedGpsLocs.length - 1) ? this.displayedGpsLocs[i] : this.displayedGpsLocs[i + 1]);
+		if(i == (this.displayedGpsLocs.length - 1) && (MAINMODEL.timeframeEnd != this.displayedTimeframeEnd)){
+			//ignore this one - it's not actually there
+		} else {
+			this.combinedLocationCluster.addLoc(this.displayedGpsLocs[i], (i == this.displayedGpsLocs.length - 1) ? this.displayedGpsLocs[i] : this.displayedGpsLocs[i + 1]);
+		}
 	}
 };
 
